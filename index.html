@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" crossorigin="anonymous"><!-- crossorigin: sem ele a resposta é opaca e o sw.js não cacheia as fontes (offline caía em fonte do sistema) -->
 
 <style>
   /* Design system B — OHubImob adaptada (rodada 26).
@@ -908,34 +908,76 @@ let currentCameraDataUrl = null;
 let recognizing = false, recognition = null, currentTranscript = '';
 
 // ---------- IndexedDB persistence ----------
+// Uma conexão só, reaproveitada (antes abria uma nova a cada get/set e nunca fechava).
+let idbConn = null;
 function idbOpen() {
+  if (idbConn) return Promise.resolve(idbConn);
   return new Promise((resolve, reject) => {
     const req = indexedDB.open('ohubimob-campo-local', 1);
     req.onupgradeneeded = () => req.result.createObjectStore('kv');
-    req.onsuccess = () => resolve(req.result);
+    req.onsuccess = () => {
+      idbConn = req.result;
+      idbConn.onclose = () => { idbConn = null; };
+      idbConn.onversionchange = () => { idbConn.close(); idbConn = null; };
+      resolve(idbConn);
+    };
     req.onerror = () => reject(req.error);
   });
 }
 async function idbGet(key) {
   const conn = await idbOpen();
   return new Promise((resolve, reject) => {
-    const tx = conn.transaction('kv', 'readonly').objectStore('kv').get(key);
-    tx.onsuccess = () => resolve(tx.result);
-    tx.onerror = () => reject(tx.error);
+    const req = conn.transaction('kv', 'readonly').objectStore('kv').get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
   });
 }
 async function idbSet(key, val) {
   const conn = await idbOpen();
   return new Promise((resolve, reject) => {
-    const tx = conn.transaction('kv', 'readwrite').objectStore('kv').put(val, key);
-    tx.onsuccess = () => resolve();
+    const tx = conn.transaction('kv', 'readwrite');
+    tx.objectStore('kv').put(val, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error || new Error('transação abortada'));  // cota cheia chega por aqui em alguns navegadores
+  });
+}
+async function idbClear() {
+  const conn = await idbOpen();
+  return new Promise((resolve, reject) => {
+    const tx = conn.transaction('kv', 'readwrite');
+    tx.objectStore('kv').clear();
+    tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
 }
-async function persist() {
-  const bytes = db.export();
-  await idbSet('db', bytes);
+// db.export() serializa o banco INTEIRO (inclusive fotos em base64) — não pode custar um
+// export completo por gravação. persist() agrupa gravações seguidas (debounce curto) e
+// persistNow() grava de verdade; a saída da página/aba força a gravação pendente.
+// Falha ao gravar (ex. cota do aparelho cheia) avisa na tela — antes era silenciosa e o
+// usuário via "salvo" enquanto nada ia pro disco.
+let persistTimer = null, persistPending = false;
+function persist() {
+  persistPending = true;
+  clearTimeout(persistTimer);
+  persistTimer = setTimeout(persistNow, 250);
 }
+async function persistNow() {
+  if (!persistPending) return;
+  persistPending = false;
+  clearTimeout(persistTimer);
+  try {
+    await idbSet('db', db.export());
+  } catch (e) {
+    console.error('persist', e);
+    const cota = e && (e.name === 'QuotaExceededError' || /quota/i.test(e.message || ''));
+    showToast(cota
+      ? 'Sem espaço no aparelho: a última alteração NÃO foi salva. Exporte o banco (.sqlite) e apague fotos antigas.'
+      : 'Falha ao salvar no aparelho (' + (e && (e.name || e.message) || 'erro') + '). Exporte o banco por segurança.');
+  }
+}
+window.addEventListener('pagehide', persistNow);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistNow(); });
 
 // ---------- DB helpers ----------
 function q(sql, params) {
@@ -969,14 +1011,27 @@ function fmtBRL(n) {
   n = Number(n) || 0;
   return 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 }
+function localYMD(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
 function todayISO(offsetDays) {
+  // Data LOCAL. Antes usava toISOString() (UTC): no Brasil, das 21h em diante "hoje" virava
+  // o dia seguinte — visitas da noite sumiam da Central Hoje e as de amanhã apareciam como hoje.
   const d = new Date();
   d.setDate(d.getDate() + (offsetDays || 0));
-  return d.toISOString().slice(0, 10);
+  return localYMD(d);
+}
+// criado_em vem do SQLite como 'AAAA-MM-DD HH:MM:SS' em UTC (CURRENT_TIMESTAMP); o seed grava só
+// a data, já local. Converte o primeiro caso pra data local antes de comparar com todayISO.
+function localDateOf(v) {
+  const s = String(v);
+  if (s.length <= 10) return s.slice(0, 10);
+  const d = new Date(s.replace(' ', 'T') + (/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? '' : 'Z'));
+  return isNaN(d) ? s.slice(0, 10) : localYMD(d);
 }
 function fmtRelDate(iso) {
   if (!iso) return '';
-  const d = String(iso).slice(0, 10);
+  const d = localDateOf(iso);
   if (d === todayISO(0)) return 'hoje';
   if (d === todayISO(-1)) return 'ontem';
   const dias = Math.round((new Date(todayISO(0)) - new Date(d)) / 86400000);
@@ -994,8 +1049,10 @@ const TEST_PHONES = ['+55 11 90000-0001', '+55 21 90000-0002', '+55 61 90000-000
 let phoneCycleCounter = 0;
 function nextTestPhone() { const p = TEST_PHONES[phoneCycleCounter % TEST_PHONES.length]; phoneCycleCounter++; return p; }
 function waDigits(tel) {
+  // 10–11 dígitos = DDD + número nacional → prefixa o 55 do Brasil; mais que isso já veio com
+  // código de país. Não dá pra decidir por "começa com 55": DDD 55 existe (RS) e perdia o país.
   let d = (tel || '').replace(/\D/g, '');
-  if (!d.startsWith('55')) d = '55' + d;
+  if (d.length <= 11) d = '55' + d;
   return d;
 }
 function waLink(tel, text) {
@@ -1100,10 +1157,19 @@ async function boot() {
     renderAll();
     wireFormPhonePrefill();
   } catch (e) {
-    document.getElementById('boot-screen').innerHTML = '<div style="max-width:280px;text-align:center;padding:0 20px">Erro ao carregar o banco local: ' + esc(e.message || String(e)) + '</div>';
+    // A tela de boot cobre o app inteiro (position:fixed) — sem uma saída aqui, um banco salvo
+    // corrompido deixava o app instalado preso nesta tela pra sempre.
+    document.getElementById('boot-screen').innerHTML = '<div style="max-width:280px;text-align:center;padding:0 20px">Erro ao carregar o banco local: ' + esc(e.message || String(e)) +
+      '<br><br><span class="btn-tiny" onclick="recomecarDoZeroNoBoot()">↺ Recomeçar do zero</span>' +
+      '<div style="font-size:0.7rem;margin-top:8px;opacity:.8">apaga o banco salvo neste aparelho e recarrega com os dados iniciais</div></div>';
     return;
   }
   document.getElementById('boot-screen').classList.add('hidden');
+}
+async function recomecarDoZeroNoBoot() {
+  if (!confirm('Apagar o banco salvo neste aparelho e recarregar do zero?')) return;
+  try { await idbClear(); } catch (e) { /* segue pro reload mesmo assim */ }
+  location.reload();
 }
 // pré-preenche o telefone dos formulários de cadastro com um dos 3 números de teste, alternando a cada abertura — o usuário pode sobrescrever com um número real
 function wireFormPhonePrefill() {
@@ -1137,9 +1203,25 @@ function importDb(evt) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    db = new SQL.Database(new Uint8Array(reader.result));
-    persist();
+    const bytes = new Uint8Array(reader.result);
+    // sql.js abre qualquer sequência de bytes sem reclamar e só falha na primeira query — e antes
+    // o persist() vinha ANTES da query, gravando lixo no IndexedDB e travando o próximo boot.
+    if (String.fromCharCode(...bytes.slice(0, 15)) !== 'SQLite format 3') {
+      alert('Esse arquivo não é um banco .sqlite exportado pelo app.'); evt.target.value = ''; return;
+    }
+    const anterior = db;
+    try {
+      db = new SQL.Database(bytes);
+      runMigrations();  // export antigo (antes das colunas de vínculo) precisa das mesmas migrações do boot
+      q('SELECT id FROM imovel LIMIT 1'); q('SELECT id FROM lead LIMIT 1');  // confere que é um banco deste app
+    } catch (e) {
+      db = anterior;
+      alert('Não consegui importar: ' + (e && e.message ? e.message : e)); evt.target.value = ''; return;
+    }
+    selectedLeadId = null;
+    persist(); persistNow();
     renderAll();
+    evt.target.value = '';
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1151,9 +1233,7 @@ function ligar(tel) {
 }
 function abrirWhats(tel) {
   if (!tel) { alert('Sem telefone cadastrado.'); return; }
-  const digits = tel.replace(/\D/g, '');
-  const full = digits.length <= 11 ? '55' + digits : digits;
-  window.open('https://wa.me/' + full, '_blank');
+  window.open(waLink(tel), '_blank');  // mesma normalização dos chips/folha de compartilhar
 }
 async function compartilharImovel(id, mode) {
   const im = q('SELECT * FROM imovel WHERE id=?', [id])[0];
@@ -1265,8 +1345,8 @@ function detailClienteHTML(id) {
       <div class="field-row"><div class="k">Tipo</div><div class="v">${esc(c.tipo || '—')}</div></div>
       <div class="field-row"><div class="k">Observações</div><div class="v">${esc(c.observacoes || '—')}</div></div>
       <div class="lead-actions">
-        <span class="icon-btn" onclick="ligar('${esc(c.telefone || '')}')">📞 ligar</span>
-        <span class="icon-btn" onclick="abrirWhats('${esc(c.telefone || '')}')">💬 whatsapp</span>
+        <span class="icon-btn" data-tel="${esc(c.telefone || '')}" onclick="ligar(this.dataset.tel)">📞 ligar</span>
+        <span class="icon-btn" data-tel="${esc(c.telefone || '')}" onclick="abrirWhats(this.dataset.tel)">💬 whatsapp</span>
       </div>
     </div>
     <h3 class="blk-title">Arquivos vinculados</h3>
@@ -1308,8 +1388,8 @@ function detailLeadHTML(id) {
       <div class="field-row"><div class="k">Próximo passo</div><div class="v">${esc(l.proximo_passo || '—')}</div></div>
       <div class="field-row"><div class="k">Estágio</div><div class="v"><select class="status-select" onchange="setLeadStage(${l.id}, this.value)">${Object.keys(STAGE_LABELS).map(s => `<option value="${s}" ${s === l.estagio ? 'selected' : ''}>${STAGE_LABELS[s]}</option>`).join('')}</select></div></div>
       <div class="lead-actions">
-        <span class="icon-btn" onclick="ligar('${esc(l.telefone || '')}')">📞 ligar</span>
-        <span class="icon-btn" onclick="abrirWhats('${esc(l.telefone || '')}')">💬 whatsapp</span>
+        <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="ligar(this.dataset.tel)">📞 ligar</span>
+        <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="abrirWhats(this.dataset.tel)">💬 whatsapp</span>
       </div>
     </div>
     <h3 class="blk-title">Arquivos vinculados</h3>
@@ -1582,7 +1662,7 @@ function visitCardHTML(v) {
     <div class="row-flex"><span class="lead">${objLink('lead', v.lead_id, v.lead_nome || '')}</span>${phoneChipHTML(v.telefone)}</div>
     <div class="visit-actions">
       ${v.status !== 'confirmada' ? `<span class="act-btn primary" onclick="checkinVisita(${v.id})">Check-in</span>` : `<span class="act-btn primary" onclick="document.getElementById('tab-ag').checked=true">Ver agenda</span>`}
-      ${v.telefone ? `<span class="act-btn" onclick="event.stopPropagation();ligar('${esc(v.telefone)}')">📞 ligar</span><span class="act-btn" onclick="event.stopPropagation();abrirWhats('${esc(v.telefone)}')">💬 zap</span>` : ''}
+      ${v.telefone ? `<span class="act-btn" data-tel="${esc(v.telefone)}" onclick="event.stopPropagation();ligar(this.dataset.tel)">📞 ligar</span><span class="act-btn" data-tel="${esc(v.telefone)}" onclick="event.stopPropagation();abrirWhats(this.dataset.tel)">💬 zap</span>` : ''}
       <span class="act-btn voice" onclick="document.getElementById('tab-nt').checked=true">🎙 nota</span>
     </div>
   </div>`;
@@ -1658,8 +1738,8 @@ function renderCrProfile() {
     <div class="field-row"><div class="k">Próximo passo</div><div class="v">${esc(l.proximo_passo || '—')}</div></div>
     <div class="field-row"><div class="k">Estágio</div><div class="v"><select class="status-select" onchange="setLeadStage(${l.id}, this.value)">${Object.keys(STAGE_LABELS).map(s => `<option value="${s}" ${s === l.estagio ? 'selected' : ''}>${STAGE_LABELS[s]}</option>`).join('')}</select></div></div>
     <div class="lead-actions">
-      <span class="icon-btn" onclick="ligar('${esc(l.telefone || '')}')">📞 ligar</span>
-      <span class="icon-btn" onclick="abrirWhats('${esc(l.telefone || '')}')">💬 whatsapp</span>
+      <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="ligar(this.dataset.tel)">📞 ligar</span>
+      <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="abrirWhats(this.dataset.tel)">💬 whatsapp</span>
       <span class="icon-btn" onclick="document.getElementById('tab-nt').checked=true">🎙 nota</span>
     </div>
   </div>`;
@@ -1688,8 +1768,8 @@ function renderCR() {
       <div class="imovel">${l.imovel_id ? objLink('imovel', l.imovel_id, (l.codigo ? l.codigo + ' · ' : '') + l.imovel_nome) : esc(l.tipo_interesse || '')}</div>
       <div class="meta"><span class="pill brass">${esc(l.classificacao || '—')}</span><span>${esc(l.canal_origem || '')} · ${fmtRelDate(l.criado_em)}</span> ${phoneChipHTML(l.telefone)}</div>
       <div class="lead-actions" onclick="event.stopPropagation()">
-        <span class="icon-btn" onclick="ligar('${esc(l.telefone || '')}')">📞 ligar</span>
-        <span class="icon-btn" onclick="abrirWhats('${esc(l.telefone || '')}')">💬 whatsapp</span>
+        <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="ligar(this.dataset.tel)">📞 ligar</span>
+        <span class="icon-btn" data-tel="${esc(l.telefone || '')}" onclick="abrirWhats(this.dataset.tel)">💬 whatsapp</span>
       </div>
     </div>`;
   });
@@ -1767,8 +1847,8 @@ function renderCLI() {
       <div class="phone">${c.telefone ? phoneChipHTML(c.telefone) : '—'}</div>
       <div class="row-flex"><span class="pill ${tipoPill[c.tipo] || 'neutral'}">${esc((c.tipo || '').toLowerCase())}</span><span class="note">${esc(c.observacoes || '')}</span></div>
       <div class="lead-actions">
-        <span class="icon-btn" onclick="ligar('${esc(c.telefone || '')}')">📞 ligar</span>
-        <span class="icon-btn" onclick="abrirWhats('${esc(c.telefone || '')}')">💬 whatsapp</span>
+        <span class="icon-btn" data-tel="${esc(c.telefone || '')}" onclick="ligar(this.dataset.tel)">📞 ligar</span>
+        <span class="icon-btn" data-tel="${esc(c.telefone || '')}" onclick="abrirWhats(this.dataset.tel)">💬 whatsapp</span>
       </div>
     </div>`;
   });

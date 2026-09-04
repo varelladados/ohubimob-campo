@@ -5,7 +5,7 @@
 //
 // IMPORTANTE ao publicar uma versão nova: incrementar CACHE ('...-v2', '-v3'...).
 // Sem isso, quem já instalou continua preso na versão em cache pra sempre.
-const CACHE = 'ohubimob-campo-v2';
+const CACHE = 'ohubimob-campo-v3';  // v3: revisão 2026-09-04 (persist debounced+toast, data local, DDD 55, import validado, recuperação no boot, fontes offline)
 
 const ASSETS = [
   './',
