@@ -3001,6 +3001,16 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     location.reload();
   }
 
+  // O worker pergunta quem sabe se atualizar sozinho e recarrega por fora quem não
+  // responde — é assim que ele tira de uma versão antiga quem não tem este bloco.
+  // Responder aqui é o que garante que ESTA aba cuide do próprio reload, com o cuidado
+  // de não atropelar um formulário aberto.
+  navigator.serviceWorker.addEventListener('message', evento => {
+    if (evento.data && evento.data.tipo === 'ds2-ping' && evento.source) {
+      evento.source.postMessage({ tipo: 'ds2-pong' });
+    }
+  });
+
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     // Na PRIMEIRA instalação não havia controlador nenhum: recarregar aqui seria um
     // susto sem motivo, porque o que está na tela já é a versão mais nova.
@@ -3011,7 +3021,9 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
       showToast('Versão nova do app disponível.', { label: 'Atualizar', fn: aplicarAtualizacao });
       return;
     }
-    aplicarAtualizacao();
+    // 400ms de folga: dá tempo do 'pong' chegar ao worker antes de a aba sumir, pra ele
+    // não recarregar por fora uma aba que já está se recarregando sozinha.
+    setTimeout(aplicarAtualizacao, 400);
   });
 }
 

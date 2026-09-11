@@ -6,14 +6,19 @@
 // IMPORTANTE ao publicar uma versão nova: incrementar CACHE ('...-v2', '-v3'...).
 // Sem isso, quem já instalou continua preso na versão em cache pra sempre.
 //
-// ATUALIZAÇÃO AUTOMÁTICA (v5): mudar o nome do cache sozinho não bastava. Como a
-// estratégia é cache-first, o primeiro acesso depois de uma publicação ainda entrega
-// a versão antiga enquanto a nova instala por trás — só na SEGUNDA abertura o usuário
-// via o app novo. skipWaiting() + clients.claim() abaixo fazem a versão nova assumir
-// o controle na hora, e a página escuta 'controllerchange' e se recarrega sozinha
-// (ver o bloco "atualização automática" em app-local-campo.html). O par é obrigatório:
-// sem o lado da página, o controle troca mas o HTML já carregado continua sendo o velho.
-const CACHE = 'ohubimob-campo-v5';  // v5: rodada 32 — mesma versão da v4, agora com atualização aplicada sozinha (ver bloco abaixo)
+// ATUALIZAÇÃO AUTOMÁTICA: mudar o nome do cache sozinho não bastava. Como a estratégia
+// é cache-first, o primeiro acesso depois de uma publicação ainda entrega a versão antiga
+// enquanto a nova instala por trás — só na SEGUNDA abertura o usuário via o app novo.
+// skipWaiting() + clients.claim() abaixo fazem a versão nova assumir o controle na hora,
+// e a página escuta 'controllerchange' e se recarrega sozinha (ver o bloco "atualização
+// automática" em app-local-campo.html).
+//
+// Isso resolve de v5 em diante. Mas quem está numa versão ANTERIOR tem uma página que não
+// tem esse ouvinte: pra ela a troca de worker passa despercebida. Por isso o activate
+// pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
+// recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
+// esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
+const CACHE = 'ohubimob-campo-v6';  // v6: rodada 32 — atualização automática também pra quem está numa versão antiga (ver bloco abaixo)
 
 const ASSETS = [
   './',
@@ -43,12 +48,37 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    await self.clients.claim();
+    await recarregarQuemNaoSabeSeAtualizar();
+  })());
 });
+
+// Pergunta a cada aba aberta se ela tem o ouvinte de atualização. Quem responde 'pong'
+// se recarrega sozinha, com os cuidados que só a página tem (esperar a gravação pendente,
+// não recarregar por cima de um formulário aberto). Quem não responde é de uma versão
+// anterior à v5 e não sabe fazer isso — essa é recarregada por fora, que é o único jeito
+// de tirar alguém de uma versão que não tem o mecanismo.
+async function recarregarQuemNaoSabeSeAtualizar() {
+  const abas = await self.clients.matchAll({ type: 'window' });
+  if (!abas.length) return;
+  const responderam = new Set();
+  const ouvir = evento => {
+    if (evento.data && evento.data.tipo === 'ds2-pong' && evento.source) responderam.add(evento.source.id);
+  };
+  self.addEventListener('message', ouvir);
+  abas.forEach(aba => aba.postMessage({ tipo: 'ds2-ping' }));
+  // 2s: a página responde em milissegundos, e ela só se recarrega depois de ~400ms,
+  // então dá tempo de sobra pro 'pong' chegar antes de qualquer decisão aqui.
+  await new Promise(r => setTimeout(r, 2000));
+  self.removeEventListener('message', ouvir);
+  abas.forEach(aba => {
+    if (responderam.has(aba.id)) return;
+    if (typeof aba.navigate === 'function') aba.navigate(aba.url).catch(() => {});
+  });
+}
 
 self.addEventListener('fetch', event => {
   const req = event.request;
