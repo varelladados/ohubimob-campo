@@ -5,7 +5,15 @@
 //
 // IMPORTANTE ao publicar uma versão nova: incrementar CACHE ('...-v2', '-v3'...).
 // Sem isso, quem já instalou continua preso na versão em cache pra sempre.
-const CACHE = 'ohubimob-campo-v4';  // v4: rodada 32 — design system DS 2 (tokens, ícones SVG, componentes), Modo Visita, Rota do dia
+//
+// ATUALIZAÇÃO AUTOMÁTICA (v5): mudar o nome do cache sozinho não bastava. Como a
+// estratégia é cache-first, o primeiro acesso depois de uma publicação ainda entrega
+// a versão antiga enquanto a nova instala por trás — só na SEGUNDA abertura o usuário
+// via o app novo. skipWaiting() + clients.claim() abaixo fazem a versão nova assumir
+// o controle na hora, e a página escuta 'controllerchange' e se recarrega sozinha
+// (ver o bloco "atualização automática" em app-local-campo.html). O par é obrigatório:
+// sem o lado da página, o controle troca mas o HTML já carregado continua sendo o velho.
+const CACHE = 'ohubimob-campo-v5';  // v5: rodada 32 — mesma versão da v4, agora com atualização aplicada sozinha (ver bloco abaixo)
 
 const ASSETS = [
   './',
@@ -23,7 +31,13 @@ self.addEventListener('install', event => {
     caches.open(CACHE)
       // addAll é atômico: se um asset falhar, nada é cacheado. Cacheia um a um pra
       // que uma falha isolada (ex. ícone renomeado) não derrube a instalação inteira.
-      .then(cache => Promise.all(ASSETS.map(url => cache.add(url).catch(() => null))))
+      // cache:'reload' fura o cache HTTP do navegador: sem isso a instalação da versão
+      // nova podia buscar o arquivo antigo que o GitHub Pages ainda tinha no cache do
+      // navegador e recachear a versão velha com nome de versão nova.
+      .then(cache => Promise.all(ASSETS.map(url =>
+        cache.add(new Request(url, { cache: 'reload' }))
+          .catch(() => cache.add(url).catch(() => null))   // navegador sem suporte a cache:'reload'
+      )))
       .then(() => self.skipWaiting())
   );
 });

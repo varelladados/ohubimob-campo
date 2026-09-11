@@ -2983,6 +2983,36 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => { /* sem SW: app segue funcionando */ });
   });
+
+  // ---------- atualização automática ----------
+  // O cache é cache-first: sem isto, o primeiro acesso depois de uma publicação ainda
+  // entrega a versão anterior enquanto a nova instala por trás, e só na SEGUNDA abertura
+  // o usuário vê o app novo. O Service Worker assume o controle na hora (skipWaiting +
+  // clients.claim) e dispara 'controllerchange'; é aqui que a página se recarrega.
+  const tinhaControlador = !!navigator.serviceWorker.controller;
+  let recarregandoPraAtualizar = false;
+
+  async function aplicarAtualizacao() {
+    if (recarregandoPraAtualizar) return;
+    recarregandoPraAtualizar = true;
+    // grava o que estiver pendente ANTES de recarregar. persist() tem debounce de 250ms,
+    // então sem este await uma alteração feita no último instante se perderia.
+    try { await persistNow(); } catch (e) { /* segue pro reload mesmo assim */ }
+    location.reload();
+  }
+
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    // Na PRIMEIRA instalação não havia controlador nenhum: recarregar aqui seria um
+    // susto sem motivo, porque o que está na tela já é a versão mais nova.
+    if (!tinhaControlador || recarregandoPraAtualizar) return;
+    // Com um formulário aberto, recarregar por cima apagaria o que a pessoa está
+    // digitando (o campo ainda não foi pro banco). Aí a atualização vira oferta.
+    if (sheetAberta()) {
+      showToast('Versão nova do app disponível.', { label: 'Atualizar', fn: aplicarAtualizacao });
+      return;
+    }
+    aplicarAtualizacao();
+  });
 }
 
 // No Android o navegador dispara beforeinstallprompt: guarda o evento e oferece um botão
