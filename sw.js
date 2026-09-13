@@ -18,7 +18,7 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v7';  // v7: rodada 33 — lote A1 (visita, Hoje, toque e leitura, formulários) e navegação que ignora ?query
+const CACHE = 'ohubimob-campo-v8';  // v8: rodada 33 — lote A2 (voltar do Android, remarcar, rascunho, atalhos no ícone, tamanho do texto, sino, lembrete)
 
 const ASSETS = [
   './',
@@ -28,7 +28,10 @@ const ASSETS = [
   './icon-512.png',
   './icon-maskable-512.png',
   './apple-touch-icon.png',
-  './favicon.png'
+  './favicon.png',
+  './atalho-voz.png',
+  './atalho-agora.png',
+  './atalho-lead.png'
 ];
 
 self.addEventListener('install', event => {

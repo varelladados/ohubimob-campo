@@ -11,10 +11,75 @@
   "theme_color": "#2A2B2D",
   "lang": "pt-BR",
   "dir": "ltr",
-  "categories": ["business", "productivity"],
+  "categories": [
+    "business",
+    "productivity"
+  ],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ]
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nota de voz",
+      "short_name": "Voz",
+      "description": "Abre a nota de voz, sem começar a gravar",
+      "url": "./?acao=voz",
+      "icons": [
+        {
+          "src": "atalho-voz.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Próxima ação",
+      "short_name": "Agora",
+      "description": "Abre o Hoje na próxima ação",
+      "url": "./?acao=agora",
+      "icons": [
+        {
+          "src": "atalho-agora.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Novo lead",
+      "short_name": "Lead",
+      "description": "Abre o formulário de lead comprador",
+      "url": "./?acao=lead",
+      "icons": [
+        {
+          "src": "atalho-lead.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": [
+      "focus-existing",
+      "auto"
+    ]
+  }
 }

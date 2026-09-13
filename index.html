@@ -1,5 +1,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<script>
+  // Tamanho do texto (rodada 33, A2). Aplicado antes do primeiro desenho: depois, a tela
+  // piscaria no tamanho padrão a cada abertura. Escala os tokens de tipo (--t-*), não a
+  // raiz: espaço e alvo de toque ficam iguais, e não depende do navegador respeitar o
+  // font-size do <html>.
+  try { var __tx = localStorage.getItem('texto:v1'); if (__tx === '115' || __tx === '130') document.documentElement.setAttribute('data-texto', __tx); } catch (e) {}
+</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2A2B2D">
@@ -595,6 +602,23 @@ a { color: inherit; text-decoration: none; }
   .preco-lido { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
   .preco-lido.aviso { color: var(--warn); }
   .chip-mini { min-height: 36px; }
+
+  /* ======================= rodada 33 — lote A2 ======================= */
+  .topbar__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* tamanho do texto: sobrescreve só a escala de tipo do DS 2 (e os dois rem soltos acima) */
+  html[data-texto="115"] { --tx-k: 1.15; }
+  html[data-texto="130"] { --tx-k: 1.3; }
+  html[data-texto] { --t-xs: calc(0.78rem * var(--tx-k)); --t-sm: calc(0.88rem * var(--tx-k)); --t-md: calc(1rem * var(--tx-k));
+    --t-lg: calc(1.15rem * var(--tx-k)); --t-xl: calc(1.4rem * var(--tx-k)); --t-2xl: calc(1.8rem * var(--tx-k)); }
+  html[data-texto] .pill, html[data-texto] .row__meta, html[data-texto] .topbar__state { font-size: calc(0.84rem * var(--tx-k)); }
+  /* a 130% o texto "salvo/offline" não cabe ao lado do título: fica só o ponto (o texto segue pro leitor de tela) */
+  html[data-texto="130"] #top-state-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .seg-texto { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+  .seg-texto .chip { justify-content: center; }
+  .rascunho { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s3); }
+  .acoes-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-bottom: var(--s3); }
+  .acoes-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
+  .pend-acts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: var(--s2); }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -757,6 +781,15 @@ a { color: inherit; text-decoration: none; }
       </div>
 
       <div class="data-box" id="install-box" hidden></div>
+
+      <div class="data-box">
+        <h4>Tamanho do texto</h4>
+        <div class="seg-texto" role="group" aria-label="Tamanho do texto" id="seg-texto">
+          <button class="chip" data-tx="100" onclick="setTamanhoTexto('100')">100%</button>
+          <button class="chip" data-tx="115" onclick="setTamanhoTexto('115')">115%</button>
+          <button class="chip" data-tx="130" onclick="setTamanhoTexto('130')">130%</button>
+        </div>
+      </div>
 
       <div class="data-box">
         <h4>Dados locais</h4>
@@ -1154,7 +1187,7 @@ CREATE TABLE visita (
 CREATE TABLE sequencia_contato (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   lead_id INTEGER REFERENCES lead(id), dia INTEGER, canal TEXT,
-  descricao TEXT, status TEXT DEFAULT 'agendado'
+  descricao TEXT, status TEXT DEFAULT 'agendado', vence_em TEXT
 );
 CREATE TABLE captacao_lp (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1204,7 +1237,10 @@ const SCHEMA_MIGRATIONS = [
   `ALTER TABLE nota ADD COLUMN visita_id INTEGER REFERENCES visita(id)`,
   `ALTER TABLE nota ADD COLUMN lead_id INTEGER REFERENCES lead(id)`,
   `ALTER TABLE nota ADD COLUMN imovel_id INTEGER REFERENCES imovel(id)`,
-  `ALTER TABLE nota ADD COLUMN cliente_id INTEGER REFERENCES cliente(id)`
+  `ALTER TABLE nota ADD COLUMN cliente_id INTEGER REFERENCES cliente(id)`,
+  // rodada 33 (A2) — follow-up com data de vencimento: é o que permite Adiar e dizer
+  // "atrasado". Linha antiga sem data conta como vencida hoje.
+  `ALTER TABLE sequencia_contato ADD COLUMN vence_em TEXT`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1488,7 +1524,14 @@ function fundoInerte(on) {
 function openSheet(html, opts) {
   opts = opts || {};
   const ov = document.getElementById('sheet-ov');
-  if (!ov.classList.contains('open')) sheetOpener = document.activeElement;
+  if (!ov.classList.contains('open')) {
+    sheetOpener = document.activeElement;
+    // Rodada 33 (A2): uma entrada de histórico por folha — o voltar do Android fecha a
+    // folha em vez de sair do app. Folha que troca por outra reaproveita a mesma entrada.
+    const st = estadoHist();
+    if (!st.sheet) { gravarRolagem(); history.pushState(Object.assign({}, estadoHist(), { sheet: 1, d: st.d + 1 }), ''); }
+  }
+  rascunhoAtual = null;
   document.getElementById('sheet-body').innerHTML = html;
   ov.classList.toggle('sheet-ov--top', !!opts.top);
   ov.classList.add('open');
@@ -1503,9 +1546,19 @@ function openSheet(html, opts) {
     else if (titulo) titulo.focus({ preventScroll: true });
   }, 60);
 }
-function closeSheet() {
+function closeSheet(opts) {
+  const estavaAberta = sheetAberta();
   document.getElementById('sheet-ov').classList.remove('open');
   fundoInerte(false);
+  // Fechada pelo botão, pelo fundo ou pelo Esc: tira a entrada da folha do histórico.
+  // Adiado um instante — fechar e abrir outra folha em seguida reaproveita a entrada,
+  // e navegar pra outra tela no mesmo gesto substitui a entrada em vez de voltar.
+  if (estavaAberta && !(opts && opts.semHistorico)) {
+    setTimeout(() => {
+      const st = history.state;
+      if (st && st.app && st.sheet && !sheetAberta() && !travessiaPendente) { travessiaPendente = true; history.back(); }
+    }, 0);
+  }
   const fn = sheetAoFechar; sheetAoFechar = null;
   if (fn) fn();
   const op = sheetOpener; sheetOpener = null;
@@ -1545,8 +1598,42 @@ const VIEWS = {
   rota:   { t: 'Rota do dia',   tab: 'ag',   back: 'ag', render: () => renderRota() }
 };
 let viewAtual = 'hj';
+// ---------- histórico (rodada 33, A2) ----------
+// O voltar do Android fechava o app de qualquer tela. Agora cada tela interna e cada
+// folha é uma entrada do histórico. `d` é a profundidade: 0 é o Hoje, na primeira
+// entrada — voltar dali sai do app, como em qualquer app Android. As abas ficam sempre
+// em d=1: aba a partir do Hoje empilha, aba entre abas substitui, e a aba Hoje volta
+// tudo de uma vez.
+let navPorHistorico = false, travessiaPendente = false, raizPendente = false, trocaPendente = null;
+function estadoHist() { return history.state && history.state.app ? history.state : { app: 1, v: 'hj', d: 0 }; }
+function gravarRolagem() {
+  try { history.replaceState(Object.assign({}, estadoHist(), { y: document.getElementById('screen-body').scrollTop }), ''); } catch (e) { /* ok */ }
+}
+function viajar(delta) { travessiaPendente = true; history.go(delta); }
 function go(v) {
   const cfg = VIEWS[v]; if (!cfg) return;
+  if (!navPorHistorico) {
+    const st = estadoHist();
+    const emFolha = !!st.sheet, dBase = emFolha ? Math.max(0, st.d - 1) : st.d;
+    const novo = { app: 1, v, d: dBase, vid: v === 'visita' ? visitaAtivaId : null };
+    if (v === viewAtual) {
+      if (sheetAberta()) closeSheet();
+    } else if (cfg.back) {
+      // tela interna empilha; a partir de uma folha, ocupa o lugar da folha
+      if (sheetAberta()) closeSheet({ semHistorico: true });
+      novo.d = dBase + 1;
+      if (emFolha) history.replaceState(novo, ''); else { gravarRolagem(); history.pushState(novo, ''); }
+    } else if (v === 'hj') {
+      if (sheetAberta()) closeSheet({ semHistorico: true });
+      if (st.d > 0) { raizPendente = true; viajar(-st.d); return; }
+      history.replaceState({ app: 1, v: 'hj', d: 0 }, '');
+    } else {
+      if (sheetAberta()) closeSheet({ semHistorico: true });
+      if (st.d === 0) { gravarRolagem(); novo.d = 1; history.pushState(novo, ''); }
+      else if (st.d === 1) { novo.d = 1; history.replaceState(novo, ''); }
+      else { trocaPendente = v; viajar(-(st.d - 1)); return; }
+    }
+  }
   if (v !== 'visita') { soltarTelaAcesa(); clearInterval(visitaTimer); visitaTimer = null; }
   viewAtual = v;
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + v));
@@ -1556,9 +1643,49 @@ function go(v) {
   document.getElementById('top-mark').hidden = !!cfg.back;
   if (cfg.render) cfg.render();
   document.getElementById('screen-body').scrollTop = 0;
-  if (sheetAberta()) closeSheet();
 }
-function voltar() { go(VIEWS[viewAtual].back || 'hj'); }
+// a seta da barra usa o histórico: volta pra onde a pessoa estava, não pra um "pai" fixo
+function voltar() {
+  const st = estadoHist();
+  if (st.d > 0 && !st.sheet) viajar(-1);
+  else go(VIEWS[viewAtual].back || 'hj');
+}
+function irSemHistorico(v) { navPorHistorico = true; try { go(v); } finally { navPorHistorico = false; } }
+window.addEventListener('popstate', e => {
+  travessiaPendente = false;
+  if (!db) return;
+  let st = e.state && e.state.app ? e.state : { app: 1, v: 'hj', d: 0 };
+  if (raizPendente) { raizPendente = false; st = { app: 1, v: 'hj', d: 0 }; history.replaceState(st, ''); }
+  else if (trocaPendente) { st = { app: 1, v: trocaPendente, d: st.d, vid: null }; trocaPendente = null; history.replaceState(st, ''); }
+  if (st.sheet) {
+    // entrada de folha sem folha na tela (ex.: recarregou com folha aberta): não há o que mostrar
+    if (!sheetAberta()) { travessiaPendente = true; history.back(); }
+    return;
+  }
+  if (sheetAberta()) closeSheet({ semHistorico: true });
+  if (st.v === 'visita' && st.vid) visitaAtivaId = st.vid;
+  if (!VIEWS[st.v]) st.v = 'hj';
+  if (st.v !== viewAtual || st.v === 'visita') irSemHistorico(st.v);
+  const y = st.y || 0;
+  requestAnimationFrame(() => { document.getElementById('screen-body').scrollTop = y; });
+});
+// boot: desenha a tela do histórico sem empilhar, e tira a entrada de folha fantasma
+function iniciarHistorico() {
+  const st = history.state && history.state.app ? history.state : null;
+  const limpo = location.pathname + location.hash;
+  if (!st || !VIEWS[st.v]) { history.replaceState({ app: 1, v: 'hj', d: 0 }, '', limpo); irSemHistorico('hj'); return; }
+  if (location.search) history.replaceState(st, '', limpo);
+  if (st.vid) visitaAtivaId = st.vid;
+  irSemHistorico(st.v);
+  if (st.sheet) { travessiaPendente = true; history.back(); }
+}
+// depois de importar ou recomeçar, a pilha antiga aponta pra objetos que não existem mais
+function colapsarPilha() {
+  if (sheetAberta()) closeSheet({ semHistorico: true });
+  const st = estadoHist();
+  if (st.d > 0) { raizPendente = true; viajar(-st.d); }
+  else { history.replaceState({ app: 1, v: 'hj', d: 0 }, ''); irSemHistorico('hj'); }
+}
 
 // ---------- criar (o "+" da tela) ----------
 // O FAB antes era um <label for="tab-nt"> — ele NAVEGAVA, não criava. E a nota aberta
@@ -1798,8 +1925,8 @@ const FORMS = {
     };
   }
 };
-function dataRapida(qual) {
-  const el = document.getElementById('fvi-data'); if (!el) return;
+function dataRapida(qual, alvo) {
+  const el = document.getElementById(alvo || 'fvi-data'); if (!el) return;
   if (qual === 'sab') { const d = new Date(); d.setDate(d.getDate() + (((6 - d.getDay()) + 7) % 7 || 7)); el.value = localYMD(d); }
   else el.value = todayISO(qual);
 }
@@ -1814,7 +1941,7 @@ function openForm(tipo, ctx) {
       <datalist id="dl-bairros">${bairros.map(r => `<option value="${esc(r.b)}">`).join('')}</datalist>
       <div class="btn-row sheet__acts">
         <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
-        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
       </div>
     </form>`);
   prepararEnter(document.getElementById('form-sheet'));
@@ -1834,7 +1961,63 @@ function openForm(tipo, ctx) {
   const tel = document.querySelector('#sheet-body input[type="tel"]');
   if (tel && !tel.value) tel.value = nextTestPhone();
   if (tipo === 'imovel') window.__geo = null;
+  // o rascunho compara com o formulário já com os padrões, o contexto e o telefone de teste
+  ligarRascunho(tipo + ':' + (ctx ? ctx.tipo + '-' + ctx.id : '-'), document.getElementById('form-sheet'));
 }
+
+// ---------- rascunho (rodada 33, A2) ----------
+// Nada digitado se perde: fechar pelo fundo, pelo voltar ou pelo Esc guarda o que foi
+// escrito por 7 dias. "Mudou" é comparado com o formulário já preenchido com os padrões
+// e o telefone de teste — senão todo formulário aberto e fechado viraria rascunho.
+const RASCUNHO_VALIDADE = 7 * 24 * 3600 * 1000;
+let rascunhoAtual = null;   // { chave, base, raiz }
+function camposDe(raiz) { return [...raiz.querySelectorAll('input[id], select[id], textarea[id]')].filter(e => !['file', 'button', 'submit'].includes(e.type)); }
+function valoresDe(raiz) { const o = {}; camposDe(raiz).forEach(e => { o[e.id] = e.value; }); return o; }
+function ligarRascunho(chave, raiz, aoRestaurar) {
+  if (!raiz) return;
+  rascunhoAtual = { chave: 'rascunho:v1:' + chave, base: valoresDe(raiz), raiz };
+  let salvo = null;
+  try { salvo = JSON.parse(localStorage.getItem(rascunhoAtual.chave) || 'null'); } catch (e) { /* sem storage */ }
+  if (salvo && Date.now() - salvo.t < RASCUNHO_VALIDADE) {
+    let restaurou = false;
+    Object.entries(salvo.campos || {}).forEach(([id, v]) => {
+      const e = document.getElementById(id);
+      if (!e || !raiz.contains(e) || e.value === v) return;
+      e.value = v; restaurou = true;
+      const fold = e.closest('details'); if (fold) fold.open = true;
+      e.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    if (aoRestaurar) aoRestaurar(salvo.campos || {});
+    if (restaurou) {
+      const aviso = `<div class="card card--accent rascunho" id="rascunho-aviso">${ico('editar')}<span style="flex:1">Rascunho recuperado</span>
+        <button type="button" class="btn btn--sm btn--ghost" onclick="descartarRascunho()">Descartar</button></div>`;
+      const tit = raiz.querySelector('#sheet-title');
+      if (tit) tit.insertAdjacentHTML('afterend', aviso); else raiz.insertAdjacentHTML('afterbegin', aviso);
+    }
+  } else if (salvo) { try { localStorage.removeItem(rascunhoAtual.chave); } catch (e) { /* ok */ } }
+  guardarRascunho();
+}
+function guardarRascunho() {
+  const r = rascunhoAtual; if (!r || !r.raiz.isConnected) return false;
+  const atual = valoresDe(r.raiz), campos = {};
+  let mudou = false;
+  Object.keys(atual).forEach(id => { if (atual[id] !== r.base[id]) { campos[id] = atual[id]; mudou = true; } });
+  try { if (mudou) localStorage.setItem(r.chave, JSON.stringify({ t: Date.now(), campos })); else localStorage.removeItem(r.chave); } catch (e) { /* ok */ }
+  // com algo digitado, o botão diz o que faz de verdade
+  const cancelar = r.raiz.querySelector('[data-cancelar]');
+  if (cancelar) cancelar.textContent = mudou ? 'Descartar' : 'Cancelar';
+  return mudou;
+}
+function limparRascunho() {
+  if (!rascunhoAtual) return;
+  try { localStorage.removeItem(rascunhoAtual.chave); } catch (e) { /* ok */ }
+  rascunhoAtual = null;
+}
+function descartarRascunho() { limparRascunho(); closeSheet(); showToast('Rascunho descartado.'); }
+function cancelarForm() { if (guardarRascunho()) limparRascunho(); closeSheet(); }
+['input', 'change'].forEach(tipo => document.addEventListener(tipo, e => {
+  if (rascunhoAtual && rascunhoAtual.raiz.contains(e.target)) guardarRascunho();
+}, true));
 
 function prepararEnter(form) {
   if (!form) return;
@@ -1855,6 +2038,7 @@ function salvarLeadVenda() {
   const id = insertAndGetId(`INSERT INTO lead (nome,telefone,tipo_interesse,imovel_id,bairro_interesse,orcamento,canal_origem,estagio,classificacao) VALUES (?,?,?,?,?,?,?,'novo','a qualificar')`,
     [nome, val('fv-telefone'), val('fv-tipo'), val('fv-imovel') || null, val('fv-bairro'), val('fv-orcamento'), val('fv-canal')]);
   vibrar();
+  limparRascunho();
   closeSheet();
   crFilter = 'novo'; renderCR(); renderHJ();
   showToast('Lead salvo.', { label: 'Abrir', fn: () => openDetail('lead', id) });
@@ -1864,6 +2048,7 @@ function salvarLeadCaptacao() {
   if (!nome) return erroCampo('fc-nome', 'Precisa do nome do proprietário.');
   run(`INSERT INTO captacao_lp (nome,telefone,endereco,tipo_imovel,motivo) VALUES (?,?,?,?,?)`,
     [nome, val('fc-telefone'), val('fc-endereco'), val('fc-tipo'), val('fc-motivo')]);
+  limparRascunho();
   closeSheet();
   renderCaptacoes();
   showToast('Captação salva.', { label: 'Ver', fn: () => go('cr') });
@@ -1881,6 +2066,7 @@ function salvarImovel() {
   const id = insertAndGetId(`INSERT INTO imovel (nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro,endereco,lat,lng) VALUES (?,?,?,?,?,?,'ativo',?,?,?,?)`,
     [nome, val('fi-tipo'), valor, maxPrio + 1, probMap[prio], val('fi-estrategia'), val('fi-bairro'), val('fi-endereco'), g.lat || null, g.lng || null]);
   window.__geo = null;
+  limparRascunho();
   closeSheet();
   renderVI(); renderCalcImovelSelect();
   showToast('Imóvel salvo.', { label: 'Abrir', fn: () => openDetail('imovel', id) });
@@ -1890,6 +2076,7 @@ function salvarCliente() {
   if (!nome) return erroCampo('fcli-nome', 'Precisa do nome pra salvar.');
   const id = insertAndGetId(`INSERT INTO cliente (nome,telefone,email,tipo,observacoes) VALUES (?,?,?,?,?)`,
     [nome, val('fcli-telefone'), val('fcli-email'), val('fcli-tipo'), val('fcli-obs')]);
+  limparRascunho();
   closeSheet();
   renderCLI();
   showToast('Cliente salvo.', { label: 'Abrir', fn: () => openDetail('cliente', id) });
@@ -1901,6 +2088,7 @@ function salvarVisita() {
   const hora = val('fvi-hora'); if (!hora) return erroCampo('fvi-hora', 'Escolha a hora.');
   const id = insertAndGetId(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,'pendente')`,
     [imovelId, val('fvi-lead') || null, data, hora]);
+  limparRascunho();
   closeSheet();
   renderAG(); renderHJ();
   showToast('Visita agendada.', { label: 'Abrir', fn: () => abrirVisita(id) });
@@ -1989,7 +2177,7 @@ function seedDatabase() {
   db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, beatriz, todayISO(1), '10:00', 'confirmada']);
   db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [c2, rodrigo, todayISO(1), '18:00', 'pendente']);
 
-  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status) VALUES (?,?,?,?,?)`, [rodrigo, 7, 'E-mail', 'Conteúdo de valor', 'agendado']);
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [rodrigo, 7, 'E-mail', 'Conteúdo de valor', 'agendado', todayISO(-1)]);
 
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Renata Kunz', TEST_PHONES[0 % 3], 'Ex-cliente', 'Fechou V1 · Vista Verde, há 12 dias', todayISO(-12)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Dias', TEST_PHONES[1 % 3], 'Comprador', 'Parceiro da Renata Kunz no fechamento', todayISO(-12)]);
@@ -2028,7 +2216,11 @@ async function boot() {
       seedDatabase();
     }
     renderAll();
-    go('hj');
+    // lido antes de iniciarHistorico(), que apaga o ?acao= do endereço
+    const urlAtalho = atalhoPendente || location.href;
+    atalhoPendente = null;
+    iniciarHistorico();
+    executarAtalho(urlAtalho);
   } catch (e) {
     // A tela de boot cobre o app inteiro — sem uma saída aqui, um banco salvo corrompido
     // deixava o app instalado preso nesta tela pra sempre.
@@ -2053,8 +2245,10 @@ async function resetDb() {
   db = new SQL.Database();
   seedDatabase();
   crFilter = 'novo';
+  // rascunhos, roteiros e o que o sino já mostrou pertencem ao banco apagado
+  try { Object.keys(localStorage).filter(k => /^(rascunho|roteiro|sino):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
   renderAll();
-  go('hj');
+  colapsarPilha();
   showToast('Banco recomeçado do zero.');
 }
 function exportDb() {
@@ -2088,6 +2282,7 @@ function importDb(evt) {
     }
     persist(); persistNow();
     renderAll();
+    colapsarPilha();
     evt.target.value = '';
     showToast('Banco importado.');
   };
@@ -2624,8 +2819,54 @@ function heroPendenciaHTML(r) {
     <div class="hero__what">${objLink('lead', leadId, r.lead_nome || r.nome)}</div>
     <div class="hero__who">${r.proximo_passo ? esc(r.proximo_passo) : 'sem próximo passo definido'}</div>
     ${principal}${outra}
+    <div class="pend-acts">
+      <button class="btn" onclick="pendFeito('${r._tipo}', ${r._tipo === 'seq' ? r.id : leadId})">${ico('check')}Feito</button>
+      <button class="btn" onclick="pendAdiar('${r._tipo}', ${r._tipo === 'seq' ? r.id : leadId})">${ico('relogio')}Adiar</button>
+    </div>
   </div>`;
 }
+// ---------- follow-up: feito e adiar (rodada 33, A2) ----------
+// A linha do Hoje sabe se é follow-up agendado ('seq', id da sequência) ou lead parado em
+// "contato" sem follow-up ('lead', id do lead) — marcar "Feito" no errado apagaria outro.
+function pendFeito(tipo, id) {
+  let desfazer;
+  if (tipo === 'seq') {
+    run(`UPDATE sequencia_contato SET status='feito' WHERE id=?`, [id]);
+    desfazer = () => run(`UPDATE sequencia_contato SET status='agendado' WHERE id=?`, [id]);
+  } else {
+    // lead sem follow-up: registrar o contato já marca o próximo, em 2 dias
+    const novo = insertAndGetId(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
+      [id, 2, 'WhatsApp', 'Retomar contato', todayISO(2)]);
+    desfazer = () => run(`DELETE FROM sequencia_contato WHERE id=?`, [novo]);
+  }
+  vibrar(); renderHJ();
+  showToast(tipo === 'seq' ? 'Follow-up feito.' : 'Contato feito · volta em 2 dias.', { label: 'Desfazer', fn: () => { desfazer(); renderHJ(); } });
+}
+function pendAdiar(tipo, id) {
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Adiar</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Sai do Hoje e volta no dia escolhido.</p>
+    <div class="acoes-3">
+      ${[['Amanhã', 1], ['Em 3 dias', 3], ['Em 7 dias', 7]].map(([t, n]) => `<button class="btn" onclick="confirmarAdiar('${tipo}', ${id}, ${n})">${t}</button>`).join('')}
+    </div>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false });
+}
+function confirmarAdiar(tipo, id, dias) {
+  const quando = todayISO(dias);
+  let desfazer;
+  if (tipo === 'seq') {
+    const antes = (q('SELECT vence_em FROM sequencia_contato WHERE id=?', [id])[0] || {}).vence_em || null;
+    run(`UPDATE sequencia_contato SET vence_em=? WHERE id=?`, [quando, id]);
+    desfazer = () => run(`UPDATE sequencia_contato SET vence_em=? WHERE id=?`, [antes, id]);
+  } else {
+    const novo = insertAndGetId(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
+      [id, dias, 'WhatsApp', 'Retomar contato', quando]);
+    desfazer = () => run(`DELETE FROM sequencia_contato WHERE id=?`, [novo]);
+  }
+  closeSheet(); renderHJ();
+  showToast('Adiado pra ' + fmtDataCurta(quando) + '.', { label: 'Desfazer', fn: () => { desfazer(); renderHJ(); } });
+}
+
 function visitasDe(data) {
   return q(`SELECT v.*, i.nome as imovel_nome, i.codigo, i.bairro, i.endereco, i.lat, i.lng,
                    l.nome as lead_nome, l.telefone
@@ -2642,17 +2883,24 @@ function horaPassou(v) {
 // Pendências do dia sem repetição. Rodada 33: as consultas tinham LIMIT 2 (o contador
 // nunca passava de 2), misturavam linha de follow-up com linha de lead usando r.lead_id||r.id,
 // e a mesma pessoa aparecia no destaque, nas visitas e na lista.
+function quandoVence(ymd) {
+  if (!ymd) return 'vence hoje';
+  const dias = Math.round((dataLocal(todayISO(0)) - dataLocal(ymd)) / 86400000);
+  return dias <= 0 ? 'vence hoje' : 'atrasado ' + plural(dias, 'dia', 'dias');
+}
 function pendenciasDoDia(leadsComVisita) {
   const vistos = new Set(leadsComVisita);
   const out = [];
   q(`SELECT sc.*, l.nome as lead_nome, l.telefone, l.proximo_passo, l.imovel_id, i.codigo, i.nome as imovel_nome
      FROM sequencia_contato sc JOIN lead l ON l.id=sc.lead_id LEFT JOIN imovel i ON i.id=l.imovel_id
-     WHERE sc.status='agendado' ORDER BY sc.dia`).forEach(r => {
+     WHERE sc.status='agendado' AND (sc.vence_em IS NULL OR sc.vence_em <= ?) ORDER BY sc.vence_em, sc.dia`, [todayISO(0)]).forEach(r => {
     if (vistos.has(r.lead_id)) return; vistos.add(r.lead_id);
-    out.push(Object.assign(r, { _tipo: 'seq', _leadId: r.lead_id, _quando: 'dia ' + r.dia + ' · ' + (r.canal || '') }));
+    out.push(Object.assign(r, { _tipo: 'seq', _leadId: r.lead_id, _quando: [quandoVence(r.vence_em), r.canal].filter(Boolean).join(' · ') }));
   });
+  // lead em "contato" com follow-up marcado pra frente não é pendência de hoje
   q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
-     WHERE l.estagio='contato' ORDER BY l.criado_em`).forEach(r => {
+     WHERE l.estagio='contato' AND NOT EXISTS (SELECT 1 FROM sequencia_contato s WHERE s.lead_id=l.id AND s.status='agendado')
+     ORDER BY l.criado_em`).forEach(r => {
     if (vistos.has(r.id)) return; vistos.add(r.id);
     out.push(Object.assign(r, { _tipo: 'lead', _leadId: r.id, _quando: fmtRelDate(r.criado_em) }));
   });
@@ -2927,31 +3175,123 @@ function cCalcCMA() {
 }
 
 // ---------- notificações ----------
+// Rodada 33 (A2): o sino acendia com qualquer lead novo e com a "última nota" — quase
+// sempre aceso, então ninguém olhava. Agora só acende com o que pede ação agora, por
+// regra de tempo, e o que já foi visto não reacende.
+function alertasDoSino() {
+  const n = new Date(), agoraMin = n.getHours() * 60 + n.getMinutes(), out = [];
+  const sql = `SELECT v.id, v.data, v.hora, v.status, i.nome as imovel_nome, l.nome as lead_nome FROM visita v JOIN imovel i ON i.id=v.imovel_id
+               LEFT JOIN lead l ON l.id=v.lead_id WHERE v.data=? AND v.fim IS NULL`;
+  q(sql + ` AND v.inicio IS NULL ORDER BY v.hora`, [todayISO(0)]).forEach(v => {
+    const [hh, mm] = String(v.hora || '').split(':').map(Number);
+    if (isNaN(hh)) return;
+    const falta = hh * 60 + (mm || 0) - agoraMin;
+    if (falta < -30 || falta > 60) return;
+    out.push({ id: 'checkin:' + v.id + ':' + v.data, ic: 'visita',
+      t: (falta > 0 ? 'Visita em ' + falta + ' min' : 'Visita agora') + ' · ' + v.hora,
+      s: [v.lead_nome, v.imovel_nome, 'sem check-in'].filter(Boolean).join(' · '), go: `abrirVisita(${v.id})` });
+  });
+  q(sql + ` AND v.status='pendente' ORDER BY v.hora`, [todayISO(1)]).forEach(v => {
+    out.push({ id: 'amanha:' + v.id + ':' + v.data, ic: 'conversa', t: 'Confirmar a visita de amanhã · ' + v.hora,
+      s: [v.lead_nome, v.imovel_nome].filter(Boolean).join(' · '), go: `abrirAvisar(${v.id})` });
+  });
+  return out;
+}
+function sinoVistos() { try { return JSON.parse(localStorage.getItem('sino:vistos:v1') || '[]'); } catch (e) { return []; } }
 function abrirNotificacoes() {
-  const hoje = todayISO(0);
-  const items = [];
-  const novosLeads = q(`SELECT id, nome, criado_em FROM lead WHERE estagio='novo' ORDER BY criado_em DESC LIMIT 1`);
-  if (novosLeads.length) items.push({ ic: 'leads', t: 'Novo lead — ' + novosLeads[0].nome, s: fmtRelDate(novosLeads[0].criado_em), go: `openDetail('lead', ${novosLeads[0].id})` });
-  const prox = q(`SELECT v.id, v.hora, i.nome as imovel_nome, l.nome as lead_nome FROM visita v JOIN imovel i ON i.id=v.imovel_id
-                  LEFT JOIN lead l ON l.id=v.lead_id WHERE v.data=? AND v.status='confirmada' AND v.fim IS NULL ORDER BY v.hora LIMIT 1`, [hoje]);
-  if (prox.length) items.push({ ic: 'agenda', t: 'Visita confirmada — ' + prox[0].hora, s: (prox[0].lead_nome || '') + ' · ' + prox[0].imovel_nome, go: `abrirVisita(${prox[0].id})` });
-  const ultima = q(`SELECT * FROM nota ORDER BY criado_em DESC, id DESC LIMIT 1`);
-  if (ultima.length) items.push({ ic: 'mic', t: 'Última nota registrada', s: (ultima[0].texto || '').slice(0, 54) + '...', go: `go('nt')` });
+  const items = alertasDoSino();
+  try { localStorage.setItem('sino:vistos:v1', JSON.stringify([...new Set(sinoVistos().concat(items.map(i => i.id)))].slice(-100))); } catch (e) { /* ok */ }
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">Notificações</h2>
     ${items.length ? items.map(it => `<button class="card card--tap row" onclick="closeSheet();${it.go}">
         <span class="row__ico">${ico(it.ic)}</span>
         <span class="row__main"><span class="row__t">${esc(it.t)}</span><span class="row__s">${esc(it.s)}</span></span>
         ${ico('chevron', 'row__chev')}</button>`).join('')
-      : `<div class="empty">${ico('sino')}<p>Sem notificações novas.</p></div>`}
+      : `<div class="empty">${ico('sino')}<p>Nada pedindo ação agora.</p></div>
+         <p class="muted" style="margin:0">O sino acende com visita em até 1 hora ainda sem check-in e com visita de amanhã ainda não confirmada.</p>`}
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { top: true, foco: false });
-  document.getElementById('bell').classList.remove('has-new');
+  atualizarSino();
 }
 function atualizarSino() {
-  // o ponto do sino era estático no HTML: ficava aceso pra sempre, tivesse ou não novidade
-  const novos = q(`SELECT COUNT(*) c FROM lead WHERE estagio='novo'`)[0].c;
-  const hojeConf = q(`SELECT COUNT(*) c FROM visita WHERE data=? AND fim IS NULL`, [todayISO(0)])[0].c;
-  document.getElementById('bell').classList.toggle('has-new', (novos + hojeConf) > 0);
+  const bell = document.getElementById('bell'); if (!bell || !db) return;
+  const vistos = sinoVistos();
+  const novos = alertasDoSino().filter(a => !vistos.includes(a.id)).length;
+  bell.classList.toggle('has-new', novos > 0);
+  bell.setAttribute('aria-label', novos ? 'Notificações: ' + plural(novos, 'nova', 'novas') : 'Notificações');
+}
+// regra de tempo: sem relógio o sino não acenderia uma hora antes da visita
+setInterval(() => { if (document.visibilityState === 'visible') atualizarSino(); }, 60000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && db) { atualizarSino(); renderHJ(); } });
+
+// ---------- tamanho do texto (rodada 33, A2) ----------
+function setTamanhoTexto(tx) {
+  const r = document.documentElement;
+  if (tx === '100') r.removeAttribute('data-texto'); else r.setAttribute('data-texto', tx);
+  // o Chrome não recalcula na hora o tamanho dos elementos já desenhados quando só o
+  // atributo do <html> muda (medido: só o que era desenhado depois pegava a escala nova)
+  const b = document.body; b.style.display = 'none'; void b.offsetHeight; b.style.display = '';
+  try { if (tx === '100') localStorage.removeItem('texto:v1'); else localStorage.setItem('texto:v1', tx); } catch (e) { /* ok */ }
+  marcarTamanhoTexto();
+}
+function marcarTamanhoTexto() {
+  const atual = document.documentElement.getAttribute('data-texto') || '100';
+  document.querySelectorAll('#seg-texto .chip').forEach(b => { const on = b.dataset.tx === atual; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+}
+
+// ---------- atalhos do ícone (rodada 33, A2) ----------
+// Segurar o ícone do app mostra três atalhos (manifest "shortcuts"), que dá pra arrastar
+// pra tela inicial. Chegam como ?acao=... — lido uma vez e apagado do endereço. Nada que
+// grava roda sem toque: "voz" abre a nota de voz sem começar a gravar.
+const ACOES_ATALHO = {
+  voz: () => { limparNotaCtx(); go('nt'); setNoteMode('audio'); setTimeout(() => { const b = document.getElementById('mic-btn'); if (b) b.focus({ preventScroll: true }); }, 80); },
+  agora: () => { go('hj'); },
+  lead: () => { go('hj'); openForm('lead-venda'); }
+};
+let atalhoPendente = null, ultimoAtalho = { acao: null, t: 0 };
+function executarAtalho(url) {
+  let acao = null;
+  try { acao = new URL(url, location.href).searchParams.get('acao'); } catch (e) { /* ok */ }
+  if (!acao || !ACOES_ATALHO[acao]) return;
+  // launchQueue e o endereço da página podem entregar o mesmo atalho duas vezes
+  if (ultimoAtalho.acao === acao && Date.now() - ultimoAtalho.t < 2000) return;
+  ultimoAtalho = { acao, t: Date.now() };
+  ACOES_ATALHO[acao]();
+}
+// com launch_handler "focus-existing", o app já aberto recebe o atalho aqui, sem recarregar
+if ('launchQueue' in window) {
+  window.launchQueue.setConsumer(p => { if (!p || !p.targetURL) return; if (db) executarAtalho(p.targetURL); else atalhoPendente = p.targetURL; });
+}
+
+// ---------- lembrete na agenda do celular (rodada 33, A2) ----------
+// Link do Google Agenda em vez de .ics: no Android abre a agenda já preenchida. O link
+// não escolhe o horário do alarme — vale o lembrete padrão da agenda da pessoa, e a
+// folha diz isso antes. O .ics fica pra depois de testado em aparelho.
+function linkGoogleAgenda(v) {
+  const hora = v.hora || '10:00';
+  const [hh, mm] = hora.split(':').map(Number);
+  const ini = dataLocal(v.data); ini.setHours(hh, mm || 0, 0, 0);
+  const fim = new Date(ini.getTime() + 3600000);
+  const fmt = d => localYMD(d).replace(/-/g, '') + 'T' + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0') + '00';
+  let fuso = 'America/Sao_Paulo';
+  try { fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || fuso; } catch (e) { /* ok */ }
+  const p = new URLSearchParams({
+    action: 'TEMPLATE', text: 'Visita · ' + v.imovel_nome + (v.lead_nome ? ' · ' + v.lead_nome : ''),
+    dates: fmt(ini) + '/' + fmt(fim), ctz: fuso, location: v.endereco || v.bairro || '', details: 'Visita agendada no OHubImob Campo.'
+  });
+  return 'https://calendar.google.com/calendar/render?' + p.toString();
+}
+function lembreteVisita(id) {
+  const v = visitaFull(id); if (!v) return;
+  const abrir = () => window.open(linkGoogleAgenda(v), '_blank', 'noopener');
+  let explicado = false;
+  try { explicado = localStorage.getItem('lembrete:explicado') === '1'; } catch (e) { /* ok */ }
+  if (explicado) return abrir();
+  window.__lembrete = () => { try { localStorage.setItem('lembrete:explicado', '1'); } catch (e) { /* ok */ } closeSheet(); abrir(); };
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Lembrete na agenda</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Abre o Google Agenda com a visita preenchida — confira e toque em Salvar lá. O aviso chega no horário do lembrete padrão da sua agenda, em geral 30 minutos antes.</p>
+    <button class="btn btn--primary btn--block" onclick="window.__lembrete()">${ico('externo')}Abrir o Google Agenda</button>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Agora não</button>`, { foco: false });
 }
 
 // =============================================================================
@@ -3027,14 +3367,16 @@ function renderVisita() {
   if (v.fim) {
     body.innerHTML = `
       <div class="card card--accent">
-        <div class="eyebrow">Visita encerrada</div>
+        <div class="eyebrow">${v.desfecho === 'Cancelada' ? 'Visita cancelada' : v.desfecho === 'Não compareceu' ? 'Cliente não compareceu' : 'Visita encerrada'}</div>
         <h2 style="font-family:var(--font-display);font-weight:700;font-size:var(--t-xl);margin:2px 0 var(--s2)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</h2>
         ${linhaCampo('Com quem', v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : '—')}
         ${linhaCampo('Desfecho', esc(v.desfecho || '—'))}
         ${linhaCampo('Objeção', esc(v.objecao || '—'))}
         ${linhaCampo('Próximo passo', esc(v.proximo_passo || '—'))}
-        ${linhaCampo('Duração', esc(fmtDuracao(v.inicio, v.fim)))}
+        ${v.inicio ? linhaCampo('Duração', esc(fmtDuracao(v.inicio, v.fim))) : ''}
       </div>
+      ${v.desfecho === 'Cancelada' || v.desfecho === 'Não compareceu'
+        ? `<button class="btn btn--primary btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>` : ''}
       <h2 class="blk-title">Notas desta visita</h2>
       ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nenhuma nota registrada.</p></div>`}`;
     return;
@@ -3061,6 +3403,13 @@ function renderVisita() {
       <button class="btn btn--grow" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Ir</button>
     </div>
 
+    ${!v.inicio ? `<div class="acoes-2">
+      <button class="btn" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>
+      <button class="btn" onclick="lembreteVisita(${v.id})">${ico('sino')}Lembrete</button>
+      <button class="btn" onclick="naoCompareceu(${v.id})">${ico('alerta')}Não veio</button>
+      <button class="btn" onclick="cancelarVisita(${v.id})">${ico('x')}Cancelar</button>
+    </div>` : ''}
+
     <h2 class="blk-title">Roteiro</h2>
     <div class="card">
       <ul class="roteiro">
@@ -3085,6 +3434,64 @@ function renderVisita() {
     }, 1000);
   }
 }
+// ---------- remarcar, cancelar, não compareceu (rodada 33, A2) ----------
+// Nada se remarcava nem se cancelava: visita que não aconteceu ficava "pendente" pra
+// sempre. Cancelar e "não veio" encerram (fim preenchido), então saem do Hoje e da Rota
+// pelas mesmas consultas de sempre; não mexem no estágio do lead nem oferecem agradecer.
+function remarcarVisitaSheet(id) {
+  const v = visitaFull(id); if (!v) return;
+  if (v.inicio && !v.fim) return showToastErr('A visita já começou: encerre antes de remarcar.');
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Remarcar visita</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}${v.lead_nome ? ' · ' + esc(v.lead_nome) : ''}</p>
+    <form id="form-remarcar" onsubmit="event.preventDefault();confirmarRemarcar(${id})" novalidate>
+      <div class="field-grid">
+        ${campo('fre-data', 'Data', `<input id="fre-data" type="date" value="${esc(v.fim || v.data < todayISO(0) ? todayISO(1) : v.data)}">`)}
+        ${campo('fre-hora', 'Hora', `<input id="fre-hora" type="time" value="${esc(v.hora || '10:00')}">`)}
+      </div>
+      <div class="chip-row" style="flex-wrap:wrap;overflow:visible;margin-top:calc(var(--s2) * -1)">
+        <button type="button" class="chip" onclick="dataRapida(0,'fre-data')">Hoje</button>
+        <button type="button" class="chip" onclick="dataRapida(1,'fre-data')">Amanhã</button>
+        <button type="button" class="chip" onclick="dataRapida('sab','fre-data')">Sábado</button>
+      </div>
+      <div class="chip-row" style="flex-wrap:wrap;overflow:visible">
+        ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="document.getElementById('fre-hora').value='${h}'">${h.slice(0, 2)}h</button>`).join('')}
+      </div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Remarcar</button>
+        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+      </div>
+    </form>`, { foco: false });
+}
+function restaurarVisita(id, a) {
+  run(`UPDATE visita SET data=?, hora=?, status=?, fim=?, desfecho=? WHERE id=?`, [a.data, a.hora, a.status, a.fim, a.desfecho, id]);
+  renderAll(); if (viewAtual === 'visita') renderVisita();
+}
+function antesDaVisita(v) { return { data: v.data, hora: v.hora, status: v.status, fim: v.fim, desfecho: v.desfecho }; }
+function confirmarRemarcar(id) {
+  const v = visitaFull(id); if (!v) return;
+  const data = val('fre-data'); if (!data) return erroCampo('fre-data', 'Escolha a data.');
+  const hora = val('fre-hora'); if (!hora) return erroCampo('fre-hora', 'Escolha a hora.');
+  const antes = antesDaVisita(v);
+  run(`UPDATE visita SET data=?, hora=?, status='pendente', fim=NULL, desfecho=NULL WHERE id=?`, [data, hora, id]);
+  closeSheet(); renderAll(); if (viewAtual === 'visita') renderVisita();
+  const quando = (data === todayISO(0) ? 'hoje' : data === todayISO(1) ? 'amanhã' : fmtDataCurta(data)) + ' às ' + hora;
+  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Aqui é ${CORRETOR_NOME}. Podemos passar nossa visita (${v.imovel_nome}) pra ${quando}?`;
+  showToast('Remarcada pra ' + quando + '.', v.telefone
+    ? { label: 'Avisar', fn: () => abrirWhats(v.telefone, msg) }
+    : { label: 'Desfazer', fn: () => restaurarVisita(id, antes) });
+}
+function encerrarSemVisita(id, desfecho, status, msg) {
+  const v = visitaFull(id); if (!v) return;
+  if (v.inicio) return showToastErr('A visita já começou: use Encerrar visita.');
+  const antes = antesDaVisita(v);
+  run(`UPDATE visita SET status=?, fim=?, desfecho=? WHERE id=?`, [status, agoraISO(), desfecho, id]);
+  vibrar(); renderAll(); if (viewAtual === 'visita') renderVisita();
+  showToast(msg, { label: 'Desfazer', fn: () => restaurarVisita(id, antes) });
+}
+function cancelarVisita(id) { encerrarSemVisita(id, 'Cancelada', 'cancelada', 'Visita cancelada.'); }
+function naoCompareceu(id) { encerrarSemVisita(id, 'Não compareceu', 'nao_compareceu', 'Registrado: o cliente não compareceu.'); }
+
 function marcarRoteiro(i) { roteiroMarcado[i] = !roteiroMarcado[i]; gravarRoteiro(visitaAtivaId); renderVisita(); }
 // Abrir a captura daqui já carrega o contexto: a nota nasce com visita_id, lead_id e
 // imovel_id preenchidos. É o conserto do bug de raiz da nota órfã.
@@ -3116,6 +3523,7 @@ function notaDaVisita(id, modo) {
     <p class="muted" style="margin:0 0 var(--s3)">Ligada a ${esc(notaCtx ? notaCtx.referencia : '')}</p>${corpo}
     <button class="btn btn--block sheet__close" onclick="closeSheet()">${ico('voltar')}Voltar pra visita</button>`,
     { foco: modo === 'texto', aoFechar: () => { if (recognizing) { try { recognition.stop(); } catch (e) {} } limparNotaCtx(); } });
+  if (modo === 'texto') ligarRascunho('nota-visita:' + id, document.getElementById('sheet-body'));
 }
 let fotoVisitaDataUrl = null;
 function onFotoVisita(evt) {
@@ -3139,6 +3547,7 @@ function salvarNotaTextoVisita() {
   const t = el ? el.value.trim() : '';
   if (!t) { if (el) el.focus(); return showToastErr('Escreva alguma coisa antes de salvar.'); }
   gravarNota('texto', refNota('Nota da visita'), t, null);
+  limparRascunho();
   vibrar(); closeSheet();
 }
 
@@ -3179,6 +3588,7 @@ function encerrarVisitaSheet(id) {
       <input id="enc-objecao" placeholder="Ex.: achou o condomínio caro"></div>
     <div class="field"><label for="enc-proximo">Próximo passo</label>
       <input id="enc-proximo" value="" placeholder="escolha como terminou" oninput="this.dataset.auto='0'"></div>
+    <input type="hidden" id="enc-desfecho" value="">
     <p class="muted" id="enc-resumo">Escolha como a visita terminou.</p>
     <div class="btn-row" style="margin-top:var(--s4)">
       <button class="btn btn--primary btn--grow" onclick="confirmarEncerramento(${id})">Encerrar</button>
@@ -3187,9 +3597,13 @@ function encerrarVisitaSheet(id) {
   // Rodada 33: vinha marcado "Quer fazer proposta" — passar direto registrava o desfecho
   // errado e movia o lead pra Proposta. Agora a escolha é obrigatória.
   window.__desfecho = null;
+  ligarRascunho('encerrar:' + id, document.getElementById('sheet-body'),
+    campos => { if (campos['enc-desfecho'] !== undefined && campos['enc-desfecho'] !== '') escolherDesfecho(+campos['enc-desfecho']); });
 }
 function escolherDesfecho(i) {
   window.__desfecho = i;
+  const h = document.getElementById('enc-desfecho');
+  if (h && h.value !== String(i)) { h.value = String(i); guardarRascunho(); }
   document.querySelectorAll('#desfecho-chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.i === i));
   const d = DESFECHOS[i];
   const prox = document.getElementById('enc-proximo');
@@ -3210,8 +3624,8 @@ function confirmarEncerramento(id) {
 
   if (v.lead_id) {
     run(`UPDATE lead SET estagio=?, proximo_passo=? WHERE id=?`, [d.estagio, proximo, v.lead_id]);
-    run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status) VALUES (?,?,?,?,'agendado')`,
-      [v.lead_id, d.dias, d.canal, proximo]);
+    run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
+      [v.lead_id, d.dias, d.canal, proximo, todayISO(d.dias)]);
   }
   // o que o corretor marcou no roteiro vira nota da visita, sem digitar de novo
   if (marcadas.length || objecao) {
@@ -3221,6 +3635,7 @@ function confirmarEncerramento(id) {
       ['Fecho da visita · ' + nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }), texto, horaAgora(), id, v.lead_id, v.imovel_id]);
   }
   try { localStorage.removeItem('roteiro:v1:' + id); } catch (e) { /* ok */ }
+  limparRascunho();
   roteiroMarcado = {};
   vibrar();
   closeSheet();
@@ -3378,7 +3793,7 @@ function usarMinhaPosicaoNaRota() {
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
   renderCalcImovelSelect(); cCalcFin(); cCalcCom(); renderCamLinkSelects(); renderInstallBox();
-  atualizarSino();
+  atualizarSino(); marcarTamanhoTexto();
   const n = q('SELECT COUNT(*) c FROM imovel')[0].c;
   const nl = q('SELECT COUNT(*) c FROM lead')[0].c;
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';
