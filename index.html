@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2A2B2D">
@@ -39,7 +39,7 @@
 
   /* ---- linha ---- */
   --border: #DCDAD3;
-  --border-2: #8E8B82;
+  --border-2: #86837A;   /* rodada 33: #8E8B82 dava 2,96:1 contra o fundo — virou borda de campo e precisa de 3:1 */
 
   /* ---- marca ----
      --graphite e --brand são CONSTANTES: são a medição do logo, não mudam com o
@@ -292,7 +292,7 @@ a { color: inherit; text-decoration: none; }
 .chip {
   flex: none; min-height: 38px; display: inline-flex; align-items: center;
   padding: 0 var(--s3); border-radius: var(--r-pill);
-  border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+  border: 1px solid var(--border-2); background: var(--surface); color: var(--text-2);
   font-size: var(--t-sm); font-weight: 600; cursor: pointer;
   transition: background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
@@ -316,11 +316,13 @@ a { color: inherit; text-decoration: none; }
 }
 .field input, .field select, .field textarea {
   width: 100%; min-height: var(--tap); padding: var(--s2) var(--s3);
-  border: 1px solid var(--border); border-radius: var(--r-sm);
-  background: var(--bg); color: var(--text); font-size: var(--t-md);
+  border: 1px solid var(--border-2); border-radius: var(--r-sm);
+  /* rodada 33: campo e folha tinham o mesmo fundo e a borda ficava a 1,22:1 — no sol o
+     campo sumia. Fundo de cartão + borda forte: 3,41:1 no claro, 3,1:1 no escuro. */
+  background: var(--surface); color: var(--text); font-size: var(--t-md);
   transition: border-color var(--dur-1) var(--ease);
 }
-.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--border-2); }
+.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--text-3); }
 .field textarea { resize: none; min-height: 88px; line-height: 1.45; }
 .field .help { font-size: var(--t-xs); color: var(--text-3); margin-top: var(--s1); }
 .field .err { font-size: var(--t-xs); color: var(--danger); margin-top: var(--s1); display: none; }
@@ -341,11 +343,12 @@ a { color: inherit; text-decoration: none; }
 /* ---- busca ---- */
 .search {
   display: flex; align-items: center; gap: var(--s2);
-  background: var(--surface); border: 1px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border-2);
   border-radius: var(--r-sm); padding: 0 var(--s3); margin-bottom: var(--s3);
   min-height: var(--tap); color: var(--text-3);
 }
 .search input { flex: 1; min-width: 0; border: none; background: none; outline: none; color: var(--text); font-size: var(--t-md); }
+.search:focus-within { outline: 2px solid var(--ring); outline-offset: 2px; }
 
 /* ---- estado vazio ---- */
 .empty {
@@ -388,7 +391,9 @@ a { color: inherit; text-decoration: none; }
    Substitui os 15 alert()/confirm() que eram o canal de "salvo" e de validação.
    Aceita uma ação — "Lead salvo · Abrir" leva direto ao objeto criado. */
 .toast {
-  position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom));
+  /* rodada 33: a 96px o toast encostava no FAB (82px + 56px) em telas de 360px e o toque
+     no FAB caía no "Desfazer". Sobe acima do FAB. */
+  position: fixed; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom));
   transform: translateX(-50%) translateY(12px);
   display: flex; align-items: center; gap: var(--s3);
   background: var(--graphite); color: #F5F5F4;
@@ -400,9 +405,10 @@ a { color: inherit; text-decoration: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 .toast__msg { flex: 1; min-width: 0; }
-.toast__act { background: none; border: none; color: var(--brand); font: inherit; font-weight: 700; cursor: pointer; flex: none; padding: 0; }
-.toast--err { background: var(--danger); color: #fff; }
-.toast--err .toast__act { color: #fff; text-decoration: underline; }
+.toast__act { background: none; border: none; color: var(--brand); font: inherit; font-weight: 700; cursor: pointer; flex: none;
+  min-height: 44px; padding: 0 var(--s3); margin: -10px calc(var(--s3) * -1) -10px 0; }
+.toast--err { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+.toast--err .toast__act { color: var(--danger); text-decoration: underline; }
 
 /* ---- barra superior ---- */
 .topbar {
@@ -468,6 +474,18 @@ a { color: inherit; text-decoration: none; }
 .tile .ic { color: var(--brand-text); margin-bottom: var(--s2); }
 .tile__n { font-weight: 600; font-size: var(--t-md); }
 .tile__p { font-size: var(--t-xs); color: var(--text-3); }
+
+/* ---- toque ----
+   Rodada 33: .btn--sm tinha 36px, chip 38px, "ver tudo" e "mais detalhes" ~20-36px,
+   apesar da regra de 44px declarada no topo deste arquivo. Só em ponteiro grosso, pra
+   não inflar a interface de mouse do portal no desktop. */
+@media (pointer: coarse) {
+  .btn--sm { min-height: var(--tap); }
+  .btn--icon.btn--sm { width: var(--tap); }
+  .chip { min-height: var(--tap); }
+  .blk-title .jump { min-height: var(--tap); padding: 0 var(--s2); margin-right: calc(var(--s2) * -1); }
+  .fold > summary { min-height: var(--tap); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -547,6 +565,36 @@ a { color: inherit; text-decoration: none; }
   .boot .mark { width: 46px; height: 37px; color: var(--brand); }
   .boot-spinner { width: 24px; height: 24px; border-radius: 50%; border: 3px solid rgba(245,245,244,0.22); border-top-color: var(--brand); animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ======================= rodada 33 — leitura na rua ======================= */
+  /* Rótulo em caixa baixa e 14px: caixa alta pequena com espaçamento é lida letra a
+     letra. Fica aqui (não no componente) porque é legibilidade do app de campo. */
+  .field > label { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; color: var(--text-2); }
+  .blk-title { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; font-weight: 700; color: var(--text-2); }
+  .eyebrow { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; }
+  .live__l, .note-tag, .data-box h4 { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; }
+  .btn--sm, .tab-btn, .tile__p, .foot-count, .app-btn { font-size: var(--t-sm); }
+  .pill, .row__meta, .topbar__state { font-size: 0.84rem; }
+  .field .help, .field .err { font-size: var(--t-sm); }
+  /* <select> abaixo de 16px faz o iPhone dar zoom no foco e não voltar */
+  select, input, textarea { font-size: max(16px, var(--t-md)); }
+
+  /* teclado: com interactive-widget=resizes-content a página encolhe quando o teclado
+     abre; a folha usa dvh, os botões ficam presos no pé e abas e FAB somem */
+  .sheet { max-height: 88dvh; }
+  .sheet__acts { position: sticky; bottom: calc(var(--s5) * -1 - env(safe-area-inset-bottom)); background: var(--bg);
+    padding: var(--s3) 0 calc(var(--s5) + env(safe-area-inset-bottom)); margin: var(--s4) 0 calc(var(--s5) * -1 - env(safe-area-inset-bottom)); }
+  body.kb .tabbar, body.kb .fab { display: none; }
+
+  /* Hoje: três ações da visita em três colunas, ícone em cima do rótulo */
+  .hero__acts--3 { grid-template-columns: repeat(3, 1fr); }
+  .hero__acts--3 .btn { flex-direction: column; gap: 2px; min-height: 56px; padding: var(--s1); }
+  .hero__late { color: var(--warn); font-weight: 600; font-size: var(--t-sm); margin: 0 0 var(--s3); }
+
+  /* preço: valor interpretado ao vivo */
+  .preco-lido { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .preco-lido.aviso { color: var(--warn); }
+  .chip-mini { min-height: 36px; }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -675,6 +723,10 @@ a { color: inherit; text-decoration: none; }
           <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Captação
         </button>
       </div>
+      <label class="search">
+        <svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
+        <input id="cr-search" placeholder="Buscar por nome, telefone ou bairro" oninput="renderCR()" aria-label="Buscar lead" autocomplete="off">
+      </label>
       <div class="chip-row" id="cr-chips"></div>
       <div id="cr-list"></div>
       <div class="data-box" id="cr-captacoes-box">
@@ -698,7 +750,7 @@ a { color: inherit; text-decoration: none; }
     <!-- ============================ MAIS ============================ -->
     <section class="panel" id="panel-mais">
       <div class="tile-grid">
-        <button class="tile" onclick="go('nt')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-mic"/></svg><div class="tile__n">Notas</div><div class="tile__p">voz, texto, foto</div></button>
+        <button class="tile" onclick="limparNotaCtx();go('nt')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-mic"/></svg><div class="tile__n">Notas</div><div class="tile__p">voz, texto, foto</div></button>
         <button class="tile" onclick="go('cart')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pasta"/></svg><div class="tile__n">Arquivos</div><div class="tile__p">fotos e documentos</div></button>
         <button class="tile" onclick="go('calc')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-calculadora"/></svg><div class="tile__n">Calculadoras</div><div class="tile__p">financiamento, comissão, CMA</div></button>
         <button class="tile" onclick="go('cli')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pessoa"/></svg><div class="tile__n">Clientes</div><div class="tile__p">cadastro geral</div></button>
@@ -775,7 +827,7 @@ a { color: inherit; text-decoration: none; }
 
     <!-- ============================ ARQUIVOS ============================ -->
     <section class="panel" id="panel-cart">
-      <button class="btn btn--primary btn--block" style="margin-bottom:var(--s3)" onclick="go('nt');setNoteMode('camera')">
+      <button class="btn btn--primary btn--block" style="margin-bottom:var(--s3)" onclick="limparNotaCtx();go('nt');setNoteMode('camera')">
         <svg class="ic" aria-hidden="true"><use href="#i-camera"/></svg>Adicionar arquivo
       </button>
       <h2 class="blk-title">Meus arquivos</h2>
@@ -791,10 +843,10 @@ a { color: inherit; text-decoration: none; }
       <div class="card">
         <p class="muted" style="margin:0 0 var(--s3)">Tabela Price simplificada.</p>
         <div class="field-grid">
-          <div class="field"><label for="c-fin-valor">Valor do imóvel</label><input type="number" id="c-fin-valor" value="620000" oninput="cCalcFin()"></div>
-          <div class="field"><label for="c-fin-entrada">Entrada (%)</label><input type="number" id="c-fin-entrada" value="20" oninput="cCalcFin()"></div>
-          <div class="field"><label for="c-fin-prazo">Prazo (anos)</label><input type="number" id="c-fin-prazo" value="30" oninput="cCalcFin()"></div>
-          <div class="field"><label for="c-fin-taxa">Taxa a.a. (%)</label><input type="number" id="c-fin-taxa" value="10.5" step="0.1" oninput="cCalcFin()"></div>
+          <div class="field"><label for="c-fin-valor">Valor do imóvel</label><input type="text" inputmode="decimal" id="c-fin-valor" value="620.000" oninput="cCalcFin()"></div>
+          <div class="field"><label for="c-fin-entrada">Entrada (%)</label><input type="text" inputmode="decimal" id="c-fin-entrada" value="20" oninput="cCalcFin()"></div>
+          <div class="field"><label for="c-fin-prazo">Prazo (anos)</label><input type="text" inputmode="numeric" id="c-fin-prazo" value="30" oninput="cCalcFin()"></div>
+          <div class="field"><label for="c-fin-taxa">Taxa a.a. (%)</label><input type="text" inputmode="decimal" id="c-fin-taxa" value="10,5" oninput="cCalcFin()"></div>
         </div>
         <div class="card card--sunken" style="margin-bottom:0">
           <div class="calc-hero"><span>Parcela estimada</span><span id="c-fin-parcela">—</span></div>
@@ -804,10 +856,10 @@ a { color: inherit; text-decoration: none; }
 
       <h2 class="blk-title">Comissão</h2>
       <div class="card">
-        <div class="field"><label for="c-com-valor">Valor da venda</label><input type="number" id="c-com-valor" value="1180000" oninput="cCalcCom()"></div>
+        <div class="field"><label for="c-com-valor">Valor da venda</label><input type="text" inputmode="decimal" id="c-com-valor" value="1.180.000" oninput="cCalcCom()"></div>
         <div class="field-grid">
-          <div class="field"><label for="c-com-pct">Comissão (%)</label><input type="number" id="c-com-pct" value="5" step="0.5" oninput="cCalcCom()"></div>
-          <div class="field"><label for="c-com-div">Sua parte (%)</label><input type="number" id="c-com-div" value="50" oninput="cCalcCom()"></div>
+          <div class="field"><label for="c-com-pct">Comissão (%)</label><input type="text" inputmode="decimal" id="c-com-pct" value="5" oninput="cCalcCom()"></div>
+          <div class="field"><label for="c-com-div">Sua parte (%)</label><input type="text" inputmode="decimal" id="c-com-div" value="50" oninput="cCalcCom()"></div>
         </div>
         <div class="card card--sunken" style="margin-bottom:0">
           <div class="calc-hero"><span>Comissão total</span><span id="c-com-total">—</span></div>
@@ -1320,8 +1372,8 @@ function fmtRelDate(iso) {
   const d = localDateOf(iso);
   if (d === todayISO(0)) return 'hoje';
   if (d === todayISO(-1)) return 'ontem';
-  const dias = Math.round((new Date(todayISO(0)) - new Date(d)) / 86400000);
-  return dias >= 0 ? dias + ' dias atrás' : d;
+  const dias = Math.round((dataLocal(todayISO(0)) - dataLocal(d)) / 86400000);
+  return dias >= 0 ? dias + ' dias atrás' : fmtDataCurta(d);
 }
 function horaAgora() {
   const d = new Date();
@@ -1329,6 +1381,24 @@ function horaAgora() {
 }
 function agoraISO() { return localYMD(new Date()) + ' ' + horaAgora(); }
 function nomeImovel(r) { return (r.codigo ? r.codigo + ' · ' : '') + (r.nome || r.imovel_nome || ''); }
+
+// ---------- português ----------
+// Rodada 33: "0 visita(s)", datas ISO cruas e "2.3 km" saíam na tela. E new Date('2026-09-18')
+// é meia-noite UTC — no fuso de Brasília vira 21h do dia anterior e o dia da semana erra.
+function plural(n, um, varios) { return (n === 1 ? '1 ' + um : n + ' ' + varios); }
+const DIAS_SEM = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+function dataLocal(ymd) { const [y, m, d] = String(ymd).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); }
+function fmtDataCurta(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ', ' + d.getDate() + ' ' + MESES[d.getMonth()]; }
+function fmtDuracao(ini, fim) {
+  if (!ini || !fim) return '—';
+  const a = new Date(String(ini).replace(' ', 'T')), b = new Date(String(fim).replace(' ', 'T'));
+  const min = Math.max(0, Math.round((b - a) / 60000));
+  return min < 60 ? min + ' min' : Math.floor(min / 60) + ' h' + (min % 60 ? ' ' + String(min % 60).padStart(2, '0') + ' min' : '');
+}
+function saudacao() { const h = new Date().getHours(); return h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; }
+// vibração curta de confirmação — só Android, só junto de sinal visual, nunca sozinha
+function vibrar() { try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) { /* sem suporte */ } }
 
 // ---------- telefone / WhatsApp ----------
 // Números FICTÍCIOS (bloco 9xxxx-0000, não atribuído). Esta é a build pública de demonstração:
@@ -1339,7 +1409,13 @@ function nextTestPhone() { const p = TEST_PHONES[phoneCycleCounter % TEST_PHONES
 function waDigits(tel) {
   // 10–11 dígitos = DDD + número nacional → prefixa o 55 do Brasil; mais que isso já veio
   // com código de país. Não dá pra decidir por "começa com 55": DDD 55 existe (RS).
+  // Rodada 33: número colado com zero de tronco ("(061) ...") ou com código de operadora
+  // ("0 41 61 ...") virava link internacional errado. Sem "+", zeros e operadora saem.
   let d = (tel || '').replace(/\D/g, '');
+  if (!/^\s*\+/.test(tel || '')) {
+    if (d.startsWith('00')) d = d.slice(2);
+    else if (d.startsWith('0')) { d = d.slice(1); if (d.length >= 12) d = d.slice(2); }
+  }
   if (d.length <= 11) d = '55' + d;
   return d;
 }
@@ -1355,8 +1431,17 @@ function phoneChipHTML(tel) {
 // Substitui os 15 alert()/confirm() que eram o canal de "salvo" e de validação até a
 // rodada 31. alert() trava a tela, não diz onde o objeto foi parar e no Android some
 // atrás do teclado. O toast aceita uma ação — "Lead salvo · Abrir" leva ao objeto.
-let toastTimer;
-function showToast(msg, acao) {
+// Rodada 33: um aviso novo apagava na hora um "Desfazer" ou "Abrir" pendente, e 5 s é pouco
+// pra quem olha o celular em rajadas de 4 s na rua. Aviso com ação espera na fila, fica 8 s
+// e para de contar enquanto o dedo está em cima.
+let toastTimer, toastFila = [], toastAtual = null;
+function showToast(msg, acao, erro) {
+  const item = { msg, acao, erro };
+  if (toastAtual && toastAtual.acao) { toastFila.push(item); return; }
+  mostrarToast(item);
+}
+function mostrarToast(item) {
+  toastAtual = item;
   let t = document.getElementById('toast');
   if (!t) {
     t = document.createElement('div');
@@ -1364,46 +1449,67 @@ function showToast(msg, acao) {
     t.setAttribute('role', 'status');
     document.querySelector('.app-shell').appendChild(t);
   }
-  t.className = 'toast';
+  t.className = 'toast' + (item.erro ? ' toast--err' : '');
   t.innerHTML = `<span class="toast__msg"></span>`;
-  t.querySelector('.toast__msg').textContent = msg;
-  if (acao) {
+  t.querySelector('.toast__msg').textContent = item.msg;
+  const esconder = () => {
+    clearTimeout(toastTimer);
+    t.classList.remove('show'); toastAtual = null;
+    if (toastFila.length) setTimeout(() => mostrarToast(toastFila.shift()), 260);
+  };
+  if (item.acao) {
     const b = document.createElement('button');
     b.className = 'toast__act';
-    b.textContent = acao.label;
-    b.onclick = () => { t.classList.remove('show'); acao.fn(); };
+    b.textContent = item.acao.label;
+    b.onclick = () => { const fn = item.acao.fn; esconder(); fn(); };
     t.appendChild(b);
   }
   requestAnimationFrame(() => t.classList.add('show'));
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), acao ? 5000 : 2800);
+  toastTimer = setTimeout(esconder, item.acao ? 8000 : item.erro ? 6000 : 2800);
+  t.onpointerdown = () => clearTimeout(toastTimer);
+  t.onpointerup = t.onpointercancel = () => { clearTimeout(toastTimer); toastTimer = setTimeout(esconder, 2500); };
 }
-function showToastErr(msg) {
-  showToast(msg);
-  const t = document.getElementById('toast');
-  if (t) t.classList.add('toast--err');
-}
+function showToastErr(msg) { showToast(msg, null, true); }
 
 // ---------- folha ----------
 // Um componente só pra criar, ver detalhe, compartilhar, confirmar e notificar.
 // Antes eram quatro implementações quase idênticas (.share-sheet, .detail-sheet, o
 // drawer de notificação e quatro formulários abertos por checkbox no CSS).
-let sheetAoFechar = null;
+let sheetAoFechar = null, sheetOpener = null;
+// Rodada 33: Tab escapava pro conteúdo atrás da folha. `inert` no que fica atrás resolve;
+// o toast fica de fora de propósito ("Atualizar" aparece justamente com folha aberta).
+function fundoInerte(on) {
+  ['.topbar', '#screen-body', '.tabbar', '#fab'].forEach(sel => {
+    const e = document.querySelector(sel);
+    if (e) on ? e.setAttribute('inert', '') : e.removeAttribute('inert');
+  });
+}
 function openSheet(html, opts) {
   opts = opts || {};
   const ov = document.getElementById('sheet-ov');
+  if (!ov.classList.contains('open')) sheetOpener = document.activeElement;
   document.getElementById('sheet-body').innerHTML = html;
   ov.classList.toggle('sheet-ov--top', !!opts.top);
   ov.classList.add('open');
+  fundoInerte(true);
   sheetAoFechar = opts.aoFechar || null;
   document.getElementById('sheet').scrollTop = 0;
-  const foco = document.querySelector('#sheet-body input, #sheet-body select, #sheet-body button');
-  if (foco && opts.foco !== false) setTimeout(() => foco.focus({ preventScroll: true }), 60);
+  const titulo = document.getElementById('sheet-title');
+  if (titulo) titulo.setAttribute('tabindex', '-1');
+  const foco = document.querySelector('#sheet-body input, #sheet-body textarea, #sheet-body select');
+  setTimeout(() => {
+    if (foco && opts.foco !== false) foco.focus({ preventScroll: true });
+    else if (titulo) titulo.focus({ preventScroll: true });
+  }, 60);
 }
 function closeSheet() {
   document.getElementById('sheet-ov').classList.remove('open');
+  fundoInerte(false);
   const fn = sheetAoFechar; sheetAoFechar = null;
   if (fn) fn();
+  const op = sheetOpener; sheetOpener = null;
+  if (op && op.isConnected && op.offsetParent !== null && !sheetAberta()) { try { op.focus({ preventScroll: true }); } catch (e) { /* ok */ } }
 }
 function sheetAberta() { return document.getElementById('sheet-ov').classList.contains('open'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetAberta()) closeSheet(); });
@@ -1413,7 +1519,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetAbert
 function confirmar(titulo, texto, labelOk, fn) {
   window.__confirmFn = fn;
   openSheet(`
-    <h2 class="sheet__title">${esc(titulo)}</h2>
+    <h2 class="sheet__title" id="sheet-title">${esc(titulo)}</h2>
     <p class="muted" style="margin:0 0 var(--s4)">${esc(texto)}</p>
     <div class="btn-row">
       <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
@@ -1441,6 +1547,7 @@ const VIEWS = {
 let viewAtual = 'hj';
 function go(v) {
   const cfg = VIEWS[v]; if (!cfg) return;
+  if (v !== 'visita') { soltarTelaAcesa(); clearInterval(visitaTimer); visitaTimer = null; }
   viewAtual = v;
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + v));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === (cfg.tab || v)));
@@ -1507,7 +1614,7 @@ function criarEscolha(k) {
     setNoteMode(k === 'nota-voz' ? 'audio' : k === 'nota-texto' ? 'texto' : 'camera');
     return;
   }
-  openForm(k);
+  openForm(k, criarCtx);
 }
 
 // ---------- contexto da nota ----------
@@ -1556,7 +1663,59 @@ function refNota(padrao) { return (notaCtx && notaCtx.referencia) || padrao; }
 function campo(id, label, extra) {
   return `<div class="field" id="f-${id}"><label for="${id}">${label}</label>${extra}<div class="err"></div></div>`;
 }
-function inp(id, ph, tipo) { return `<input id="${id}" placeholder="${ph || ''}" ${tipo ? 'type="' + tipo + '"' : ''}>`; }
+// autocomplete desligado nos campos de cliente: com "name"/"tel" o Chrome oferece os dados
+// do DONO do celular, não do cliente que está sendo cadastrado.
+function inp(id, ph, tipo, extra) {
+  const im = tipo === 'tel' ? ' inputmode="tel"' : tipo === 'email' ? ' inputmode="email"' : '';
+  return `<input id="${id}" placeholder="${ph || ''}" ${tipo ? 'type="' + tipo + '"' : ''}${im} autocomplete="off" ${extra || ''}>`;
+}
+// ---------- número em português ----------
+// Rodada 33: type="number" apagava "1.050.000" e parseFloat(...)||0 gravava o imóvel com
+// valor ZERO sem avisar — no cadastro e nas calculadoras. Aqui o campo é texto com teclado
+// decimal, e a leitura segue o jeito brasileiro de escrever.
+function numeroBR(txt) {
+  let t = String(txt == null ? '' : txt).toLowerCase().replace(/r\$/g, '').trim();
+  if (!t) return null;
+  let mult = 1;
+  const m = t.match(/(milh(?:ão|ao|ões|oes)|mil|mi|k)\s*$/);
+  if (m) { mult = (m[1] === 'mil' || m[1] === 'k') ? 1e3 : 1e6; t = t.slice(0, m.index); }
+  t = t.replace(/\s/g, '');
+  if (!/^\d[\d.,]*$/.test(t)) return NaN;
+  const ponto = t.includes('.'), virg = t.includes(',');
+  let n;
+  if (ponto && virg) {
+    const dec = t.lastIndexOf('.') > t.lastIndexOf(',') ? '.' : ',';
+    n = parseFloat(t.split(dec === '.' ? ',' : '.').join('').replace(dec, '.'));
+  } else if (ponto) n = /^\d{1,3}(\.\d{3})+$/.test(t) ? parseFloat(t.replace(/\./g, '')) : parseFloat(t);
+  else if (virg) n = /^\d{1,3}(,\d{3})+$/.test(t) ? parseFloat(t.replace(/,/g, '')) : parseFloat(t.replace(',', '.'));
+  else n = parseFloat(t);
+  return isNaN(n) ? NaN : n * mult;
+}
+function precoBR(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? n : Math.round(n); }
+function numOuZero(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? 0 : n; }
+function campoPreco(id, ph) {
+  return `<input id="${id}" type="text" inputmode="decimal" autocomplete="off" placeholder="${ph || 'Ex.: 1.050.000 ou 1,05 mi'}" oninput="mostrarPrecoLido(this)">
+    <div class="btn-row" style="margin-top:var(--s2);align-items:center">
+      <button type="button" class="btn btn--sm chip-mini" onclick="sufixoPreco('${id}', ' mil')">mil</button>
+      <button type="button" class="btn btn--sm chip-mini" onclick="sufixoPreco('${id}', ' mi')">mi</button>
+      <span class="preco-lido" id="${id}-lido" aria-live="polite" style="margin-left:auto"></span>
+    </div>`;
+}
+function mostrarPrecoLido(el) {
+  const alvo = document.getElementById(el.id + '-lido'); if (!alvo) return;
+  const v = precoBR(el.value);
+  alvo.classList.remove('aviso');
+  if (v == null) { alvo.textContent = ''; return; }
+  if (isNaN(v)) { alvo.textContent = 'não entendi o valor'; alvo.classList.add('aviso'); return; }
+  const estranho = v < 10000 || v > 100000000;
+  alvo.textContent = '= ' + fmtBRL(v) + (estranho ? ' — confere?' : '');
+  if (estranho) alvo.classList.add('aviso');
+}
+function sufixoPreco(id, suf) {
+  const el = document.getElementById(id); if (!el) return;
+  el.value = el.value.replace(/\s*(milh(?:ão|ao|ões|oes)|mil|mi|k)\s*$/i, '').trim() + suf;
+  mostrarPrecoLido(el); el.focus();
+}
 function sel(id, ops) { return `<select id="${id}">${ops.map(o => `<option>${o}</option>`).join('')}</select>`; }
 function selDados(id, rows, labelFn, vazio) {
   return `<select id="${id}">${vazio ? `<option value="">${vazio}</option>` : ''}` +
@@ -1569,20 +1728,21 @@ function erroCampo(id, msg) {
   const i = document.getElementById(id); if (i) i.focus();
 }
 const FORMS = {
-  'lead-venda': () => ({
+  'lead-venda': () => { const imoveis = q(`SELECT id,codigo,nome FROM imovel WHERE status!='vendido' ORDER BY prioridade`); return {
     titulo: 'Novo lead — comprador', salvar: 'salvarLeadVenda()',
-    html: campo('fv-nome', 'Nome', inp('fv-nome', 'Nome do interessado')) +
+    html: campo('fv-nome', 'Nome', inp('fv-nome', 'Nome do interessado', '', 'autocapitalize="words"')) +
           campo('fv-telefone', 'Telefone / WhatsApp', inp('fv-telefone', '(61) 90000-0000', 'tel')) +
           campo('fv-tipo', 'Interesse', inp('fv-tipo', 'Casa, apartamento, galpão...')) +
+          campo('fv-imovel', 'Imóvel de interesse', selDados('fv-imovel', imoveis, nomeImovel, '(nenhum ainda)')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
-          campo('fv-bairro', 'Bairro de interesse', inp('fv-bairro', 'Ex.: Bela Vista')) +
+          campo('fv-bairro', 'Bairro de interesse', inp('fv-bairro', 'Ex.: Bela Vista', '', 'list="dl-bairros"')) +
           campo('fv-orcamento', 'Faixa de orçamento', inp('fv-orcamento', 'Ex.: até R$ 1,2 mi')) +
           campo('fv-canal', 'Canal', sel('fv-canal', ['Encontrei em campo', 'Indicação', 'WhatsApp', 'Site'])) +
           `</details>`
-  }),
+  }; },
   'lead-captacao': () => ({
     titulo: 'Novo lead — captação', salvar: 'salvarLeadCaptacao()',
-    html: campo('fc-nome', 'Nome do proprietário', inp('fc-nome', 'Nome')) +
+    html: campo('fc-nome', 'Nome do proprietário', inp('fc-nome', 'Nome', '', 'autocapitalize="words"')) +
           campo('fc-telefone', 'Telefone / WhatsApp', inp('fc-telefone', '(61) 90000-0000', 'tel')) +
           campo('fc-endereco', 'Endereço do imóvel', inp('fc-endereco', 'Rua, número, bairro')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
@@ -1593,8 +1753,8 @@ const FORMS = {
   'imovel': () => ({
     titulo: 'Novo imóvel', salvar: 'salvarImovel()',
     html: campo('fi-nome', 'Endereço / nome', inp('fi-nome', 'Ex.: Casa Vista Verde')) +
-          campo('fi-valor', 'Valor (R$)', inp('fi-valor', '0', 'number')) +
-          campo('fi-bairro', 'Bairro', inp('fi-bairro', 'Ex.: Bela Vista')) +
+          campo('fi-valor', 'Valor', campoPreco('fi-valor')) +
+          campo('fi-bairro', 'Bairro', inp('fi-bairro', 'Ex.: Bela Vista', '', 'list="dl-bairros"')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fi-tipo', 'Tipo', sel('fi-tipo', ['Casa', 'Apartamento', 'Galpão', 'Terreno'])) +
           campo('fi-endereco', 'Endereço completo', inp('fi-endereco', 'Rua, número')) +
@@ -1607,7 +1767,7 @@ const FORMS = {
   }),
   'cliente': () => ({
     titulo: 'Novo cliente', salvar: 'salvarCliente()',
-    html: campo('fcli-nome', 'Nome', inp('fcli-nome', 'Nome completo')) +
+    html: campo('fcli-nome', 'Nome', inp('fcli-nome', 'Nome completo', '', 'autocapitalize="words"')) +
           campo('fcli-telefone', 'Telefone / WhatsApp', inp('fcli-telefone', '(61) 90000-0000', 'tel')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fcli-email', 'E-mail', inp('fcli-email', 'nome@exemplo.com', 'email')) +
@@ -1617,7 +1777,7 @@ const FORMS = {
   }),
   'visita': () => {
     const imoveis = q(`SELECT id,codigo,nome FROM imovel WHERE status!='vendido' ORDER BY nome`);
-    const leads = q(`SELECT id,nome FROM lead ORDER BY nome`);
+    const leads = q(`SELECT id,nome FROM lead ORDER BY criado_em DESC, id DESC`);
     return {
       titulo: 'Nova visita', salvar: 'salvarVisita()',
       html: campo('fvi-imovel', 'Imóvel', selDados('fvi-imovel', imoveis, nomeImovel, imoveis.length ? '' : '(cadastre um imóvel antes)')) +
@@ -1625,20 +1785,50 @@ const FORMS = {
             `<div class="field-grid">` +
             campo('fvi-data', 'Data', `<input id="fvi-data" type="date" value="${todayISO(0)}">`) +
             campo('fvi-hora', 'Hora', `<input id="fvi-hora" type="time" value="10:00">`) +
-            `</div>`
+            `</div>` +
+            // o seletor nativo de data e hora custa 4 a 6 toques; o caso comum é um toque
+            `<div class="chip-row" style="flex-wrap:wrap;overflow:visible;margin-top:calc(var(--s2) * -1)">
+               <button type="button" class="chip" onclick="dataRapida(0)">Hoje</button>
+               <button type="button" class="chip" onclick="dataRapida(1)">Amanhã</button>
+               <button type="button" class="chip" onclick="dataRapida('sab')">Sábado</button>
+             </div>
+             <div class="chip-row" style="flex-wrap:wrap;overflow:visible">
+               ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="document.getElementById('fvi-hora').value='${h}'">${h.slice(0, 2)}h</button>`).join('')}
+             </div>`
     };
   }
 };
-function openForm(tipo) {
+function dataRapida(qual) {
+  const el = document.getElementById('fvi-data'); if (!el) return;
+  if (qual === 'sab') { const d = new Date(); d.setDate(d.getDate() + (((6 - d.getDay()) + 7) % 7 || 7)); el.value = localYMD(d); }
+  else el.value = todayISO(qual);
+}
+function openForm(tipo, ctx) {
   const f = FORMS[tipo]; if (!f) return;
   const cfg = f();
+  const bairros = q(`SELECT DISTINCT bairro b FROM imovel WHERE bairro IS NOT NULL AND bairro!='' UNION SELECT DISTINCT bairro_interesse FROM lead WHERE bairro_interesse IS NOT NULL AND bairro_interesse!=''`);
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">${cfg.titulo}</h2>
-    ${cfg.html}
-    <div class="btn-row" style="margin-top:var(--s4)">
-      <button class="btn btn--primary btn--grow" onclick="${cfg.salvar}">Salvar</button>
-      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
-    </div>`);
+    <form id="form-sheet" onsubmit="event.preventDefault();${cfg.salvar}" novalidate>
+      ${cfg.html}
+      <datalist id="dl-bairros">${bairros.map(r => `<option value="${esc(r.b)}">`).join('')}</datalist>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+      </div>
+    </form>`);
+  prepararEnter(document.getElementById('form-sheet'));
+  // "Criar" a partir de um imóvel, lead ou visita: o formulário já nasce preenchido.
+  // Antes a folha dizia "vai nascer ligado a X" e 5 das 8 opções ignoravam.
+  if (ctx) {
+    const setV = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.value = String(v); };
+    if (tipo === 'visita') {
+      if (ctx.tipo === 'imovel') setV('fvi-imovel', ctx.id);
+      if (ctx.tipo === 'lead') { setV('fvi-lead', ctx.id); const l = q('SELECT imovel_id FROM lead WHERE id=?', [ctx.id])[0]; if (l) setV('fvi-imovel', l.imovel_id); }
+      if (ctx.tipo === 'visita') { const v = q('SELECT imovel_id, lead_id FROM visita WHERE id=?', [ctx.id])[0]; if (v) { setV('fvi-imovel', v.imovel_id); setV('fvi-lead', v.lead_id); } }
+    }
+    if (tipo === 'lead-venda' && ctx.tipo === 'imovel') setV('fv-imovel', ctx.id);
+  }
   // pré-preenche o telefone com um dos números de teste, alternando a cada abertura —
   // o usuário sobrescreve com o número real
   const tel = document.querySelector('#sheet-body input[type="tel"]');
@@ -1646,13 +1836,25 @@ function openForm(tipo) {
   if (tipo === 'imovel') window.__geo = null;
 }
 
+function prepararEnter(form) {
+  if (!form) return;
+  const campos = () => [...form.querySelectorAll('input:not([type=hidden]):not([type=file]), select')].filter(e => e.offsetParent !== null);
+  campos().forEach((e, i, arr) => e.setAttribute('enterkeyhint', i === arr.length - 1 ? 'done' : 'next'));
+  form.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    const lista = campos(); const i = lista.indexOf(e.target);
+    if (i >= 0 && i < lista.length - 1) { e.preventDefault(); lista[i + 1].focus(); }
+  });
+}
+
 // ---------- gravar formulário ----------
 function val(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
 function salvarLeadVenda() {
   const nome = val('fv-nome');
   if (!nome) return erroCampo('fv-nome', 'Precisa do nome pra salvar.');
-  const id = insertAndGetId(`INSERT INTO lead (nome,telefone,tipo_interesse,bairro_interesse,orcamento,canal_origem,estagio,classificacao) VALUES (?,?,?,?,?,?,'novo','a qualificar')`,
-    [nome, val('fv-telefone'), val('fv-tipo'), val('fv-bairro'), val('fv-orcamento'), val('fv-canal')]);
+  const id = insertAndGetId(`INSERT INTO lead (nome,telefone,tipo_interesse,imovel_id,bairro_interesse,orcamento,canal_origem,estagio,classificacao) VALUES (?,?,?,?,?,?,?,'novo','a qualificar')`,
+    [nome, val('fv-telefone'), val('fv-tipo'), val('fv-imovel') || null, val('fv-bairro'), val('fv-orcamento'), val('fv-canal')]);
+  vibrar();
   closeSheet();
   crFilter = 'novo'; renderCR(); renderHJ();
   showToast('Lead salvo.', { label: 'Abrir', fn: () => openDetail('lead', id) });
@@ -1669,7 +1871,9 @@ function salvarLeadCaptacao() {
 function salvarImovel() {
   const nome = val('fi-nome');
   if (!nome) return erroCampo('fi-nome', 'Precisa do endereço ou nome.');
-  const valor = parseFloat(val('fi-valor')) || 0;
+  const valor = precoBR(val('fi-valor'));
+  if (valor == null) return erroCampo('fi-valor', 'Escreva o valor do imóvel.');
+  if (isNaN(valor)) return erroCampo('fi-valor', 'Não entendi o valor. Ex.: 1.050.000 ou 1,05 mi.');
   const probMap = { alta: 70, media: 45, baixa: 20 };
   const prio = val('fi-prioridade') || 'media';
   const maxPrio = q('SELECT COALESCE(MAX(prioridade),0) m FROM imovel')[0].m;
@@ -1902,7 +2106,8 @@ function abrirWhats(tel, texto) {
 async function compartilharImovel(id, mode) {
   const im = q('SELECT * FROM imovel WHERE id=?', [id])[0];
   if (!im) return;
-  const texto = `${im.nome} — ${fmtBRL(im.valor)}\nFale comigo pra saber mais sobre esse imóvel.`;
+  const texto = [nomeImovel(im), [im.tipo, im.bairro].filter(Boolean).join(' · '), fmtBRL(im.valor),
+                 `Fale comigo: ${CORRETOR_NOME}`].filter(Boolean).join('\n');
   if (mode === 'copy') {
     try { await navigator.clipboard.writeText(texto); showToast('Texto do imóvel copiado.'); }
     catch (e) { showToastErr('Não consegui copiar automaticamente neste navegador.'); }
@@ -1915,6 +2120,40 @@ async function compartilharImovel(id, mode) {
   }
 }
 // abre o app de mapa do aparelho. Coordenada quando existe; senão, busca pelo endereço.
+// ---------- avisar o cliente ----------
+// Jobber, Imobzi e ShowingTime deixam "estou a caminho" a um toque de cada visita; aqui
+// não existia. A mensagem sai pronta no WhatsApp e quem aperta enviar é o corretor.
+function quandoVisita(v) { return v.data === todayISO(0) ? 'hoje' : v.data === todayISO(1) ? 'amanhã' : fmtDataCurta(v.data); }
+function abrirAvisar(visitaId) {
+  const v = visitaFull(visitaId); if (!v) return;
+  if (!v.telefone) return showToastErr('Esta visita não tem telefone de contato.');
+  const primeiro = v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : '';
+  const imovel = nomeImovel({ codigo: v.codigo, nome: v.imovel_nome });
+  window.__avisar = {
+    tel: v.telefone,
+    confirmar: `Oi${primeiro}! Aqui é ${CORRETOR_NOME}. Confirmando nossa visita ${quandoVisita(v)} às ${v.hora} — ${v.imovel_nome}. Tudo certo?`,
+    caminho: min => `Oi${primeiro}! Aqui é ${CORRETOR_NOME}, estou a caminho da nossa visita (${v.imovel_nome}). Chego em uns ${min} minutos.`
+  };
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Avisar ${esc(v.lead_nome || 'o cliente')}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(imovel)} · ${esc(quandoVisita(v))}, ${esc(v.hora)}</p>
+    <button class="btn btn--ok btn--block" onclick="enviarAviso('confirmar')">${ico('conversa')}Confirmar visita</button>
+    <h3 class="blk-title">Estou a caminho, chego em</h3>
+    <div class="btn-row">
+      <button class="btn btn--grow" onclick="enviarAviso(10)">10 min</button>
+      <button class="btn btn--grow" onclick="enviarAviso(20)">20 min</button>
+      <button class="btn btn--grow" onclick="enviarAviso(30)">30 min</button>
+    </div>
+    <button class="btn btn--block" style="margin-top:var(--s3)" data-tel="${esc(v.telefone)}" onclick="closeSheet();ligar(this.dataset.tel)">${ico('telefone')}Ligar em vez de mandar mensagem</button>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false });
+}
+function enviarAviso(qual) {
+  const a = window.__avisar; if (!a) return;
+  const texto = qual === 'confirmar' ? a.confirmar : a.caminho(qual);
+  closeSheet();
+  abrirWhats(a.tel, texto);
+}
+
 function abrirMapa(im) {
   const destino = (im.lat && im.lng) ? `${im.lat},${im.lng}`
     : [im.endereco, im.bairro, im.nome].filter(Boolean).join(', ');
@@ -2066,7 +2305,7 @@ function detailImovelHTML(id) {
       <p class="muted" style="margin:var(--s2) 0 0">${esc(im.estrategia || '')}</p>
       ${im.bairro || im.endereco ? linhaCampo('Onde fica', esc([im.endereco, im.bairro].filter(Boolean).join(' · '))) : ''}
       <div class="btn-row" style="margin-top:var(--s3)">
-        <button class="btn btn--ok btn--grow" onclick="compartilharImovel(${im.id})">${ico('compartilhar')}Mandar link</button>
+        <button class="btn btn--ok btn--grow" onclick="compartilharImovel(${im.id})">${ico('compartilhar')}Compartilhar</button>
         <button class="btn btn--grow" onclick="compartilharImovel(${im.id}, 'copy')">${ico('copiar')}Copiar</button>
       </div>
       <div class="btn-row" style="margin-top:var(--s2)">
@@ -2148,8 +2387,9 @@ const REC_ERROS = {
   'no-speech': 'Não ouvi nada. Toque de novo e fale mais perto do microfone.',
   'aborted': 'Gravação interrompida.'
 };
+let micPfx = 'mic-', ctxGravacao = null;
 function micAviso(msg) {
-  const hint = document.getElementById('mic-hint');
+  const hint = document.getElementById(micPfx + 'hint');
   if (hint) hint.textContent = msg;
 }
 function setNoteMode(m) {
@@ -2158,17 +2398,23 @@ function setNoteMode(m) {
     document.getElementById('chip-' + k).classList.toggle('on', k === m);
   });
 }
-async function toggleVoiceNote() {
+async function toggleVoiceNote(pfx) {
   const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const btn = document.getElementById('mic-btn');
-  const status = document.getElementById('mic-status');
+  if (!recognizing) micPfx = pfx || 'mic-';
+  const btn = document.getElementById(micPfx + 'btn');
+  const status = document.getElementById(micPfx + 'status');
 
   if (recognizing) { try { recognition.stop(); } catch (e) {} return; }
 
-  if (!Rec) {
-    micAviso('Reconhecimento de voz não existe neste navegador (Firefox e alguns navegadores de Android não têm) — use o modo Texto.');
-    return;
-  }
+  // Rodada 33: no iPhone com o app instalado o Safari não oferece reconhecimento de voz, e no
+  // Android ele depende de internet. Em vez de falhar, abre a nota de texto e ensina o
+  // microfone do teclado — que funciona nos dois casos, inclusive offline.
+  const iosInstalado = navigator.standalone === true;
+  let semVozAqui = false;
+  try { semVozAqui = localStorage.getItem('voz:sem-reconhecimento') === '1'; } catch (e) { /* ok */ }
+  if (semVozAqui && iosInstalado) return vozParaTexto('Neste aparelho a voz do app não funciona. Toque no microfone do teclado pra ditar.', false);
+  if (!navigator.onLine) return vozParaTexto('Sem internet a voz do app não funciona. Toque no microfone do teclado pra ditar — isso funciona offline.', false);
+  if (!Rec) return vozParaTexto('Este navegador não tem reconhecimento de voz. Toque no microfone do teclado pra ditar.', iosInstalado);
   // Causa raiz mais comum do "pisca e não grava" no Chrome Android: contexto não-seguro.
   // Abrindo o arquivo direto (file://) o Chrome mata o reconhecimento imediatamente.
   if (!window.isSecureContext) {
@@ -2179,7 +2425,7 @@ async function toggleVoiceNote() {
   }
   // Pede a permissão explicitamente e solta o microfone em seguida: no Android isso faz
   // o prompt aparecer de forma previsível e dá um erro legível quando é negado.
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  if (!iosInstalado && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach(t => t.stop());
@@ -2200,6 +2446,9 @@ async function toggleVoiceNote() {
   recognition.interimResults = true;
   currentTranscript = '';
   let deuErro = false;
+  // o vínculo é o do momento em que começou a gravar: fechar a folha no meio não pode
+  // fazer a nota nascer órfã quando o reconhecimento terminar
+  ctxGravacao = notaCtx;
 
   recognition.onresult = (e) => {
     let txt = '';
@@ -2207,10 +2456,15 @@ async function toggleVoiceNote() {
     currentTranscript = txt;
     status.textContent = txt || 'Ouvindo...';
   };
+  let comecou = false;
+  recognition.onstart = () => { comecou = true; };
   recognition.onerror = (e) => {
     deuErro = true; recognizing = false;
     btn.classList.remove('rec');
     const code = e && e.error ? e.error : 'desconhecido';
+    if (code === 'service-not-allowed' || code === 'network' || (code === 'not-allowed' && iosInstalado)) {
+      return vozParaTexto(REC_ERROS[code] + ' Toque no microfone do teclado pra ditar.', iosInstalado);
+    }
     micAviso(REC_ERROS[code] || ('Falha no reconhecimento de voz (' + code + '). Use o modo Texto.'));
     status.textContent = 'Não deu — veja o aviso';
     setTimeout(() => { status.textContent = 'Toque e fale'; }, 3200);
@@ -2219,7 +2473,9 @@ async function toggleVoiceNote() {
     recognizing = false;
     btn.classList.remove('rec');
     if (currentTranscript.trim()) {
+      const antes = notaCtx; notaCtx = ctxGravacao;
       gravarNota('audio', refNota('Nota de voz'), currentTranscript.trim(), null);
+      notaCtx = antes; vibrar();
       status.textContent = 'Nota salva!';
       setTimeout(() => { status.textContent = 'Toque e fale'; }, 1600);
     } else if (!deuErro) {
@@ -2232,11 +2488,30 @@ async function toggleVoiceNote() {
     recognizing = true;
     btn.classList.add('rec');
     status.textContent = 'Ouvindo...';
+    // se a gravação não começar logo, não deixa o botão pulsando à toa
+    setTimeout(() => {
+      if (comecou || !recognizing) return;
+      try { recognition.abort(); } catch (e) { /* ok */ }
+      recognizing = false; btn.classList.remove('rec');
+      vozParaTexto('A gravação não começou. Toque no microfone do teclado pra ditar.', iosInstalado);
+    }, 2500);
   } catch (e) {
     recognizing = false;
     btn.classList.remove('rec');
     micAviso('Não consegui iniciar a gravação: ' + (e && e.message ? e.message : 'erro desconhecido'));
   }
+}
+function vozParaTexto(msg, lembrar) {
+  if (lembrar) { try { localStorage.setItem('voz:sem-reconhecimento', '1'); } catch (e) { /* ok */ } }
+  if (micPfx === 'vmic-' && viewAtual === 'visita' && visitaAtivaId) {
+    notaDaVisita(visitaAtivaId, 'texto');
+    setTimeout(() => { const t = document.getElementById('vnota-texto'); if (t) t.focus(); }, 90);
+  } else {
+    if (viewAtual !== 'nt') go('nt');
+    setNoteMode('texto');
+    setTimeout(() => { const t = document.getElementById('texto-nota'); if (t) t.focus(); }, 90);
+  }
+  showToast(msg);
 }
 // Único ponto de gravação de nota. É aqui que o vínculo entra — até a rodada 31 a nota
 // de voz e a de texto gravavam contexto='geral' fixo e nasciam órfãs.
@@ -2312,31 +2587,43 @@ function renderCamLinkSelects() {
 // uma no cartão "Próxima visita" e outra na lista "Todas as visitas de hoje".
 function heroVisitaHTML(v) {
   const tel = esc(v.telefone || '');
+  // Rodada 33: com telefone o cartão mostrava Ligar e WhatsApp mas escondia o mapa; sem
+  // telefone, o contrário. Quem vai visitar precisa das três coisas — em três colunas,
+  // ícone em cima do rótulo, pra caber em 360px.
   return `<div class="hero">
     <div class="hero__when">${ico('relogio')}<span class="num">${esc(v.hora)}</span>
       <span class="pill ${v.status === 'confirmada' ? 'ok' : 'warn'}" style="margin-left:auto">${esc(v.status)}</span></div>
     <div class="hero__what">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
     <div class="hero__who">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome || '') : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
-    <div class="hero__acts">
-      <button class="btn btn--primary" onclick="iniciarVisita(${v.id})">${ico(v.inicio ? 'visita' : 'check')}${v.inicio ? 'Continuar visita' : 'Check-in e começar'}</button>
+    <button class="btn btn--primary btn--block" style="margin-bottom:var(--s2)" onclick="iniciarVisita(${v.id})">${ico(v.inicio ? 'visita' : 'check')}${v.inicio ? 'Continuar visita' : 'Check-in e começar'}</button>
+    <div class="hero__acts hero__acts--3">
+      <button class="btn" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Ir</button>
       ${tel ? `<button class="btn" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>
-               <button class="btn btn--ok" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>`
-            : `<button class="btn" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Mapa</button>
-               <button class="btn" onclick="go('rota')">${ico('rota')}Rota</button>`}
+               <button class="btn btn--ok" onclick="abrirAvisar(${v.id})">${ico('conversa')}Avisar</button>`
+            : `<button class="btn" onclick="go('rota')">${ico('rota')}Rota</button>
+               <button class="btn" onclick="openDetail('lead', ${v.lead_id || 0})" ${v.lead_id ? '' : 'disabled'}>${ico('pessoa')}Contato</button>`}
     </div>
   </div>`;
 }
+// canal do follow-up vira o botão principal. "E-mail" não tem como sair daqui (lead não
+// guarda e-mail), então cai no WhatsApp.
+function canalAcao(canal) { return /liga/i.test(canal || '') ? 'ligar' : 'whats'; }
 function heroPendenciaHTML(r) {
   const tel = esc(r.telefone || '');
+  const leadId = r._leadId;
+  const principal = !tel
+    ? `<button class="btn btn--primary btn--block" onclick="openDetail('lead', ${leadId})">${ico('pessoa')}Abrir ficha — sem telefone</button>`
+    : canalAcao(r.canal) === 'ligar'
+      ? `<button class="btn btn--primary btn--block" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar agora</button>`
+      : `<button class="btn btn--primary btn--block" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}Mandar WhatsApp</button>`;
+  const outra = !tel ? '' : canalAcao(r.canal) === 'ligar'
+    ? `<button class="btn btn--ok btn--block" style="margin-top:var(--s2)" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>`
+    : `<button class="btn btn--block" style="margin-top:var(--s2)" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>`;
   return `<div class="hero">
-    <div class="hero__when">${ico('leads')}Follow-up</div>
-    <div class="hero__what">${objLink('lead', r.lead_id || r.id, r.lead_nome || r.nome)}</div>
+    <div class="hero__when">${ico('leads')}Follow-up${r._quando ? `<span class="row__meta" style="margin-left:auto">${esc(r._quando)}</span>` : ''}</div>
+    <div class="hero__what">${objLink('lead', leadId, r.lead_nome || r.nome)}</div>
     <div class="hero__who">${r.proximo_passo ? esc(r.proximo_passo) : 'sem próximo passo definido'}</div>
-    <div class="hero__acts">
-      <button class="btn btn--primary" onclick="openDetail('lead', ${r.lead_id || r.id})">${ico('pessoa')}Abrir lead</button>
-      ${tel ? `<button class="btn" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>
-               <button class="btn btn--ok" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>` : ''}
-    </div>
+    ${principal}${outra}
   </div>`;
 }
 function visitasDe(data) {
@@ -2345,53 +2632,82 @@ function visitasDe(data) {
             FROM visita v JOIN imovel i ON i.id=v.imovel_id
             LEFT JOIN lead l ON l.id=v.lead_id WHERE v.data=? ORDER BY v.hora`, [data]);
 }
+// visita de hoje sem check-in cujo horário passou há mais de 30 min: não é mais "agora"
+function horaPassou(v) {
+  if (v.inicio || !v.hora) return false;
+  const [hh, mm] = String(v.hora).split(':').map(Number);
+  const n = new Date();
+  return n.getHours() * 60 + n.getMinutes() > hh * 60 + (mm || 0) + 30;
+}
+// Pendências do dia sem repetição. Rodada 33: as consultas tinham LIMIT 2 (o contador
+// nunca passava de 2), misturavam linha de follow-up com linha de lead usando r.lead_id||r.id,
+// e a mesma pessoa aparecia no destaque, nas visitas e na lista.
+function pendenciasDoDia(leadsComVisita) {
+  const vistos = new Set(leadsComVisita);
+  const out = [];
+  q(`SELECT sc.*, l.nome as lead_nome, l.telefone, l.proximo_passo, l.imovel_id, i.codigo, i.nome as imovel_nome
+     FROM sequencia_contato sc JOIN lead l ON l.id=sc.lead_id LEFT JOIN imovel i ON i.id=l.imovel_id
+     WHERE sc.status='agendado' ORDER BY sc.dia`).forEach(r => {
+    if (vistos.has(r.lead_id)) return; vistos.add(r.lead_id);
+    out.push(Object.assign(r, { _tipo: 'seq', _leadId: r.lead_id, _quando: 'dia ' + r.dia + ' · ' + (r.canal || '') }));
+  });
+  q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
+     WHERE l.estagio='contato' ORDER BY l.criado_em`).forEach(r => {
+    if (vistos.has(r.id)) return; vistos.add(r.id);
+    out.push(Object.assign(r, { _tipo: 'lead', _leadId: r.id, _quando: fmtRelDate(r.criado_em) }));
+  });
+  return out;
+}
 function renderHJ() {
-  document.getElementById('hj-hello').textContent = 'Bom dia, ' + CORRETOR_NOME;
-  const visitasHoje = visitasDe(todayISO(0));
-  const abertas = visitasHoje.filter(v => !v.fim);
-  const followupSeq = q(`SELECT sc.*, l.nome as lead_nome, l.telefone, l.proximo_passo, l.imovel_id, i.codigo, i.nome as imovel_nome
-                         FROM sequencia_contato sc JOIN lead l ON l.id=sc.lead_id LEFT JOIN imovel i ON i.id=l.imovel_id
-                         WHERE sc.status='agendado' ORDER BY sc.dia LIMIT 2`);
-  const semContato = q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
-                        WHERE l.estagio='contato' ORDER BY l.criado_em LIMIT 2`);
-  const pendencias = followupSeq.concat(semContato);
+  document.getElementById('hj-hello').textContent = saudacao() + ', ' + CORRETOR_NOME;
+  const abertas = visitasDe(todayISO(0)).filter(v => !v.fim);
+  const aTempo = abertas.filter(v => !horaPassou(v));
+  const vencidas = abertas.filter(horaPassou);
+  const pendencias = pendenciasDoDia(abertas.map(v => v.lead_id).filter(Boolean));
 
   document.getElementById('hj-sum').textContent =
-    `${abertas.length} visita(s) hoje${pendencias.length ? ' · ' + pendencias.length + ' pendência(s)' : ''}`;
+    (abertas.length ? plural(abertas.length, 'visita hoje', 'visitas hoje') : 'Nenhuma visita hoje') +
+    (pendencias.length ? ' · ' + plural(pendencias.length, 'pendência', 'pendências') : '');
 
-  // "Próxima ação" é uma coisa só: a visita aberta mais próxima; sem visita, a pendência
-  // mais antiga; sem nada, um estado vazio que oferece o que fazer.
+  // "Próxima ação": a visita no horário; sem ela, a pendência mais antiga; sem nada,
+  // um estado vazio que oferece o que fazer. O que vira destaque sai da lista de baixo.
   const next = document.getElementById('hj-next');
-  if (abertas.length) next.innerHTML = heroVisitaHTML(abertas[0]);
-  else if (pendencias.length) next.innerHTML = heroPendenciaHTML(pendencias[0]);
+  let restoPend = pendencias;
+  if (aTempo.length) next.innerHTML = heroVisitaHTML(aTempo[0]);
+  else if (pendencias.length) { next.innerHTML = heroPendenciaHTML(pendencias[0]); restoPend = pendencias.slice(1); }
   else next.innerHTML = `<div class="empty">${ico('check')}<p>Nada marcado pra agora.</p>
     <button class="btn btn--sm" onclick="openForm('visita')">Agendar uma visita</button></div>`;
 
-  // bloco da Rota do dia (C2) — só aparece quando há mais de uma parada
   document.getElementById('hj-rota').innerHTML = abertas.length > 1 ? `
     <h2 class="blk-title">Rota do dia</h2>
     <button class="card card--tap row" onclick="go('rota')">
       <span class="row__ico">${ico('rota')}</span>
-      <span class="row__main"><span class="row__t">${abertas.length} paradas hoje</span>
+      <span class="row__main"><span class="row__t">${plural(abertas.length, 'parada hoje', 'paradas hoje')}</span>
         <span class="row__s">${esc(abertas.map(v => v.bairro || v.imovel_nome).filter(Boolean).join(' → ').slice(0, 60))}</span></span>
       ${ico('chevron', 'row__chev')}
     </button>` : '';
 
-  const resto = abertas.slice(1);
+  const resto = (aTempo.length ? aTempo.slice(1) : aTempo).concat(vencidas);
   document.getElementById('hj-today').innerHTML = resto.length
-    ? resto.map(v => `<button class="card card--tap row" onclick="abrirVisita(${v.id})">
-        <span class="row__ico">${ico('agenda')}</span>
+    ? resto.map(v => {
+        const passou = horaPassou(v);
+        return `<button class="card card--tap row" onclick="abrirVisita(${v.id})">
+        <span class="row__ico">${ico(passou ? 'alerta' : 'agenda')}</span>
         <span class="row__main"><span class="row__t num">${esc(v.hora)} · ${esc(v.imovel_nome)}</span>
           <span class="row__s">${esc(v.lead_nome || 'sem lead')}</span></span>
-        <span class="pill ${v.status === 'confirmada' ? 'ok' : 'warn'}">${esc(v.status)}</span></button>`).join('')
+        <span class="pill ${passou ? 'warn' : v.status === 'confirmada' ? 'ok' : ''}">${passou ? 'horário passou' : esc(v.status)}</span></button>`;
+      }).join('')
     : `<div class="empty">${ico('agenda')}<p>${abertas.length ? 'Só a visita acima.' : 'Sem visitas hoje.'}</p></div>`;
 
-  document.getElementById('hj-followup').innerHTML = pendencias.length
-    ? pendencias.map(r => `<button class="card card--tap row" onclick="openDetail('lead', ${r.lead_id || r.id})">
-        <span class="row__ico">${ico('leads')}</span>
+  // prazo e canal descem pro subtítulo: à direita, o FAB cobria esse texto
+  const MAX = 6;
+  document.getElementById('hj-followup').innerHTML = restoPend.length
+    ? restoPend.slice(0, MAX).map(r => `<button class="card card--tap row" onclick="openDetail('lead', ${r._leadId})">
+        <span class="row__ico">${ico(r._tipo === 'seq' ? (canalAcao(r.canal) === 'ligar' ? 'telefone' : 'conversa') : 'pessoa')}</span>
         <span class="row__main"><span class="row__t">${esc(r.lead_nome || r.nome)}</span>
-          <span class="row__s">${esc(r.imovel_nome || r.proximo_passo || '')}</span></span>
-        <span class="row__meta">${r.dia ? 'dia ' + esc(r.dia) + ' · ' + esc(r.canal) : fmtRelDate(r.criado_em)}</span></button>`).join('')
+          <span class="row__s">${esc([r.proximo_passo || r.imovel_nome, r._quando].filter(Boolean).join(' · '))}</span></span>
+        ${ico('chevron', 'row__chev')}</button>`).join('') +
+      (restoPend.length > MAX ? `<button class="btn btn--ghost btn--block" onclick="go('cr')">Mais ${restoPend.length - MAX} em Leads</button>` : '')
     : `<div class="empty">${ico('check')}<p>Nada vencendo agora.</p></div>`;
 }
 
@@ -2405,7 +2721,7 @@ function renderAG() {
   rows.forEach(v => { (groups[v.data] = groups[v.data] || []).push(v); });
   let html = '';
   Object.keys(groups).sort().forEach(data => {
-    const label = data === hoje ? 'Hoje' : data === amanha ? 'Amanhã' : data;
+    const label = data === hoje ? 'Hoje' : data === amanha ? 'Amanhã' : fmtDataCurta(data);
     html += `<h2 class="blk-title">${esc(label)}</h2>`;
     groups[data].forEach(v => {
       html += `<button class="card card--tap row" onclick="abrirVisita(${v.id})">
@@ -2436,8 +2752,16 @@ function renderCR() {
   document.getElementById('cr-chips').innerHTML = Object.keys(STAGE_LABELS).map(st =>
     `<button class="chip ${crFilter === st ? 'on' : ''}" onclick="setCrFilter('${st}')">${STAGE_LABELS[st]} · ${counts[st] || 0}</button>`).join('');
 
-  const leads = q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
-                   WHERE l.estagio=? ORDER BY l.criado_em DESC`, [crFilter]);
+  // Rodada 33: Leads não tinha busca. Com termo, procura em todos os estágios — quem está
+  // na rua lembra do nome ou de um pedaço do telefone, não do estágio.
+  const termo = ((document.getElementById('cr-search') || {}).value || '').trim().toLowerCase();
+  const digitos = termo.replace(/\D/g, '');
+  let leads = termo
+    ? q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id ORDER BY l.criado_em DESC`)
+        .filter(l => (l.nome || '').toLowerCase().includes(termo) || (l.bairro_interesse || '').toLowerCase().includes(termo)
+          || (digitos.length >= 3 && (l.telefone || '').replace(/\D/g, '').includes(digitos)))
+    : q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
+         WHERE l.estagio=? ORDER BY l.criado_em DESC`, [crFilter]);
   document.getElementById('cr-list').innerHTML = leads.length ? leads.map(l => {
     const tel = esc(l.telefone || '');
     return `<div class="card">
@@ -2448,7 +2772,7 @@ function renderCR() {
         ${ico('chevron', 'row__chev')}
       </button>
       <div class="between" style="margin-bottom:var(--s2)">
-        <span class="pill brand">${esc(l.classificacao || '—')}</span>
+        <span class="pill brand">${esc(l.classificacao || '—')}${termo ? ' · ' + esc(STAGE_LABELS[l.estagio] || l.estagio) : ''}</span>
         <span class="row__meta">${esc(l.canal_origem || '')} · ${fmtRelDate(l.criado_em)}</span>
       </div>
       <div class="btn-row">
@@ -2457,7 +2781,7 @@ function renderCR() {
         <button class="btn btn--sm btn--icon" onclick="abrirCriar('lead', ${l.id})" aria-label="Criar ligado a este lead">${ico('somar')}</button>
       </div>
     </div>`;
-  }).join('') : `<div class="empty">${ico('leads')}<p>Nenhum lead em ${STAGE_LABELS[crFilter].toLowerCase()}.</p>
+  }).join('') : termo ? `<div class="empty">${ico('busca')}<p>Nenhum lead com "${esc(termo)}".</p></div>` : `<div class="empty">${ico('leads')}<p>Nenhum lead em ${STAGE_LABELS[crFilter].toLowerCase()}.</p>
       <button class="btn btn--sm" onclick="openForm('lead-venda')">Cadastrar um</button></div>`;
   renderCaptacoes();
 }
@@ -2483,7 +2807,7 @@ function renderVI() {
         <span class="pill ${r.status === 'vendido' ? '' : 'ok'}">${esc(r.status)}</span>
       </div>
       <div class="btn-row">
-        <button class="btn btn--sm btn--ok btn--grow" onclick="compartilharImovel(${r.id})">${ico('compartilhar')}Mandar link</button>
+        <button class="btn btn--sm btn--ok btn--grow" onclick="compartilharImovel(${r.id})">${ico('compartilhar')}Compartilhar</button>
         <button class="btn btn--sm btn--grow" onclick="compartilharImovel(${r.id}, 'copy')">${ico('copiar')}Copiar</button>
         <button class="btn btn--sm btn--icon" onclick="abrirMapaId(${r.id})" aria-label="Abrir no mapa">${ico('mapa')}</button>
       </div>
@@ -2563,10 +2887,10 @@ function renderCLI() {
 
 // ---------- calculadoras ----------
 function cCalcFin() {
-  const valor = parseFloat(val('c-fin-valor')) || 0;
-  const entradaPct = parseFloat(val('c-fin-entrada')) || 0;
-  const anos = parseFloat(val('c-fin-prazo')) || 0;
-  const taxaAno = parseFloat(val('c-fin-taxa')) || 0;
+  const valor = numOuZero(val('c-fin-valor'));
+  const entradaPct = numOuZero(val('c-fin-entrada'));
+  const anos = numOuZero(val('c-fin-prazo'));
+  const taxaAno = numOuZero(val('c-fin-taxa'));
   const financiado = valor * (1 - entradaPct / 100);
   const n = anos * 12, i = (taxaAno / 100) / 12;
   const parcela = (i > 0 && n > 0) ? (financiado * i) / (1 - Math.pow(1 + i, -n)) : (n > 0 ? financiado / n : 0);
@@ -2574,9 +2898,9 @@ function cCalcFin() {
   document.getElementById('c-fin-financiado').textContent = fmtBRL(financiado);
 }
 function cCalcCom() {
-  const valor = parseFloat(val('c-com-valor')) || 0;
-  const pct = parseFloat(val('c-com-pct')) || 0;
-  const div = parseFloat(val('c-com-div')) || 0;
+  const valor = numOuZero(val('c-com-valor'));
+  const pct = numOuZero(val('c-com-pct'));
+  const div = numOuZero(val('c-com-div'));
   const total = valor * (pct / 100);
   document.getElementById('c-com-total').textContent = fmtBRL(total);
   document.getElementById('c-com-minha').textContent = fmtBRL(total * (div / 100));
@@ -2662,10 +2986,14 @@ function visitaFull(id) {
             FROM visita v JOIN imovel i ON i.id=v.imovel_id LEFT JOIN lead l ON l.id=v.lead_id
             WHERE v.id=?`, [id])[0];
 }
-function abrirVisita(id) { visitaAtivaId = id; roteiroMarcado = {}; go('visita'); }
+// Rodada 33: abrir a visita zerava o roteiro — e sair pra tirar uma nota e voltar
+// apagava o que o corretor tinha marcado. Agora fica guardado por visita.
+function lerRoteiro(id) { try { return JSON.parse(localStorage.getItem('roteiro:v1:' + id) || '{}'); } catch (e) { return {}; } }
+function gravarRoteiro(id) { try { localStorage.setItem('roteiro:v1:' + id, JSON.stringify(roteiroMarcado)); } catch (e) { /* sem storage: fica só na memória */ } }
+function abrirVisita(id) { visitaAtivaId = id; go('visita'); }
 function iniciarVisita(id) {
   const v = visitaFull(id); if (!v) return;
-  if (!v.inicio) run(`UPDATE visita SET inicio=?, status='confirmada' WHERE id=?`, [agoraISO(), id]);
+  if (!v.inicio) { run(`UPDATE visita SET inicio=?, status='confirmada' WHERE id=?`, [agoraISO(), id]); vibrar(); }
   renderAG(); renderHJ();
   abrirVisita(id);
 }
@@ -2693,6 +3021,8 @@ function renderVisita() {
   }
   const tel = esc(v.telefone || '');
   const notas = q(`SELECT * FROM nota WHERE visita_id=? ORDER BY id DESC`, [v.id]);
+  roteiroMarcado = lerRoteiro(v.id);
+  if (v.inicio && !v.fim) pedirTelaAcesa(); else soltarTelaAcesa();
 
   if (v.fim) {
     body.innerHTML = `
@@ -2703,7 +3033,7 @@ function renderVisita() {
         ${linhaCampo('Desfecho', esc(v.desfecho || '—'))}
         ${linhaCampo('Objeção', esc(v.objecao || '—'))}
         ${linhaCampo('Próximo passo', esc(v.proximo_passo || '—'))}
-        ${linhaCampo('Duração', esc(v.inicio && v.fim ? v.inicio.slice(11) + ' → ' + v.fim.slice(11) : '—'))}
+        ${linhaCampo('Duração', esc(fmtDuracao(v.inicio, v.fim)))}
       </div>
       <h2 class="blk-title">Notas desta visita</h2>
       ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nenhuma nota registrada.</p></div>`}`;
@@ -2714,7 +3044,7 @@ function renderVisita() {
     <div class="live">
       <div class="live__l">${v.inicio ? 'em andamento' : 'ainda não começou'}</div>
       <div class="live__t" id="visita-cron">${v.inicio ? tempoDecorrido(v.inicio) : esc(v.hora)}</div>
-      <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
+      <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
       <div style="opacity:.85;font-size:var(--t-sm)">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
     </div>
 
@@ -2727,8 +3057,8 @@ function renderVisita() {
     </div>
     <div class="btn-row" style="margin-bottom:var(--s3)">
       ${tel ? `<button class="btn btn--grow" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>
-               <button class="btn btn--grow btn--ok" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>` : ''}
-      <button class="btn btn--grow" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Mapa</button>
+               <button class="btn btn--grow btn--ok" ${v.inicio ? `data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)"` : `onclick="abrirAvisar(${v.id})"`}>${ico('conversa')}${v.inicio ? 'WhatsApp' : 'Avisar'}</button>` : ''}
+      <button class="btn btn--grow" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Ir</button>
     </div>
 
     <h2 class="blk-title">Roteiro</h2>
@@ -2755,46 +3085,122 @@ function renderVisita() {
     }, 1000);
   }
 }
-function marcarRoteiro(i) { roteiroMarcado[i] = !roteiroMarcado[i]; renderVisita(); }
+function marcarRoteiro(i) { roteiroMarcado[i] = !roteiroMarcado[i]; gravarRoteiro(visitaAtivaId); renderVisita(); }
 // Abrir a captura daqui já carrega o contexto: a nota nasce com visita_id, lead_id e
 // imovel_id preenchidos. É o conserto do bug de raiz da nota órfã.
 function notaDaVisita(id, modo) {
+  // Rodada 33: antes ia pra tela Notas — o voltar caía em Mais, a aba acesa virava "Mais"
+  // no meio da visita, e reabrir a visita zerava o roteiro. Agora a captura abre por cima.
   criarCtx = { tipo: 'visita', id, nome: nomeDoObjeto('visita', id) };
   aplicarCtxNaNota();
-  go('nt');
-  setNoteMode(modo);
+  const titulo = { audio: 'Nota de voz', texto: 'Nota de texto', camera: 'Foto da visita' }[modo];
+  let corpo;
+  if (modo === 'audio') {
+    corpo = `<div class="compose">
+      <button class="mic-big" id="vmic-btn" onclick="toggleVoiceNote('vmic-')" aria-label="Gravar nota de voz">${ico('mic')}</button>
+      <div id="vmic-status" style="font-weight:600;font-size:var(--t-sm)">Toque e fale</div>
+      <div class="muted" id="vmic-hint" style="margin-top:var(--s2)">a nota fica ligada a esta visita</div></div>`;
+  } else if (modo === 'texto') {
+    corpo = `<div class="field"><label for="vnota-texto">O que aconteceu</label>
+      <textarea id="vnota-texto" placeholder="Ex.: gostou da cozinha, achou o condomínio caro"></textarea></div>
+      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" onclick="salvarNotaTextoVisita()">${ico('check')}Salvar na visita</button></div>`;
+  } else {
+    corpo = `<div class="compose"><img id="vcam-preview" class="shot-preview" alt="">
+      <button class="mic-big" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border-2)" onclick="document.getElementById('vcam-input').click()" aria-label="Tirar foto">${ico('camera')}</button>
+      <div style="font-weight:600;font-size:var(--t-sm)">Toque pra fotografar</div>
+      <input type="file" id="vcam-input" accept="image/*" capture="environment" hidden onchange="onFotoVisita(event)"></div>
+      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" id="vcam-salvar" disabled onclick="salvarFotoVisita()">${ico('check')}Salvar na visita</button></div>`;
+  }
+  fotoVisitaDataUrl = null;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">${titulo}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Ligada a ${esc(notaCtx ? notaCtx.referencia : '')}</p>${corpo}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">${ico('voltar')}Voltar pra visita</button>`,
+    { foco: modo === 'texto', aoFechar: () => { if (recognizing) { try { recognition.stop(); } catch (e) {} } limparNotaCtx(); } });
 }
+let fotoVisitaDataUrl = null;
+function onFotoVisita(evt) {
+  const f = evt.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    fotoVisitaDataUrl = r.result;
+    const img = document.getElementById('vcam-preview');
+    if (img) { img.src = fotoVisitaDataUrl; img.style.display = 'block'; }
+    const b = document.getElementById('vcam-salvar'); if (b) b.disabled = false;
+  };
+  r.readAsDataURL(f);
+}
+function salvarFotoVisita() {
+  if (!fotoVisitaDataUrl) return;
+  gravarNota('camera', refNota('Foto da visita'), simulateOCR(), fotoVisitaDataUrl);
+  fotoVisitaDataUrl = null; vibrar(); closeSheet();
+}
+function salvarNotaTextoVisita() {
+  const el = document.getElementById('vnota-texto');
+  const t = el ? el.value.trim() : '';
+  if (!t) { if (el) el.focus(); return showToastErr('Escreva alguma coisa antes de salvar.'); }
+  gravarNota('texto', refNota('Nota da visita'), t, null);
+  vibrar(); closeSheet();
+}
+
+// ---------- tela acesa (só na visita) ----------
+// A Rota ficou de fora de propósito: com o carro andando quem guia é o app de mapas.
+// A trava cai sozinha quando o app vai pro fundo; volta ao retornar, e solta depois de
+// 20 min sem toque — um check-in esquecido não pode deixar a tela acesa o dia inteiro.
+let telaAcesa = null, telaAcesaTimer = null;
+async function pedirTelaAcesa() {
+  if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+  armarSolturaTela();
+  if (telaAcesa) return;
+  try {
+    telaAcesa = await navigator.wakeLock.request('screen');
+    telaAcesa.addEventListener('release', () => { telaAcesa = null; });
+  } catch (e) { /* bateria baixa ou recusado: segue sem */ }
+}
+function armarSolturaTela() { clearTimeout(telaAcesaTimer); telaAcesaTimer = setTimeout(soltarTelaAcesa, 20 * 60 * 1000); }
+function soltarTelaAcesa() {
+  clearTimeout(telaAcesaTimer);
+  if (telaAcesa) { telaAcesa.release().catch(() => {}); telaAcesa = null; }
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || viewAtual !== 'visita' || !visitaAtivaId) return;
+  const v = visitaFull(visitaAtivaId);
+  if (v && v.inicio && !v.fim) pedirTelaAcesa();
+});
+document.addEventListener('pointerdown', () => { if (telaAcesa) armarSolturaTela(); }, { passive: true });
+
 function encerrarVisitaSheet(id) {
   const v = visitaFull(id); if (!v) return;
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">Como terminou?</h2>
     <div id="desfecho-chips" class="chip-row" style="flex-wrap:wrap;overflow:visible">
-      ${DESFECHOS.map((d, i) => `<button class="chip ${i === 0 ? 'on' : ''}" data-i="${i}" onclick="escolherDesfecho(${i})">${d.k}</button>`).join('')}
+      ${DESFECHOS.map((d, i) => `<button class="chip" data-i="${i}" onclick="escolherDesfecho(${i})">${d.k}</button>`).join('')}
     </div>
     <div class="field"><label for="enc-objecao">Objeção que apareceu</label>
       <input id="enc-objecao" placeholder="Ex.: achou o condomínio caro"></div>
     <div class="field"><label for="enc-proximo">Próximo passo</label>
-      <input id="enc-proximo" value="${esc(DESFECHOS[0].desc)}"></div>
-    <p class="muted" id="enc-resumo"></p>
+      <input id="enc-proximo" value="" placeholder="escolha como terminou" oninput="this.dataset.auto='0'"></div>
+    <p class="muted" id="enc-resumo">Escolha como a visita terminou.</p>
     <div class="btn-row" style="margin-top:var(--s4)">
       <button class="btn btn--primary btn--grow" onclick="confirmarEncerramento(${id})">Encerrar</button>
       <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
     </div>`, { foco: false });
-  window.__desfecho = 0;
-  escolherDesfecho(0);
+  // Rodada 33: vinha marcado "Quer fazer proposta" — passar direto registrava o desfecho
+  // errado e movia o lead pra Proposta. Agora a escolha é obrigatória.
+  window.__desfecho = null;
 }
 function escolherDesfecho(i) {
   window.__desfecho = i;
   document.querySelectorAll('#desfecho-chips .chip').forEach(c => c.classList.toggle('on', +c.dataset.i === i));
   const d = DESFECHOS[i];
   const prox = document.getElementById('enc-proximo');
-  if (prox) prox.value = d.desc;
+  if (prox && (!prox.value.trim() || prox.dataset.auto === '1')) { prox.value = d.desc; prox.dataset.auto = '1'; }
   const res = document.getElementById('enc-resumo');
-  if (res) res.textContent = `Vou agendar o follow-up em ${d.dias} dia(s) por ${d.canal} e mover o lead pra "${STAGE_LABELS[d.estagio]}".`;
+  if (res) res.textContent = `Vou agendar o follow-up em ${plural(d.dias, 'dia', 'dias')} por ${d.canal} e mover o lead pra "${STAGE_LABELS[d.estagio]}".`;
 }
 function confirmarEncerramento(id) {
   const v = visitaFull(id); if (!v) return;
-  const d = DESFECHOS[window.__desfecho || 0];
+  if (window.__desfecho == null) return showToastErr('Escolha como a visita terminou.');
+  const d = DESFECHOS[window.__desfecho];
   const objecao = val('enc-objecao');
   const proximo = val('enc-proximo') || d.desc;
   const marcadas = ROTEIRO.filter((_, i) => roteiroMarcado[i]);
@@ -2814,12 +3220,15 @@ function confirmarEncerramento(id) {
     run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,visita_id,lead_id,imovel_id) VALUES ('texto','visita',?,?,?,?,?,?)`,
       ['Fecho da visita · ' + nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }), texto, horaAgora(), id, v.lead_id, v.imovel_id]);
   }
+  try { localStorage.removeItem('roteiro:v1:' + id); } catch (e) { /* ok */ }
+  roteiroMarcado = {};
+  vibrar();
   closeSheet();
   renderAll();
   renderVisita();
 
-  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Obrigado pela visita no ${v.imovel_nome}. ${proximo}`;
-  showToast('Visita encerrada · follow-up em ' + d.dias + ' dia(s).',
+  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Obrigado pela visita de hoje (${v.imovel_nome}). ${proximo}`;
+  showToast('Visita encerrada · follow-up em ' + plural(d.dias, 'dia', 'dias') + '.',
     v.telefone ? { label: 'Mandar zap', fn: () => abrirWhats(v.telefone, msg) } : null);
 }
 
@@ -2869,7 +3278,7 @@ function marcarDistancias(lista, origem) {
   });
   return lista;
 }
-function fmtKm(km) { return km == null ? '' : (km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1) + ' km'); }
+function fmtKm(km) { return km == null ? '' : (km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1).replace('.', ',') + ' km'); }
 
 // A agenda manda: visita tem hora marcada com cliente do outro lado, então a ordem padrão
 // é a do relógio. A ordem mais curta é oferecida como sugestão, com o ganho em km escrito
@@ -2909,7 +3318,7 @@ function renderRota() {
   body.innerHTML = `
     <div class="card card--sunken">
       <div class="between">
-        <span><b>${lista.length}</b> parada(s) hoje</span>
+        <span><b>${plural(lista.length, 'parada hoje', 'paradas hoje')}</b></span>
         ${kmAgenda != null ? `<span class="num">${fmtKm(rotaModo === 'curta' ? kmCurta : kmAgenda)}</span>` : ''}
       </div>
       ${podeCalcular ? `
@@ -2923,7 +3332,7 @@ function renderRota() {
                 ? `Na ordem marcada. Ir pela rota mais curta economizaria ${fmtKm(economia)} — mas significa remarcar horário com o cliente.`
                 : 'Na ordem marcada. A rota mais curta daria quase o mesmo caminho.')
             : 'Ordem por proximidade, ignorando o horário marcado. Só siga por ela se der pra remarcar com os clientes.'}
-          ${semGeo ? ` ${semGeo} imóvel(is) ainda sem posição gravada — ficam no fim.` : ''}
+          ${semGeo ? ' ' + plural(semGeo, 'imóvel ainda sem posição gravada — fica no fim.', 'imóveis ainda sem posição gravada — ficam no fim.') : ''}
         </p>`
         : `<p class="muted" style="margin:var(--s3) 0 0">Ordem pelo horário. Marque a posição de pelo menos dois imóveis (ficha do imóvel › Marcar posição) pra eu calcular distância e rota.</p>`}
       <button class="btn btn--block" style="margin-top:var(--s3)" onclick="usarMinhaPosicaoNaRota()">
@@ -2946,7 +3355,7 @@ function renderRota() {
         ${p._perto ? `<p class="muted" style="margin:var(--s2) 0 0;color:var(--ok)">Você está a menos de 150 m daqui.</p>` : ''}
         <div class="btn-row" style="margin-top:var(--s3)">
           <button class="btn btn--sm btn--grow" onclick="abrirMapaId(${p.imovel_id})">${ico('mapa')}Ir</button>
-          ${p.telefone ? `<button class="btn btn--sm btn--grow" data-tel="${esc(p.telefone)}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>` : ''}
+          ${p.telefone ? `<button class="btn btn--sm btn--grow btn--ok" onclick="abrirAvisar(${p.id})">${ico('conversa')}Avisar</button>` : ''}
           <button class="btn btn--sm btn--grow ${p._perto ? 'btn--primary' : ''}" onclick="iniciarVisita(${p.id})">${ico('check')}Check-in</button>
         </div>
       </div>`).join('')}`;
@@ -2975,7 +3384,18 @@ function renderAll() {
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';
 }
 window.addEventListener('DOMContentLoaded', boot);
+if (window.matchMedia && matchMedia('(pointer: coarse)').matches) {
+  const ehCampo = el => el && el.matches && el.matches('input:not([type=file]):not([type=checkbox]):not([type=radio]), textarea, select');
+  document.addEventListener('focusin', e => { if (ehCampo(e.target)) document.body.classList.add('kb'); });
+  document.addEventListener('focusout', () => setTimeout(() => { if (!ehCampo(document.activeElement)) document.body.classList.remove('kb'); }, 60));
+}
 
+// Rodada 33: a atualização automática só esperava folha aberta. Recarregava por cima de
+// nota sendo digitada, gravação em andamento e foto ainda não salva.
+function trabalhoEmAndamento() {
+  const t = document.getElementById('texto-nota');
+  return sheetAberta() || recognizing || !!currentCameraDataUrl || !!fotoVisitaDataUrl || !!(t && t.value.trim());
+}
 // ---------- PWA: service worker + prompt de instalação ----------
 // Service Worker só roda em HTTPS (ou localhost) — abrindo o arquivo direto (file://)
 // ele é ignorado em silêncio, e o app continua funcionando normalmente, só sem offline.
@@ -3017,7 +3437,7 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     if (!tinhaControlador || recarregandoPraAtualizar) return;
     // Com um formulário aberto, recarregar por cima apagaria o que a pessoa está
     // digitando (o campo ainda não foi pro banco). Aí a atualização vira oferta.
-    if (sheetAberta()) {
+    if (trabalhoEmAndamento()) {
       showToast('Versão nova do app disponível.', { label: 'Atualizar', fn: aplicarAtualizacao });
       return;
     }

@@ -18,7 +18,7 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v6';  // v6: rodada 32 — atualização automática também pra quem está numa versão antiga (ver bloco abaixo)
+const CACHE = 'ohubimob-campo-v7';  // v7: rodada 33 — lote A1 (visita, Hoje, toque e leitura, formulários) e navegação que ignora ?query
 
 const ASSETS = [
   './',
@@ -91,12 +91,16 @@ self.addEventListener('fetch', event => {
   const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
   if (!sameOrigin && !isFont) return;
 
+  // Navegação com ?query (atalhos do ícone, links com ?acao=) casa com o app em cache
+  // ignorando a query — senão o endereço não bate e o app abre a página offline do
+  // navegador. E guarda sob o endereço sem query: uma cópia só do app de 1 MB.
+  const nav = req.mode === 'navigate';
   event.respondWith(
-    caches.match(req).then(cached => {
+    caches.match(req, nav ? { ignoreSearch: true } : undefined).then(cached => {
       const network = fetch(req).then(res => {
         if (res && res.status === 200 && (res.type === 'basic' || res.type === 'cors')) {
           const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
+          caches.open(CACHE).then(c => c.put(nav ? url.origin + url.pathname : req, copy));
         }
         return res;
       }).catch(() => cached);
