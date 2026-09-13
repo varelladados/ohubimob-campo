@@ -18,7 +18,8 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v8';  // v8: rodada 33 — lote A2 (voltar do Android, remarcar, rascunho, atalhos no ícone, tamanho do texto, sino, lembrete)
+const CACHE = 'ohubimob-campo-v9';  // v9: rodada 33 — lote B (pessoas, linha do tempo, fatos e fotos do imóvel, lixeira, PIN, receber do WhatsApp, notificação da visita)
+const COMPARTILHADO = 'ohubimob-compartilhado';  // o que chegou pelo compartilhamento do Android, até o app ler
 
 const ASSETS = [
   './',
@@ -53,7 +54,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)));
+    await Promise.all(keys.filter(k => k !== CACHE && k !== COMPARTILHADO).map(k => caches.delete(k)));
     await self.clients.claim();
     await recarregarQuemNaoSabeSeAtualizar();
   })());
@@ -85,6 +86,26 @@ async function recarregarQuemNaoSabeSeAtualizar() {
 
 self.addEventListener('fetch', event => {
   const req = event.request;
+  // Destino de compartilhamento (manifest "share_target"): o Android manda texto e fotos por
+  // POST. Guarda num cache à parte e abre o app com ?acao=compartilhado, que lê e apaga.
+  const alvo = new URL(req.url);
+  if (req.method === 'POST' && alvo.origin === self.location.origin && alvo.searchParams.has('compartilhar')) {
+    event.respondWith((async () => {
+      try {
+        const dados = await req.formData();
+        const cache = await caches.open(COMPARTILHADO);
+        await Promise.all((await cache.keys()).map(k => cache.delete(k)));
+        const texto = [dados.get('title'), dados.get('text'), dados.get('url')].filter(Boolean).join('\n');
+        await cache.put('/__compartilhado/texto', new Response(texto));
+        const arquivos = dados.getAll('arquivos').filter(f => f && f.size);
+        await cache.put('/__compartilhado/qtd', new Response(String(Math.min(arquivos.length, 5))));
+        await Promise.all(arquivos.slice(0, 5).map((f, i) =>
+          cache.put('/__compartilhado/arquivo-' + i, new Response(f, { headers: { 'content-type': f.type || 'image/jpeg' } }))));
+      } catch (e) { /* abre o app mesmo assim */ }
+      return Response.redirect(new URL(alvo.pathname + '?acao=compartilhado', alvo.origin).href, 303);
+    })());
+    return;
+  }
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
@@ -111,4 +132,21 @@ self.addEventListener('fetch', event => {
       return cached || network;
     })
   );
+});
+
+// Notificação "Visita em andamento" (lote B, B15). Tocar no corpo abre a visita; os botões
+// abrem a nota de voz ou o encerramento — nada grava sem um toque dentro do app.
+self.addEventListener('notificationclick', event => {
+  const acao = event.action === 'voz' ? 'voz-visita' : event.action === 'encerrar' ? 'encerrar' : 'visita';
+  const destino = (event.notification.data && event.notification.data.url) || './';
+  event.waitUntil((async () => {
+    const abas = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    const aba = abas.find(a => new URL(a.url).pathname === new URL(destino, self.location.origin).pathname) || abas[0];
+    if (aba) {
+      await aba.focus();
+      aba.postMessage({ tipo: 'acao', acao });
+    } else {
+      await self.clients.openWindow(destino + '?acao=' + acao);
+    }
+  })());
 });

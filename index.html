@@ -619,6 +619,50 @@ a { color: inherit; text-decoration: none; }
   .acoes-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-bottom: var(--s3); }
   .acoes-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
   .pend-acts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-top: var(--s2); }
+
+  /* ======================= rodada 33 — lote B (base) ======================= */
+  .trava { position: fixed; inset: 0; z-index: 2000; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; padding: var(--s5); }
+  .trava[hidden] { display: none; }
+  .trava__caixa { width: 100%; max-width: 320px; text-align: center; }
+  .trava__marca { width: 56px; height: 46px; color: var(--brand); margin-bottom: var(--s3); }
+  .trava__titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--t-xl); margin: 0 0 var(--s4); }
+  .trava input { width: 100%; min-height: 52px; text-align: center; letter-spacing: 0.4em; font-size: var(--t-xl); margin-bottom: var(--s3);
+    border: 1px solid var(--border-2); border-radius: var(--r-sm); background: var(--surface); color: var(--text); }
+  .trava__erro { color: var(--danger); min-height: 1.5em; font-weight: 600; margin: var(--s2) 0; }
+
+  /* ======================= rodada 33 — lote B (pessoas) ======================= */
+  .acoes-3--novo .btn { flex-direction: column; gap: 2px; min-height: 56px; padding: var(--s1); }
+  #cr-chips[hidden] { display: none; }
+  .tl { margin: var(--s2) 0 var(--s3); }
+  .tl-item { display: flex; gap: var(--s3); position: relative; padding: var(--s2) 0; }
+  .tl-item::before { content: ""; position: absolute; left: 17px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .tl-item:first-child::before { top: 50%; }
+  .tl-item:last-child::before { bottom: 50%; }
+  .tl-item:only-child::before { display: none; }
+  .tl-ico { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-2); color: var(--text-2); display: flex; align-items: center; justify-content: center; flex: none; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--bg); }
+  .tl-item--futuro .tl-ico { background: var(--bg); border: 2px dashed var(--border-2); }
+  .tl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .tl-t { font-weight: 600; }
+  .tl-s { color: var(--text-2); font-size: var(--t-sm); overflow-wrap: anywhere; }
+  .tl-q { color: var(--text-3); font-size: var(--t-xs); }
+  .tl audio { width: 100%; margin-top: var(--s1); }
+  .fotos-grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin: var(--s2) 0 var(--s3); }
+  .fotos-grade img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--r-sm); display: block; background: var(--surface-2); }
+  .fotos-grade .foto { padding: 0; border: 0; background: none; border-radius: var(--r-sm); cursor: pointer; min-height: 44px; }
+
+  /* ======================= rodada 33 — lote B (imóvel e ferramentas) ======================= */
+  .fatos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+  .fatos__k { font-size: var(--t-sm); color: var(--text-3); }
+  .fatos__v { font-weight: 600; }
+  .chk { display: flex; align-items: center; gap: var(--s2); border-bottom: 1px solid var(--border); }
+  .chk:last-child { border-bottom: 0; }
+  .chk__main { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--s3); min-height: 48px; padding: var(--s1) 0;
+    background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+  .chk__box { width: 24px; height: 24px; border: 2px solid var(--border-2); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .chk.is-feito .chk__box { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .chk.is-feito .chk__t { color: var(--text-3); }
+  .lembrar { display: flex; align-items: center; gap: var(--s2); min-height: 44px; margin: var(--s2) 0; font-size: var(--t-sm); }
+  .lembrar input { width: 22px; height: 22px; flex: none; }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -686,6 +730,25 @@ a { color: inherit; text-decoration: none; }
 </svg>
 <!-- ds2-icons:fim -->
 
+<!-- Trava por PIN (B13). Fica fora do .app-shell: com a trava na tela, o app inteiro fica inerte. -->
+<div id="trava" class="trava" hidden role="dialog" aria-modal="true" aria-labelledby="trava-titulo">
+  <div class="trava__caixa" id="trava-pedir">
+    <svg class="trava__marca" viewBox="0 0 128 104" aria-hidden="true"><use href="#i-marca"/></svg>
+    <h1 id="trava-titulo" class="trava__titulo">Digite seu PIN</h1>
+    <form onsubmit="event.preventDefault();destravar()">
+      <input id="trava-pin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN" enterkeyhint="done">
+      <button type="submit" class="btn btn--primary btn--block">Entrar</button>
+    </form>
+    <p class="trava__erro" id="trava-erro" role="alert"></p>
+    <button class="btn btn--ghost btn--block" onclick="document.getElementById('trava-pedir').hidden=true;document.getElementById('trava-esqueci').hidden=false">Esqueci o PIN</button>
+  </div>
+  <div class="trava__caixa" id="trava-esqueci" hidden>
+    <h1 class="trava__titulo">Sem o PIN</h1>
+    <p>O único jeito de entrar é apagar os dados deste aparelho: imóveis, leads, notas e arquivos. Se você exportou o banco antes, dá pra importar depois.</p>
+    <button class="btn btn--danger btn--block" onclick="apagarAparelho()">Apagar tudo neste aparelho</button>
+    <button class="btn btn--block" style="margin-top:var(--s2)" onclick="document.getElementById('trava-esqueci').hidden=true;document.getElementById('trava-pedir').hidden=false">Voltar</button>
+  </div>
+</div>
 <div id="boot-screen" class="boot">
   <svg class="mark" aria-hidden="true"><use href="#i-marca"/></svg>
   <div class="boot-spinner"></div>
@@ -739,24 +802,18 @@ a { color: inherit; text-decoration: none; }
 
     <!-- ============================ LEADS ============================ -->
     <section class="panel" id="panel-cr">
-      <div class="btn-row" style="margin-bottom:var(--s3)">
-        <button class="btn btn--primary btn--grow" onclick="openForm('lead-venda')">
-          <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Comprador
-        </button>
-        <button class="btn btn--grow" onclick="openForm('lead-captacao')">
-          <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Captação
-        </button>
+      <div class="acoes-3 acoes-3--novo" style="margin-bottom:var(--s3)">
+        <button class="btn btn--primary" onclick="openForm('lead-venda')"><svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Comprador</button>
+        <button class="btn" onclick="openForm('lead-captacao')"><svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Captação</button>
+        <button class="btn" onclick="openForm('cliente')"><svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Cliente</button>
       </div>
       <label class="search">
         <svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
-        <input id="cr-search" placeholder="Buscar por nome, telefone ou bairro" oninput="renderCR()" aria-label="Buscar lead" autocomplete="off">
+        <input id="cr-search" placeholder="Buscar nome, telefone ou bairro" oninput="renderCR()" aria-label="Buscar pessoa" autocomplete="off">
       </label>
+      <div class="chip-row" id="cr-tipos" role="group" aria-label="Tipo de pessoa"></div>
       <div class="chip-row" id="cr-chips"></div>
       <div id="cr-list"></div>
-      <div class="data-box" id="cr-captacoes-box">
-        <h4>Captações recentes</h4>
-        <div id="cr-captacoes-list"></div>
-      </div>
     </section>
 
     <!-- ============================ PORTFÓLIO ============================ -->
@@ -777,7 +834,7 @@ a { color: inherit; text-decoration: none; }
         <button class="tile" onclick="limparNotaCtx();go('nt')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-mic"/></svg><div class="tile__n">Notas</div><div class="tile__p">voz, texto, foto</div></button>
         <button class="tile" onclick="go('cart')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pasta"/></svg><div class="tile__n">Arquivos</div><div class="tile__p">fotos e documentos</div></button>
         <button class="tile" onclick="go('calc')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-calculadora"/></svg><div class="tile__n">Calculadoras</div><div class="tile__p">financiamento, comissão, CMA</div></button>
-        <button class="tile" onclick="go('cli')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pessoa"/></svg><div class="tile__n">Clientes</div><div class="tile__p">cadastro geral</div></button>
+        <button class="tile" onclick="pessoasTipo='cliente';go('cr');renderCR()"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pessoa"/></svg><div class="tile__n">Clientes</div><div class="tile__p">agora em Pessoas</div></button>
       </div>
 
       <div class="data-box" id="install-box" hidden></div>
@@ -792,14 +849,32 @@ a { color: inherit; text-decoration: none; }
       </div>
 
       <div class="data-box">
+        <h4>App de mapa</h4>
+        <div class="seg-texto" role="group" aria-label="App de mapa" id="seg-mapa">
+          <button class="chip" data-mapa="" onclick="setMapaApp('')">Perguntar</button>
+          <button class="chip" data-mapa="google" onclick="setMapaApp('google')">Google</button>
+          <button class="chip" data-mapa="waze" onclick="setMapaApp('waze')">Waze</button>
+        </div>
+      </div>
+
+      <div class="data-box" id="perfil-box"></div>
+      <div class="data-box" id="trava-box"></div>
+
+      <div class="data-box">
         <h4>Dados locais</h4>
         <div class="btn-row" style="margin-bottom:var(--s2)">
           <button class="btn btn--sm btn--grow" onclick="exportDb()"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Exportar</button>
           <button class="btn btn--sm btn--grow" onclick="document.getElementById('import-file').click()"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Importar</button>
           <input type="file" id="import-file" accept=".sqlite,.db" hidden onchange="importDb(event)">
         </div>
+        <button class="btn btn--sm btn--block" style="margin-bottom:var(--s2)" onclick="go('lixo')">
+          <svg class="ic" aria-hidden="true"><use href="#i-lixeira"/></svg>Lixeira
+        </button>
         <button class="btn btn--sm btn--danger btn--block" onclick="confirmarReset()">
           <svg class="ic" aria-hidden="true"><use href="#i-reset"/></svg>Recomeçar do zero
+        </button>
+        <button class="btn btn--sm btn--ghost btn--block" style="margin-top:var(--s2);color:var(--danger)" onclick="confirmarApagarAparelho()">
+          <svg class="ic" aria-hidden="true"><use href="#i-lixeira"/></svg>Apagar todos os dados deste aparelho
         </button>
         <div class="foot-count" id="foot-count"></div>
         <div class="foot-count" style="margin-top:6px;line-height:1.5">Versão de demonstração — imóveis, clientes e telefones são <b>fictícios</b>. Use “Recomeçar do zero” e cadastre os seus.</div>
@@ -867,6 +942,8 @@ a { color: inherit; text-decoration: none; }
       <div id="cart-pessoal-list"></div>
       <h2 class="blk-title">Desta negociação</h2>
       <div id="cart-negociacao-list"></div>
+      <h2 class="blk-title">Documentos da venda</h2>
+      <div id="cart-venda-list"></div>
       <p class="muted" style="text-align:center;margin-top:var(--s4)">contratos e cláusulas formais continuam no portal — aqui é foto, captura e compartilhamento rápido</p>
     </section>
 
@@ -900,6 +977,20 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
+      <h2 class="blk-title">Custos da compra no DF</h2>
+      <div class="card">
+        <div class="field"><label for="c-itbi-valor">Valor da compra</label><input type="text" inputmode="decimal" id="c-itbi-valor" value="620.000" oninput="cCalcITBI()"></div>
+        <div class="chip-row" style="flex-wrap:wrap;overflow:visible" id="c-itbi-tipo" role="group" aria-label="Tipo de transferência">
+          <button class="chip on" data-itbi="2" aria-pressed="true" onclick="setItbi(2)">Demais casos</button>
+          <button class="chip" data-itbi="1" aria-pressed="false" onclick="setItbi(1)">1ª transferência de imóvel novo</button>
+        </div>
+        <div class="card card--sunken" style="margin-bottom:0">
+          <div class="calc-hero"><span>ITBI</span><span id="c-itbi-total">—</span></div>
+          <div class="calc-sub"><span>Alíquota</span><span id="c-itbi-aliq">—</span></div>
+        </div>
+        <p class="muted" style="margin:var(--s3) 0 0">No DF, 1% na primeira transferência de imóvel novo e 2% nas demais, desde 1º/1/2025 (Lei distrital 7.635/2024). Escritura e registro seguem a tabela do cartório e não entram nesta conta. Fora do DF, vale a alíquota do município.</p>
+      </div>
+
       <h2 class="blk-title">CMA automática</h2>
       <div class="card">
         <div class="field"><label for="c-cma-imovel">Imóvel de referência</label><select id="c-cma-imovel" onchange="cCalcCMA()"></select></div>
@@ -907,7 +998,7 @@ a { color: inherit; text-decoration: none; }
         <div class="card card--sunken" style="margin-bottom:0">
           <div class="calc-hero"><span>Faixa sugerida</span><span id="c-cma-faixa">—</span></div>
         </div>
-        <p class="muted" style="margin:var(--s3) 0 0">consulta de verdade o portfólio salvo no banco local (imóveis de valor mais próximo)</p>
+        <p class="muted" style="margin:var(--s3) 0 0">compara com imóveis do mesmo tipo na sua carteira, sem os vendidos — não é preço de mercado. Com área útil preenchida, estima pelo m².</p>
       </div>
     </section>
 
@@ -921,6 +1012,11 @@ a { color: inherit; text-decoration: none; }
         <input id="cli-search" placeholder="Buscar cliente..." oninput="renderCLI()" aria-label="Buscar cliente">
       </label>
       <div id="cli-list"></div>
+    </section>
+
+    <!-- ============================ LIXEIRA (B12) ============================ -->
+    <section class="panel" id="panel-lixo">
+      <div id="lixo-body"></div>
     </section>
 
     <!-- ============================ MODO VISITA (C1) ============================ -->
@@ -942,7 +1038,7 @@ a { color: inherit; text-decoration: none; }
   <nav class="tabbar" aria-label="Navegação principal">
     <button class="tab-btn on" data-tab="hj" onclick="go('hj')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-hoje"/></svg>Hoje</button>
     <button class="tab-btn" data-tab="ag" onclick="go('ag')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-agenda"/></svg>Agenda</button>
-    <button class="tab-btn" data-tab="cr" onclick="go('cr')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-leads"/></svg>Leads</button>
+    <button class="tab-btn" data-tab="cr" onclick="go('cr')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-leads"/></svg>Pessoas</button>
     <button class="tab-btn" data-tab="vi" onclick="go('vi')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-portfolio"/></svg>Portfólio</button>
     <button class="tab-btn" data-tab="mais" onclick="go('mais')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-mais"/></svg>Mais</button>
   </nav>
@@ -1240,7 +1336,31 @@ const SCHEMA_MIGRATIONS = [
   `ALTER TABLE nota ADD COLUMN cliente_id INTEGER REFERENCES cliente(id)`,
   // rodada 33 (A2) — follow-up com data de vencimento: é o que permite Adiar e dizer
   // "atrasado". Linha antiga sem data conta como vencida hoje.
-  `ALTER TABLE sequencia_contato ADD COLUMN vence_em TEXT`
+  `ALTER TABLE sequencia_contato ADD COLUMN vence_em TEXT`,
+  // rodada 33 (lote B) — B1/B2 registro de contato e linha do tempo
+  `CREATE TABLE IF NOT EXISTS interacao (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER, cliente_id INTEGER, captacao_id INTEGER, tipo TEXT, resultado TEXT, texto TEXT, criado_em TEXT)`,
+  // B3 fatos do imóvel no formato dos portais, posição do sol, chaves e várias fotos
+  `ALTER TABLE imovel ADD COLUMN area_util REAL`,
+  `ALTER TABLE imovel ADD COLUMN area_total REAL`,
+  `ALTER TABLE imovel ADD COLUMN quartos INTEGER`,
+  `ALTER TABLE imovel ADD COLUMN suites INTEGER`,
+  `ALTER TABLE imovel ADD COLUMN banheiros INTEGER`,
+  `ALTER TABLE imovel ADD COLUMN vagas INTEGER`,
+  `ALTER TABLE imovel ADD COLUMN andar TEXT`,
+  `ALTER TABLE imovel ADD COLUMN condominio REAL`,
+  `ALTER TABLE imovel ADD COLUMN iptu REAL`,
+  `ALTER TABLE imovel ADD COLUMN posicao_sol TEXT`,
+  `ALTER TABLE imovel ADD COLUMN chaves TEXT`,
+  `CREATE TABLE IF NOT EXISTS imovel_foto (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER, imagem_base64 TEXT, criado_em TEXT)`,
+  // B4 autorização de venda registrada; perfil do corretor
+  `ALTER TABLE imovel ADD COLUMN autorizacao_em TEXT`,
+  `CREATE TABLE IF NOT EXISTS config (chave TEXT PRIMARY KEY, valor TEXT)`,
+  // B5 o áudio da nota fica guardado
+  `ALTER TABLE nota ADD COLUMN audio_base64 TEXT`,
+  // B10 checklist de documentos da venda
+  `CREATE TABLE IF NOT EXISTS checklist_item (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER, item TEXT, feito_em TEXT, documento_id INTEGER)`,
+  // B12 lixeira: o que foi apagado volta por 30 dias
+  `CREATE TABLE IF NOT EXISTS lixeira (id INTEGER PRIMARY KEY AUTOINCREMENT, tabela TEXT, rotulo TEXT, dados TEXT, apagado_em TEXT)`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1587,7 +1707,7 @@ function confirmar(titulo, texto, labelOk, fn) {
 const VIEWS = {
   hj:     { t: 'Hoje' },
   ag:     { t: 'Agenda' },
-  cr:     { t: 'Leads' },
+  cr:     { t: 'Pessoas' },
   vi:     { t: 'Portfólio' },
   mais:   { t: 'Mais' },
   nt:     { t: 'Notas',         tab: 'mais', back: 'mais' },
@@ -1595,7 +1715,8 @@ const VIEWS = {
   calc:   { t: 'Calculadoras',  tab: 'mais', back: 'mais' },
   cli:    { t: 'Clientes',      tab: 'mais', back: 'mais' },
   visita: { t: 'Visita',        tab: 'ag',   back: 'ag', render: () => renderVisita() },
-  rota:   { t: 'Rota do dia',   tab: 'ag',   back: 'ag', render: () => renderRota() }
+  rota:   { t: 'Rota do dia',   tab: 'ag',   back: 'ag', render: () => renderRota() },
+  lixo:   { t: 'Lixeira',       tab: 'mais', back: 'mais', render: () => renderLixeira() }
 };
 let viewAtual = 'hj';
 // ---------- histórico (rodada 33, A2) ----------
@@ -1858,7 +1979,7 @@ const FORMS = {
   'lead-venda': () => { const imoveis = q(`SELECT id,codigo,nome FROM imovel WHERE status!='vendido' ORDER BY prioridade`); return {
     titulo: 'Novo lead — comprador', salvar: 'salvarLeadVenda()',
     html: campo('fv-nome', 'Nome', inp('fv-nome', 'Nome do interessado', '', 'autocapitalize="words"')) +
-          campo('fv-telefone', 'Telefone / WhatsApp', inp('fv-telefone', '(61) 90000-0000', 'tel')) +
+          campo('fv-telefone', 'Telefone / WhatsApp', inp('fv-telefone', '(61) 90000-0000', 'tel')) + botaoContatos('fv-nome', 'fv-telefone') +
           campo('fv-tipo', 'Interesse', inp('fv-tipo', 'Casa, apartamento, galpão...')) +
           campo('fv-imovel', 'Imóvel de interesse', selDados('fv-imovel', imoveis, nomeImovel, '(nenhum ainda)')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
@@ -1870,7 +1991,7 @@ const FORMS = {
   'lead-captacao': () => ({
     titulo: 'Novo lead — captação', salvar: 'salvarLeadCaptacao()',
     html: campo('fc-nome', 'Nome do proprietário', inp('fc-nome', 'Nome', '', 'autocapitalize="words"')) +
-          campo('fc-telefone', 'Telefone / WhatsApp', inp('fc-telefone', '(61) 90000-0000', 'tel')) +
+          campo('fc-telefone', 'Telefone / WhatsApp', inp('fc-telefone', '(61) 90000-0000', 'tel')) + botaoContatos('fc-nome', 'fc-telefone') +
           campo('fc-endereco', 'Endereço do imóvel', inp('fc-endereco', 'Rua, número, bairro')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fc-tipo', 'Tipo', sel('fc-tipo', ['Casa', 'Apartamento', 'Galpão', 'Terreno'])) +
@@ -1895,7 +2016,7 @@ const FORMS = {
   'cliente': () => ({
     titulo: 'Novo cliente', salvar: 'salvarCliente()',
     html: campo('fcli-nome', 'Nome', inp('fcli-nome', 'Nome completo', '', 'autocapitalize="words"')) +
-          campo('fcli-telefone', 'Telefone / WhatsApp', inp('fcli-telefone', '(61) 90000-0000', 'tel')) +
+          campo('fcli-telefone', 'Telefone / WhatsApp', inp('fcli-telefone', '(61) 90000-0000', 'tel')) + botaoContatos('fcli-nome', 'fcli-telefone') +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fcli-email', 'E-mail', inp('fcli-email', 'nome@exemplo.com', 'email')) +
           campo('fcli-tipo', 'Tipo', sel('fcli-tipo', ['Comprador', 'Proprietário', 'Inquilino', 'Ex-cliente', 'Contato geral'])) +
@@ -2050,8 +2171,8 @@ function salvarLeadCaptacao() {
     [nome, val('fc-telefone'), val('fc-endereco'), val('fc-tipo'), val('fc-motivo')]);
   limparRascunho();
   closeSheet();
-  renderCaptacoes();
-  showToast('Captação salva.', { label: 'Ver', fn: () => go('cr') });
+  renderCR();
+  showToast('Captação salva.', { label: 'Ver', fn: () => { pessoasTipo = 'captacao'; go('cr'); renderCR(); } });
 }
 function salvarImovel() {
   const nome = val('fi-nome');
@@ -2078,7 +2199,7 @@ function salvarCliente() {
     [nome, val('fcli-telefone'), val('fcli-email'), val('fcli-tipo'), val('fcli-obs')]);
   limparRascunho();
   closeSheet();
-  renderCLI();
+  renderCLI(); renderCR();
   showToast('Cliente salvo.', { label: 'Abrir', fn: () => openDetail('cliente', id) });
 }
 function salvarVisita() {
@@ -2125,6 +2246,7 @@ function capturarPosicaoImovel(id) {
 // ---------- seed ----------
 function seedDatabase() {
   db.run(SCHEMA_SQL);
+  runMigrations();
   // bairro e endereço saem do próprio nome do imóvel — são lugares reais do portfólio,
   // não dado inventado. lat/lng ficam vazios de propósito: quem grava a coordenada é o
   // corretor, em campo, com "usar minha posição".
@@ -2211,6 +2333,7 @@ async function boot() {
     if (stored) {
       db = new SQL.Database(new Uint8Array(stored));
       runMigrations();
+      try { db.run('DELETE FROM lixeira WHERE apagado_em < ?', [todayISO(-30)]); } catch (e) { /* ok */ }
     } else {
       db = new SQL.Database();
       seedDatabase();
@@ -2230,6 +2353,7 @@ async function boot() {
       '<div style="font-size:0.78rem;margin-top:10px;opacity:.8">apaga o banco salvo neste aparelho e recarrega com os dados iniciais</div></div>';
     return;
   }
+  if (pinSalvo()) travar();
   document.getElementById('boot-screen').classList.add('hidden');
 }
 async function recomecarDoZeroNoBoot() {
@@ -2290,19 +2414,29 @@ function importDb(evt) {
 }
 
 // ---------- integrações reais do aparelho ----------
-function ligar(tel) {
+// Rodada 33 (B1): ligar e mandar WhatsApp passam a lembrar com quem foi. Na volta pro app,
+// a ligação pergunta como foi (se ficou pelo menos 10 s fora) e a mensagem oferece
+// registrar — os dois entram na linha do tempo da pessoa.
+function ligar(tel, pessoa) {
   if (!tel) return showToastErr('Sem telefone cadastrado.');
+  const p = pessoa ? parsePessoa(pessoa) : pessoaPorTelefone(tel);
+  contatoPendente = p ? { tipo: 'ligacao', pessoa: p, t: Date.now(), saiu: false } : null;
   window.location.href = 'tel:' + tel.replace(/[^\d+]/g, '');
 }
-function abrirWhats(tel, texto) {
+function abrirWhats(tel, texto, pessoa) {
   if (!tel) return showToastErr('Sem telefone cadastrado.');
+  const p = pessoa ? parsePessoa(pessoa) : pessoaPorTelefone(tel);
+  contatoPendente = p ? { tipo: 'whatsapp', pessoa: p, texto: texto || '', t: Date.now(), saiu: false } : null;
   window.open(waLink(tel, texto), '_blank');  // mesma normalização dos chips e da folha
 }
 async function compartilharImovel(id, mode) {
   const im = q('SELECT * FROM imovel WHERE id=?', [id])[0];
   if (!im) return;
+  // Rodada 33 (B4): anúncio público precisa de autorização escrita do proprietário e do
+  // número do CRECI. Mandar pra um cliente numa conversa ('privado') não é anúncio.
+  if (mode !== 'privado' && (!im.autorizacao_em || !cfg('creci'))) return avisoAnuncio(im, mode);
   const texto = [nomeImovel(im), [im.tipo, im.bairro].filter(Boolean).join(' · '), fmtBRL(im.valor),
-                 `Fale comigo: ${CORRETOR_NOME}`].filter(Boolean).join('\n');
+                 assinatura()].filter(Boolean).join('\n');
   if (mode === 'copy') {
     try { await navigator.clipboard.writeText(texto); showToast('Texto do imóvel copiado.'); }
     catch (e) { showToastErr('Não consegui copiar automaticamente neste navegador.'); }
@@ -2326,8 +2460,8 @@ function abrirAvisar(visitaId) {
   const imovel = nomeImovel({ codigo: v.codigo, nome: v.imovel_nome });
   window.__avisar = {
     tel: v.telefone,
-    confirmar: `Oi${primeiro}! Aqui é ${CORRETOR_NOME}. Confirmando nossa visita ${quandoVisita(v)} às ${v.hora} — ${v.imovel_nome}. Tudo certo?`,
-    caminho: min => `Oi${primeiro}! Aqui é ${CORRETOR_NOME}, estou a caminho da nossa visita (${v.imovel_nome}). Chego em uns ${min} minutos.`
+    confirmar: `Oi${primeiro}! Aqui é ${nomeCorretor()}. Confirmando nossa visita ${quandoVisita(v)} às ${v.hora} — ${v.imovel_nome}. Tudo certo?`,
+    caminho: min => `Oi${primeiro}! Aqui é ${nomeCorretor()}, estou a caminho da nossa visita (${v.imovel_nome}). Chego em uns ${min} minutos.`
   };
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">Avisar ${esc(v.lead_nome || 'o cliente')}</h2>
@@ -2349,10 +2483,49 @@ function enviarAviso(qual) {
   abrirWhats(a.tel, texto);
 }
 
+// Rodada 33 (B14): só abria o Google Maps. Agora pergunta uma vez (Google Maps ou Waze) e
+// lembra; dá pra trocar em Mais.
+function mapaPreferido() { try { return localStorage.getItem('mapa:app') || ''; } catch (e) { return ''; } }
+function setMapaApp(app) {
+  try { if (app) localStorage.setItem('mapa:app', app); else localStorage.removeItem('mapa:app'); } catch (e) { /* ok */ }
+  marcarMapaApp();
+}
+function marcarMapaApp() {
+  const atual = mapaPreferido();
+  document.querySelectorAll('#seg-mapa .chip').forEach(b => { const on = b.dataset.mapa === atual; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+}
+function urlMapa(im, app) {
+  const temGeo = im.lat != null && im.lng != null;
+  const destino = temGeo ? `${im.lat},${im.lng}` : [im.endereco, im.bairro, im.nome].filter(Boolean).join(', ');
+  if (app === 'waze') return temGeo ? `https://waze.com/ul?ll=${im.lat},${im.lng}&navigate=yes` : `https://waze.com/ul?q=${encodeURIComponent(destino)}&navigate=yes`;
+  return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(destino);
+}
 function abrirMapa(im) {
-  const destino = (im.lat && im.lng) ? `${im.lat},${im.lng}`
-    : [im.endereco, im.bairro, im.nome].filter(Boolean).join(', ');
-  window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(destino), '_blank');
+  const app = mapaPreferido();
+  if (app) return window.open(urlMapa(im, app), '_blank');
+  window.__mapaIm = im;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Abrir com</h2>
+    <div class="acoes-2">
+      <button class="btn" onclick="escolherMapa('google')">${ico('mapa')}Google Maps</button>
+      <button class="btn" onclick="escolherMapa('waze')">${ico('rota')}Waze</button>
+    </div>
+    <label class="lembrar"><input type="checkbox" id="mapa-lembrar" checked> Usar sempre este app (dá pra trocar em Mais)</label>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false });
+}
+function escolherMapa(app) {
+  const lembrar = document.getElementById('mapa-lembrar');
+  if (lembrar && lembrar.checked) setMapaApp(app);
+  const im = window.__mapaIm;
+  closeSheet();
+  if (im) window.open(urlMapa(im, app), '_blank');
+}
+function abrirRotaInteira() {
+  const l = window.__rotaLista || []; if (l.length < 2) return;
+  const ponto = p => (p.lat != null && p.lng != null) ? `${p.lat},${p.lng}` : [p.endereco, p.bairro, p.imovel_nome].filter(Boolean).join(', ');
+  const destino = ponto(l[l.length - 1]), meio = l.slice(0, -1).map(ponto);
+  window.open('https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=' + encodeURIComponent(destino)
+    + (meio.length ? '&waypoints=' + encodeURIComponent(meio.join('|')) : ''), '_blank');
 }
 function abrirMapaId(id) {
   const im = q('SELECT * FROM imovel WHERE id=?', [id])[0];
@@ -2458,6 +2631,7 @@ function openDetail(tipo, id) {
   else if (tipo === 'imovel') html = detailImovelHTML(id);
   else if (tipo === 'lead') html = detailLeadHTML(id);
   else if (tipo === 'arquivo') html = detailArquivoHTML(id);
+  else if (tipo === 'captacao') html = detailCaptacaoHTML(id);
   else return;
   openSheet(html + `<button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false });
 }
@@ -2468,11 +2642,17 @@ function cabecalhoDetalhe(eyebrow, titulo) {
 function linhaCampo(k, v) {
   return `<div style="margin-top:var(--s3)"><div class="eyebrow" style="color:var(--text-3)">${esc(k)}</div><div>${v}</div></div>`;
 }
-function acoesContato(tel) {
+function acoesContato(tel, pessoa) {
+  const t = esc(tel || ''), p = esc(pessoa || '');
   return `<div class="btn-row" style="margin-top:var(--s3)">
-    <button class="btn btn--grow" data-tel="${esc(tel || '')}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>
-    <button class="btn btn--grow btn--ok" data-tel="${esc(tel || '')}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>
+    <button class="btn btn--grow" data-tel="${t}" data-pessoa="${p}" onclick="ligar(this.dataset.tel, this.dataset.pessoa)">${ico('telefone')}Ligar</button>
+    <button class="btn btn--grow btn--ok" data-tel="${t}" data-pessoa="${p}" onclick="abrirWhats(this.dataset.tel, '', this.dataset.pessoa)">${ico('conversa')}WhatsApp</button>
   </div>`;
+}
+function blocoLinhaDoTempo(tipo, id) {
+  return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Linha do tempo</h3>
+      <button class="btn btn--sm" onclick="folhaComoFoi('${tipo}:${id}', true)">${ico('somar')}Registrar contato</button></div>
+    ${linhaDoTempoHTML(tipo, id)}`;
 }
 function detailClienteHTML(id) {
   const c = q('SELECT * FROM cliente WHERE id=?', [id])[0];
@@ -2483,22 +2663,51 @@ function detailClienteHTML(id) {
       ${linhaCampo('E-mail', esc(c.email || '—'))}
       ${linhaCampo('Tipo', esc(c.tipo || '—'))}
       ${linhaCampo('Observações', esc(c.observacoes || '—'))}
-      ${acoesContato(c.telefone)}
+      ${acoesContato(c.telefone, 'cliente:' + id)}
     </div>
     <button class="btn btn--block" onclick="abrirCriar('cliente', ${id})">${ico('somar')}Criar algo ligado a este cliente</button>
-    <h3 class="blk-title">Notas</h3>${linkedNotasHTML('cliente_id', id)}
-    <h3 class="blk-title">Arquivos vinculados</h3>${linkedArquivosHTML('cliente_id', id)}`;
+    ${blocoLinhaDoTempo('cliente', id)}
+    ${botaoApagar('cliente', id, 'Apagar cliente')}`;
+}
+function detailCaptacaoHTML(id) {
+  const c = q('SELECT * FROM captacao_lp WHERE id=?', [id])[0];
+  if (!c) return `<div class="empty">${ico('alerta')}<p>Captação não encontrada.</p></div>`;
+  return cabecalhoDetalhe('Captação', c.nome) + `
+    <div class="card">
+      ${linhaCampo('Telefone', c.telefone ? phoneChipHTML(c.telefone) : '—')}
+      ${linhaCampo('Endereço do imóvel', esc(c.endereco || '—'))}
+      ${linhaCampo('Tipo', esc(c.tipo_imovel || '—'))}
+      ${linhaCampo('Motivo', esc(c.motivo || '—'))}
+      ${acoesContato(c.telefone, 'captacao:' + id)}
+    </div>
+    <button class="btn btn--block" onclick="captacaoVirarImovel(${id})">${ico('portfolio')}Virar imóvel do portfólio</button>
+    ${blocoLinhaDoTempo('captacao', id)}
+    ${botaoApagar('captacao', id, 'Apagar captação')}`;
+}
+function captacaoVirarImovel(id) {
+  const c = q('SELECT * FROM captacao_lp WHERE id=?', [id])[0]; if (!c) return;
+  closeSheet();
+  openForm('imovel');
+  const set = (i, v) => { const e = document.getElementById(i); if (e && v) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); } };
+  set('fi-nome', c.endereco || c.nome); set('fi-endereco', c.endereco); set('fi-tipo', c.tipo_imovel);
+  const fold = document.querySelector('#form-sheet details'); if (fold) fold.open = true;
 }
 function detailImovelHTML(id) {
   const im = q('SELECT * FROM imovel WHERE id=?', [id])[0];
   if (!im) return `<div class="empty">${ico('alerta')}<p>Imóvel não encontrado.</p></div>`;
   const leads = q('SELECT * FROM lead WHERE imovel_id=? ORDER BY criado_em DESC', [id]);
+  const fotos = q('SELECT id, imagem_base64 FROM imovel_foto WHERE imovel_id=? ORDER BY id', [id]);
+  const fatos = FATOS.map(f => [f[1], valorFato(im, f)]).filter(x => x[1]);
+  const chk = checklistDe(id);
   return cabecalhoDetalhe('Imóvel', nomeImovel(im)) +
     (im.imagem_base64 ? `<img class="shot" src="${im.imagem_base64}" alt="">` : '') + `
     <div class="card">
       <div class="between"><span class="price">${fmtBRL(im.valor)}</span><span class="pill ${im.status === 'vendido' ? '' : 'ok'}">${esc(im.status)}</span></div>
       <p class="muted" style="margin:var(--s2) 0 0">${esc(im.estrategia || '')}</p>
       ${im.bairro || im.endereco ? linhaCampo('Onde fica', esc([im.endereco, im.bairro].filter(Boolean).join(' · '))) : ''}
+      ${linhaCampo('Autorização de venda', im.autorizacao_em
+        ? `registrada ${esc(fmtRelDate(im.autorizacao_em))} <button class="link" onclick="tirarAutorizacao(${id})">tirar</button>`
+        : `não registrada <button class="link" onclick="registrarAutorizacao(${id})">registrar</button>`)}
       <div class="btn-row" style="margin-top:var(--s3)">
         <button class="btn btn--ok btn--grow" onclick="compartilharImovel(${im.id})">${ico('compartilhar')}Compartilhar</button>
         <button class="btn btn--grow" onclick="compartilharImovel(${im.id}, 'copy')">${ico('copiar')}Copiar</button>
@@ -2508,12 +2717,36 @@ function detailImovelHTML(id) {
         <button class="btn btn--grow" onclick="capturarPosicaoImovel(${im.id})">${ico('rota')}${im.lat ? 'Atualizar posição' : 'Marcar posição'}</button>
       </div>
     </div>
-    <button class="btn btn--block" onclick="abrirCriar('imovel', ${id})">${ico('somar')}Criar algo ligado a este imóvel</button>
+
+    <h3 class="blk-title">Fatos</h3>
+    <div class="card">
+      ${fatos.length ? `<div class="fatos">${fatos.map(([k, v]) => `<div><div class="fatos__k">${esc(k)}</div><div class="fatos__v">${esc(v)}</div></div>`).join('')}</div>`
+        : `<p class="muted" style="margin:0">Sem fatos ainda. Área, quartos, vagas, condomínio e posição do sol são o que o cliente pergunta primeiro.</p>`}
+      <button class="btn btn--block" style="margin-top:var(--s3)" onclick="editarFatos(${id})">${ico('editar')}${fatos.length ? 'Editar fatos' : 'Preencher fatos'}</button>
+    </div>
+
+    <h3 class="blk-title">Fotos</h3>
+    ${fotos.length ? `<div class="fotos-grade">${fotos.map(f => `<button class="foto" onclick="abrirFoto(${f.id})" aria-label="Abrir foto"><img src="${f.imagem_base64}" alt=""></button>`).join('')}</div>` : ''}
+    <div class="btn-row">
+      <button class="btn btn--grow" onclick="document.getElementById('foto-cam-${id}').click()">${ico('camera')}Tirar foto</button>
+      <button class="btn btn--grow" onclick="document.getElementById('foto-gal-${id}').click()">${ico('upload')}Da galeria</button>
+    </div>
+    <input type="file" id="foto-cam-${id}" accept="image/*" capture="environment" hidden onchange="adicionarFotos(${id}, this)">
+    <input type="file" id="foto-gal-${id}" accept="image/*" multiple hidden onchange="adicionarFotos(${id}, this)">
+
+    <h3 class="blk-title">Comparáveis na carteira</h3>
+    ${cmaHTML(cmaDe(id))}
+
+    <h3 class="blk-title">Documentos da venda · ${chk.feitos} de ${chk.total}</h3>
+    ${checklistHTML(id, chk)}
+
+    <button class="btn btn--block" style="margin-top:var(--s3)" onclick="abrirCriar('imovel', ${id})">${ico('somar')}Criar algo ligado a este imóvel</button>
     <h3 class="blk-title">Leads interessados</h3>
     ${leads.length ? leads.map(l => `<div class="card between"><span>${objLink('lead', l.id, l.nome)}</span><span class="pill brand">${esc(l.classificacao || '—')}</span></div>`).join('')
                    : `<div class="empty">${ico('leads')}<p>Nenhum lead vinculado a este imóvel.</p></div>`}
     <h3 class="blk-title">Notas</h3>${linkedNotasHTML('imovel_id', id)}
-    <h3 class="blk-title">Arquivos vinculados</h3>${linkedArquivosHTML('imovel_id', id)}`;
+    <h3 class="blk-title">Arquivos vinculados</h3>${linkedArquivosHTML('imovel_id', id)}
+    ${botaoApagar('imovel', id, 'Apagar imóvel')}`;
 }
 function detailLeadHTML(id) {
   const l = q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id WHERE l.id=?`, [id])[0];
@@ -2525,12 +2758,12 @@ function detailLeadHTML(id) {
       ${linhaCampo('Imóvel de interesse', l.imovel_id ? objLink('imovel', l.imovel_id, nomeImovel({ codigo: l.codigo, nome: l.imovel_nome })) : esc(l.tipo_interesse || '—'))}
       ${linhaCampo('Motivação', esc(l.motivacao || '—'))}
       ${linhaCampo('Próximo passo', esc(l.proximo_passo || '—'))}
-      ${linhaCampo('Estágio', `<select onchange="setLeadStage(${l.id}, this.value)" style="min-height:var(--tap);width:100%;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);color:var(--text);padding:0 var(--s3)">${Object.keys(STAGE_LABELS).map(s => `<option value="${s}" ${s === l.estagio ? 'selected' : ''}>${STAGE_LABELS[s]}</option>`).join('')}</select>`)}
-      ${acoesContato(l.telefone)}
+      ${linhaCampo('Estágio', `<select onchange="setLeadStage(${l.id}, this.value)" style="min-height:var(--tap);width:100%;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);color:var(--text);padding:0 var(--s3)">${Object.keys(STAGE_LABELS).map(st => `<option value="${st}" ${st === l.estagio ? 'selected' : ''}>${STAGE_LABELS[st]}</option>`).join('')}</select>`)}
+      ${acoesContato(l.telefone, 'lead:' + id)}
     </div>
     <button class="btn btn--block" onclick="abrirCriar('lead', ${id})">${ico('somar')}Criar algo ligado a este lead</button>
-    <h3 class="blk-title">Notas</h3>${linkedNotasHTML('lead_id', id)}
-    <h3 class="blk-title">Arquivos vinculados</h3>${linkedArquivosHTML('lead_id', id)}`;
+    ${blocoLinhaDoTempo('lead', id)}
+    ${botaoApagar('lead', id, 'Apagar lead')}`;
 }
 function detailArquivoHTML(id) {
   const d = q('SELECT * FROM documento_carteira WHERE id=?', [id])[0];
@@ -2553,7 +2786,8 @@ function detailArquivoHTML(id) {
       <div class="field"><label for="link-imovel-${d.id}">Imóvel</label><select id="link-imovel-${d.id}">${optHTML(imoveis, d.imovel_id, nomeImovel)}</select></div>
       <div class="field"><label for="link-lead-${d.id}">Lead</label><select id="link-lead-${d.id}">${optHTML(leads, d.lead_id, r => r.nome)}</select></div>
       <button class="btn btn--primary btn--block" onclick="salvarVinculosArquivo(${d.id})">Salvar vínculos</button>
-    </div>`;
+    </div>
+    ${botaoApagar('arquivo', d.id, 'Apagar arquivo')}`;
 }
 function salvarVinculosArquivo(id) {
   run('UPDATE documento_carteira SET cliente_id=?, imovel_id=?, lead_id=? WHERE id=?', [
@@ -2566,7 +2800,7 @@ function salvarVinculosArquivo(id) {
 }
 function setLeadStage(id, estagio) {
   run(`UPDATE lead SET estagio=? WHERE id=?`, [estagio, id]);
-  crFilter = estagio;
+  crFilter = estagio; pessoasTipo = 'lead';
   renderCR(); renderHJ();
   if (sheetAberta()) openDetail('lead', id);
 }
@@ -2698,6 +2932,8 @@ async function toggleVoiceNote(pfx) {
 }
 function vozParaTexto(msg, lembrar) {
   if (lembrar) { try { localStorage.setItem('voz:sem-reconhecimento', '1'); } catch (e) { /* ok */ } }
+  // Rodada 33 (B5): sem transcrição, grava o áudio de verdade em vez de pedir pra digitar
+  if (window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) return gravarAudioSheet(msg);
   if (micPfx === 'vmic-' && viewAtual === 'visita' && visitaAtivaId) {
     notaDaVisita(visitaAtivaId, 'texto');
     setTimeout(() => { const t = document.getElementById('vnota-texto'); if (t) t.focus(); }, 90);
@@ -2710,11 +2946,11 @@ function vozParaTexto(msg, lembrar) {
 }
 // Único ponto de gravação de nota. É aqui que o vínculo entra — até a rodada 31 a nota
 // de voz e a de texto gravavam contexto='geral' fixo e nasciam órfãs.
-function gravarNota(modo, referencia, texto, imagem) {
+function gravarNota(modo, referencia, texto, imagem, audio) {
   const [vid, lid, iid, cid] = ctxNota();
   const contexto = vid ? 'visita' : lid ? 'lead' : iid ? 'imovel' : cid ? 'cliente' : 'geral';
-  run(`INSERT INTO nota (modo,contexto,referencia,texto,imagem_base64,hora,visita_id,lead_id,imovel_id,cliente_id) VALUES (?,?,?,?,?,?,?,?,?,?)`,
-    [modo, contexto, referencia, texto, imagem, horaAgora(), vid, lid, iid, cid]);
+  run(`INSERT INTO nota (modo,contexto,referencia,texto,imagem_base64,audio_base64,hora,visita_id,lead_id,imovel_id,cliente_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+    [modo, contexto, referencia, texto, imagem, audio || null, horaAgora(), vid, lid, iid, cid]);
   renderNT();
   if (viewAtual === 'visita') renderVisita();
   showToast(notaCtx ? 'Nota salva em ' + notaCtx.referencia + '.' : 'Nota salva.');
@@ -2907,7 +3143,7 @@ function pendenciasDoDia(leadsComVisita) {
   return out;
 }
 function renderHJ() {
-  document.getElementById('hj-hello').textContent = saudacao() + ', ' + CORRETOR_NOME;
+  document.getElementById('hj-hello').textContent = saudacao() + ', ' + nomeCorretor();
   const abertas = visitasDe(todayISO(0)).filter(v => !v.fim);
   const aTempo = abertas.filter(v => !horaPassou(v));
   const vencidas = abertas.filter(horaPassou);
@@ -2955,7 +3191,7 @@ function renderHJ() {
         <span class="row__main"><span class="row__t">${esc(r.lead_nome || r.nome)}</span>
           <span class="row__s">${esc([r.proximo_passo || r.imovel_nome, r._quando].filter(Boolean).join(' · '))}</span></span>
         ${ico('chevron', 'row__chev')}</button>`).join('') +
-      (restoPend.length > MAX ? `<button class="btn btn--ghost btn--block" onclick="go('cr')">Mais ${restoPend.length - MAX} em Leads</button>` : '')
+      (restoPend.length > MAX ? `<button class="btn btn--ghost btn--block" onclick="pessoasTipo='lead';go('cr');renderCR()">Mais ${restoPend.length - MAX} em Pessoas</button>` : '')
     : `<div class="empty">${ico('check')}<p>Nada vencendo agora.</p></div>`;
 }
 
@@ -2986,52 +3222,104 @@ function renderAG() {
 
 // ---------- render: LEADS ----------
 function setCrFilter(st) { crFilter = st; renderCR(); }
-function renderCaptacoes() {
-  const rows = q(`SELECT * FROM captacao_lp ORDER BY criado_em DESC LIMIT 5`);
-  document.getElementById('cr-captacoes-list').innerHTML = rows.length
-    ? rows.map(r => `<div class="card between"><span><b>${esc(r.nome)}</b> ${phoneChipHTML(r.telefone)}<br>
-        <span class="row__s">${esc(r.endereco)} · ${esc(r.tipo_imovel)}</span></span>
-        <span class="pill">${esc(r.motivo)}</span></div>`).join('')
-    : `<p class="muted" style="margin:0">Nenhuma captação registrada ainda.</p>`;
+// Rodada 33 (B6): Leads, Captação e Clientes eram três cadastros de gente em três lugares
+// (a captação nem tinha ficha). Agora é uma lista só, com o tipo como filtro, e a busca
+// procura nos três.
+let pessoasTipo = 'lead';
+function setPessoasTipo(t) { pessoasTipo = t; renderCR(); }
+function renderCaptacoes() { renderCR(); }
+function botoesContato(tel, pessoa, extra) {
+  const t = esc(tel || '');
+  return `<div class="btn-row">
+    <button class="btn btn--sm btn--grow" data-tel="${t}" data-pessoa="${pessoa}" onclick="ligar(this.dataset.tel, this.dataset.pessoa)">${ico('telefone')}Ligar</button>
+    <button class="btn btn--sm btn--grow btn--ok" data-tel="${t}" data-pessoa="${pessoa}" onclick="abrirWhats(this.dataset.tel, '', this.dataset.pessoa)">${ico('conversa')}WhatsApp</button>
+    ${extra || ''}
+  </div>`;
+}
+function cartaoLead(l, comTipo) {
+  return `<div class="card">
+    <button class="row" onclick="openDetail('lead', ${l.id})" style="margin-bottom:var(--s2)">
+      <span class="row__ico">${ico('pessoa')}</span>
+      <span class="row__main"><span class="row__t">${esc(l.nome)}</span>
+        <span class="row__s">${esc(l.imovel_nome ? nomeImovel({ codigo: l.codigo, nome: l.imovel_nome }) : (l.tipo_interesse || '—'))}</span></span>
+      ${ico('chevron', 'row__chev')}
+    </button>
+    <div class="between" style="margin-bottom:var(--s2)">
+      <span class="pill brand">${comTipo ? 'comprador · ' + esc(STAGE_LABELS[l.estagio] || l.estagio) : esc(l.classificacao || '—')}</span>
+      <span class="row__meta">${esc(l.canal_origem || '')} · ${fmtRelDate(l.criado_em)}</span>
+    </div>
+    ${botoesContato(l.telefone, 'lead:' + l.id, `<button class="btn btn--sm btn--icon" onclick="abrirCriar('lead', ${l.id})" aria-label="Criar ligado a este lead">${ico('somar')}</button>`)}
+  </div>`;
+}
+function cartaoCaptacao(c) {
+  return `<div class="card">
+    <button class="row" onclick="openDetail('captacao', ${c.id})" style="margin-bottom:var(--s2)">
+      <span class="row__ico">${ico('casa')}</span>
+      <span class="row__main"><span class="row__t">${esc(c.nome)}</span>
+        <span class="row__s">${esc([c.endereco, c.tipo_imovel].filter(Boolean).join(' · ') || '—')}</span></span>
+      ${ico('chevron', 'row__chev')}
+    </button>
+    <div class="between" style="margin-bottom:var(--s2)">
+      <span class="pill">captação · ${esc((c.motivo || '').toLowerCase())}</span>
+      <span class="row__meta">${fmtRelDate(c.criado_em)}</span>
+    </div>
+    ${botoesContato(c.telefone, 'captacao:' + c.id)}
+  </div>`;
+}
+function cartaoCliente(c) {
+  return `<div class="card">
+    <button class="row" onclick="openDetail('cliente', ${c.id})" style="margin-bottom:var(--s2)">
+      <span class="row__ico">${ico('pessoa')}</span>
+      <span class="row__main"><span class="row__t">${esc(c.nome)}</span>
+        <span class="row__s">${esc(c.observacoes || '')}</span></span>
+      ${ico('chevron', 'row__chev')}
+    </button>
+    <div class="between" style="margin-bottom:var(--s2)">
+      <span class="pill ok">cliente · ${esc((c.tipo || '').toLowerCase())}</span>
+      <span class="row__meta">${fmtRelDate(c.criado_em)}</span>
+    </div>
+    ${botoesContato(c.telefone, 'cliente:' + c.id)}
+  </div>`;
 }
 function renderCR() {
-  const counts = {};
-  q(`SELECT estagio, COUNT(*) c FROM lead GROUP BY estagio`).forEach(r => counts[r.estagio] = r.c);
-  document.getElementById('cr-chips').innerHTML = Object.keys(STAGE_LABELS).map(st =>
-    `<button class="chip ${crFilter === st ? 'on' : ''}" onclick="setCrFilter('${st}')">${STAGE_LABELS[st]} · ${counts[st] || 0}</button>`).join('');
-
-  // Rodada 33: Leads não tinha busca. Com termo, procura em todos os estágios — quem está
-  // na rua lembra do nome ou de um pedaço do telefone, não do estágio.
+  const n = t => q(`SELECT COUNT(*) c FROM ${t}`)[0].c;
+  const tipos = [['lead', 'Compradores', n('lead')], ['captacao', 'Captação', n('captacao_lp')], ['cliente', 'Clientes', n('cliente')]];
   const termo = ((document.getElementById('cr-search') || {}).value || '').trim().toLowerCase();
   const digitos = termo.replace(/\D/g, '');
-  let leads = termo
-    ? q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id ORDER BY l.criado_em DESC`)
-        .filter(l => (l.nome || '').toLowerCase().includes(termo) || (l.bairro_interesse || '').toLowerCase().includes(termo)
-          || (digitos.length >= 3 && (l.telefone || '').replace(/\D/g, '').includes(digitos)))
-    : q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
-         WHERE l.estagio=? ORDER BY l.criado_em DESC`, [crFilter]);
-  document.getElementById('cr-list').innerHTML = leads.length ? leads.map(l => {
-    const tel = esc(l.telefone || '');
-    return `<div class="card">
-      <button class="row" onclick="openDetail('lead', ${l.id})" style="margin-bottom:var(--s2)">
-        <span class="row__ico">${ico('pessoa')}</span>
-        <span class="row__main"><span class="row__t">${esc(l.nome)}</span>
-          <span class="row__s">${esc(l.imovel_nome ? nomeImovel({ codigo: l.codigo, nome: l.imovel_nome }) : (l.tipo_interesse || '—'))}</span></span>
-        ${ico('chevron', 'row__chev')}
-      </button>
-      <div class="between" style="margin-bottom:var(--s2)">
-        <span class="pill brand">${esc(l.classificacao || '—')}${termo ? ' · ' + esc(STAGE_LABELS[l.estagio] || l.estagio) : ''}</span>
-        <span class="row__meta">${esc(l.canal_origem || '')} · ${fmtRelDate(l.criado_em)}</span>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn--sm btn--grow" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>
-        <button class="btn btn--sm btn--grow btn--ok" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>
-        <button class="btn btn--sm btn--icon" onclick="abrirCriar('lead', ${l.id})" aria-label="Criar ligado a este lead">${ico('somar')}</button>
-      </div>
-    </div>`;
-  }).join('') : termo ? `<div class="empty">${ico('busca')}<p>Nenhum lead com "${esc(termo)}".</p></div>` : `<div class="empty">${ico('leads')}<p>Nenhum lead em ${STAGE_LABELS[crFilter].toLowerCase()}.</p>
-      <button class="btn btn--sm" onclick="openForm('lead-venda')">Cadastrar um</button></div>`;
-  renderCaptacoes();
+  const bate = (nome, extra, tel) => (nome || '').toLowerCase().includes(termo) || (extra || '').toLowerCase().includes(termo)
+    || (digitos.length >= 3 && (tel || '').replace(/\D/g, '').includes(digitos));
+
+  document.getElementById('cr-tipos').innerHTML = tipos.map(([k, t, c]) =>
+    `<button class="chip ${pessoasTipo === k && !termo ? 'on' : ''}" aria-pressed="${pessoasTipo === k && !termo}" onclick="setPessoasTipo('${k}')">${t} · ${c}</button>`).join('');
+  const chips = document.getElementById('cr-chips');
+  chips.hidden = !!termo || pessoasTipo !== 'lead';
+  if (!chips.hidden) {
+    const counts = {};
+    q(`SELECT estagio, COUNT(*) c FROM lead GROUP BY estagio`).forEach(r => { counts[r.estagio] = r.c; });
+    chips.innerHTML = Object.keys(STAGE_LABELS).map(st =>
+      `<button class="chip ${crFilter === st ? 'on' : ''}" onclick="setCrFilter('${st}')">${STAGE_LABELS[st]} · ${counts[st] || 0}</button>`).join('');
+  }
+
+  let html;
+  if (termo) {
+    const leads = q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id ORDER BY l.criado_em DESC`)
+      .filter(l => bate(l.nome, l.bairro_interesse, l.telefone));
+    const caps = q(`SELECT * FROM captacao_lp ORDER BY criado_em DESC`).filter(c => bate(c.nome, c.endereco, c.telefone));
+    const clis = q(`SELECT * FROM cliente ORDER BY criado_em DESC`).filter(c => bate(c.nome, c.observacoes, c.telefone));
+    html = leads.map(l => cartaoLead(l, true)).join('') + caps.map(cartaoCaptacao).join('') + clis.map(cartaoCliente).join('')
+      || `<div class="empty">${ico('busca')}<p>Ninguém com "${esc(termo)}".</p></div>`;
+  } else if (pessoasTipo === 'captacao') {
+    html = q(`SELECT * FROM captacao_lp ORDER BY criado_em DESC`).map(cartaoCaptacao).join('')
+      || `<div class="empty">${ico('casa')}<p>Nenhuma captação registrada ainda.</p><button class="btn btn--sm" onclick="openForm('lead-captacao')">Registrar uma</button></div>`;
+  } else if (pessoasTipo === 'cliente') {
+    html = q(`SELECT * FROM cliente ORDER BY criado_em DESC`).map(cartaoCliente).join('')
+      || `<div class="empty">${ico('pessoa')}<p>Nenhum cliente cadastrado.</p><button class="btn btn--sm" onclick="openForm('cliente')">Cadastrar um</button></div>`;
+  } else {
+    html = q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
+              WHERE l.estagio=? ORDER BY l.criado_em DESC`, [crFilter]).map(l => cartaoLead(l, false)).join('')
+      || `<div class="empty">${ico('leads')}<p>Nenhum comprador em ${STAGE_LABELS[crFilter].toLowerCase()}.</p><button class="btn btn--sm" onclick="openForm('lead-venda')">Cadastrar um</button></div>`;
+  }
+  document.getElementById('cr-list').innerHTML = html;
 }
 
 // ---------- render: PORTFÓLIO ----------
@@ -3070,9 +3358,11 @@ function notaCardHTML(n) {
   return `<div class="card card--note">
     <div class="between">
       <span class="note-tag">${ico(ic, 'ic-sm')}${esc(n.referencia || n.contexto || '')}</span>
-      <span class="row__meta">${fmtRelDate(n.criado_em)}${n.hora ? ', ' + esc(n.hora) : ''}</span>
+      <span class="row__meta" style="display:flex;align-items:center;gap:var(--s1)">${fmtRelDate(n.criado_em)}${n.hora ? ', ' + esc(n.hora) : ''}
+        <button class="btn btn--sm btn--icon btn--ghost" onclick="apagar('nota', ${n.id})" aria-label="Apagar nota">${ico('lixeira')}</button></span>
     </div>
     <p style="margin:var(--s2) 0 0">${esc(n.texto || '')}</p>
+    ${n.audio_base64 ? `<audio controls preload="none" src="${n.audio_base64}" style="width:100%;margin-top:var(--s2)"></audio>` : ''}
     ${n.imagem_base64 ? `<img class="note-thumb" src="${n.imagem_base64}" alt="">` : ''}
   </div>`;
 }
@@ -3103,6 +3393,14 @@ function renderCART() {
     || `<div class="empty">${ico('pasta')}<p>Nenhum arquivo pessoal.</p></div>`;
   document.getElementById('cart-negociacao-list').innerHTML = negoc.map(docCardHTML).join('')
     || `<div class="empty">${ico('pasta')}<p>Nenhum arquivo desta negociação.</p></div>`;
+  const ativos = q(`SELECT id, codigo, nome FROM imovel WHERE COALESCE(status,'')!='vendido' ORDER BY prioridade`);
+  document.getElementById('cart-venda-list').innerHTML = ativos.map(im => {
+    const c = checklistDe(im.id);
+    return `<button class="card card--tap row" onclick="openDetail('imovel', ${im.id})">
+      <span class="row__ico">${ico(c.feitos === c.total ? 'check' : 'pasta')}</span>
+      <span class="row__main"><span class="row__t">${esc(nomeImovel(im))}</span><span class="row__s">${c.feitos} de ${c.total} documentos da venda</span></span>
+      ${ico('chevron', 'row__chev')}</button>`;
+  }).join('') || `<div class="empty">${ico('pasta')}<p>Nenhum imóvel à venda.</p></div>`;
 }
 
 // ---------- render: CLIENTES ----------
@@ -3164,14 +3462,12 @@ function renderCalcImovelSelect() {
 function cCalcCMA() {
   const id = parseInt(document.getElementById('c-cma-imovel').value);
   if (!id) return;
-  const row = q('SELECT valor FROM imovel WHERE id=?', [id])[0];
-  if (!row) return;
-  const comps = q('SELECT nome,codigo,valor FROM imovel WHERE id!=? ORDER BY ABS(valor-?) LIMIT 3', [id, row.valor]);
-  document.getElementById('c-cma-comparaveis').innerHTML = comps.map(c =>
-    `<div class="between" style="font-size:var(--t-sm);margin-bottom:var(--s1)"><span>${esc(nomeImovel(c))}</span><span class="num">${fmtBRL(c.valor)}</span></div>`).join('');
-  const vals = comps.map(c => c.valor);
-  document.getElementById('c-cma-faixa').textContent = vals.length
-    ? fmtBRL(Math.min(...vals)) + ' – ' + fmtBRL(Math.max(...vals)) : '—';
+  const c = cmaDe(id); if (!c) return;
+  document.getElementById('c-cma-comparaveis').innerHTML = c.comps.length
+    ? c.comps.slice(0, 3).map(x => `<div class="between" style="font-size:var(--t-sm);margin-bottom:var(--s1)"><span>${esc(nomeImovel(x))}</span><span class="num">${fmtBRL(x.valor)}${x.area_util > 0 ? ' · ' + fmtBRL(x.valor / x.area_util) + '/m²' : ''}</span></div>`).join('')
+    : `<p class="muted" style="margin:0 0 var(--s2)">Nenhum imóvel do mesmo tipo à venda na carteira.</p>`;
+  document.getElementById('c-cma-faixa').textContent = c.estimado ? fmtBRL(c.estimado) + ' pelo m²'
+    : c.faixa ? fmtBRL(c.faixa[0]) + ' – ' + fmtBRL(c.faixa[1]) : '—';
 }
 
 // ---------- notificações ----------
@@ -3333,7 +3629,7 @@ function gravarRoteiro(id) { try { localStorage.setItem('roteiro:v1:' + id, JSON
 function abrirVisita(id) { visitaAtivaId = id; go('visita'); }
 function iniciarVisita(id) {
   const v = visitaFull(id); if (!v) return;
-  if (!v.inicio) { run(`UPDATE visita SET inicio=?, status='confirmada' WHERE id=?`, [agoraISO(), id]); vibrar(); }
+  if (!v.inicio) { run(`UPDATE visita SET inicio=?, status='confirmada' WHERE id=?`, [agoraISO(), id]); vibrar(); oferecerNotifVisita(id); }
   renderAG(); renderHJ();
   abrirVisita(id);
 }
@@ -3476,7 +3772,7 @@ function confirmarRemarcar(id) {
   run(`UPDATE visita SET data=?, hora=?, status='pendente', fim=NULL, desfecho=NULL WHERE id=?`, [data, hora, id]);
   closeSheet(); renderAll(); if (viewAtual === 'visita') renderVisita();
   const quando = (data === todayISO(0) ? 'hoje' : data === todayISO(1) ? 'amanhã' : fmtDataCurta(data)) + ' às ' + hora;
-  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Aqui é ${CORRETOR_NOME}. Podemos passar nossa visita (${v.imovel_nome}) pra ${quando}?`;
+  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Aqui é ${nomeCorretor()}. Podemos passar nossa visita (${v.imovel_nome}) pra ${quando}?`;
   showToast('Remarcada pra ' + quando + '.', v.telefone
     ? { label: 'Avisar', fn: () => abrirWhats(v.telefone, msg) }
     : { label: 'Desfazer', fn: () => restaurarVisita(id, antes) });
@@ -3636,6 +3932,7 @@ function confirmarEncerramento(id) {
   }
   try { localStorage.removeItem('roteiro:v1:' + id); } catch (e) { /* ok */ }
   limparRascunho();
+  fecharNotifVisita();
   roteiroMarcado = {};
   vibrar();
   closeSheet();
@@ -3728,6 +4025,7 @@ function renderRota() {
   if (posicaoAtual) lista.forEach(p => {
     p._perto = (p.lat != null && p.lng != null) && haversineKm(posicaoAtual, p) < 0.15;
   });
+  window.__rotaLista = lista;
   const economia = (podeCalcular && kmAgenda != null && kmCurta != null) ? kmAgenda - kmCurta : 0;
 
   body.innerHTML = `
@@ -3753,6 +4051,8 @@ function renderRota() {
       <button class="btn btn--block" style="margin-top:var(--s3)" onclick="usarMinhaPosicaoNaRota()">
         ${ico('mapa')}Contar a partir de onde estou
       </button>
+      ${lista.length >= 2 ? `<button class="btn btn--block" style="margin-top:var(--s2)" onclick="abrirRotaInteira()">${ico('rota')}Rota inteira no Google Maps</button>
+        <p class="muted" style="margin:var(--s2) 0 0">O Waze abre um destino por vez: use o Ir de cada parada.</p>` : ''}
     </div>
     ${lista.map((p, i) => `
       ${i ? '<div class="rota-line"></div>' : ''}
@@ -3789,11 +4089,791 @@ function usarMinhaPosicaoNaRota() {
   );
 }
 
+// =============================================================================
+// LOTE B (rodada 33) — base
+// =============================================================================
+
+// ---------- perfil do corretor e assinatura (B4) ----------
+// Nome e CRECI moram no banco (tabela config), não no código: é dado de quem usa o app.
+function cfg(chave) { try { const r = q('SELECT valor FROM config WHERE chave=?', [chave])[0]; return r ? (r.valor || '') : ''; } catch (e) { return ''; } }
+function setCfg(chave, valor) { run('INSERT OR REPLACE INTO config (chave, valor) VALUES (?, ?)', [chave, valor]); }
+function nomeCompletoCorretor() { return cfg('corretor_nome') || CORRETOR_NOME; }
+function nomeCorretor() { return nomeCompletoCorretor().split(' ')[0]; }
+function assinatura() {
+  const creci = cfg('creci');
+  return [nomeCompletoCorretor(), 'Corretor de Imóveis', creci ? 'CRECI ' + creci : ''].filter(Boolean).join(' · ');
+}
+function renderPerfil() {
+  const box = document.getElementById('perfil-box'); if (!box) return;
+  const creci = cfg('creci');
+  box.innerHTML = `<h4>Seu perfil</h4>
+    <div class="field"><label for="perfil-nome">Nome nas mensagens e anúncios</label><input id="perfil-nome" autocomplete="off" autocapitalize="words" value="${esc(nomeCompletoCorretor())}"></div>
+    <div class="field"><label for="perfil-creci">Número do CRECI</label><input id="perfil-creci" autocomplete="off" placeholder="Ex.: 00000-F" value="${esc(creci)}"></div>
+    <button class="btn btn--sm btn--block" onclick="salvarPerfil()">${ico('check')}Salvar perfil</button>
+    ${creci ? '' : '<p class="muted" style="margin:var(--s2) 0 0">Sem o CRECI, o compartilhamento de imóvel avisa antes de sair: anúncio precisa mostrar o número.</p>'}`;
+}
+function salvarPerfil() {
+  const nome = val('perfil-nome'), creci = val('perfil-creci');
+  if (!nome) return showToastErr('Escreva seu nome.');
+  setCfg('corretor_nome', nome); setCfg('creci', creci);
+  renderPerfil(); renderHJ();
+  showToast('Perfil salvo.');
+}
+function avisoAnuncio(im, mode) {
+  const creci = cfg('creci');
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Antes de anunciar</h2>
+    ${!im.autorizacao_em ? `<div class="card card--accent"><b>Sem autorização de venda registrada.</b>
+      <p class="muted" style="margin:var(--s1) 0 0">Anunciar publicamente exige autorização escrita do proprietário (Lei 6.530/1978, art. 20). Mandar pra um cliente numa conversa não é anúncio.</p>
+      <button class="btn btn--block" style="margin-top:var(--s3)" onclick="registrarAutorizacao(${im.id}, '${mode || 'share'}')">${ico('check')}Tenho a autorização: registrar</button></div>` : ''}
+    ${!creci ? `<div class="card card--accent"><b>Seu CRECI não está no perfil.</b>
+      <p class="muted" style="margin:var(--s1) 0 0">Todo anúncio precisa mostrar o número do CRECI.</p>
+      <button class="btn btn--block" style="margin-top:var(--s3)" onclick="closeSheet();go('mais')">${ico('pessoa')}Preencher o perfil</button></div>` : ''}
+    <button class="btn btn--ok btn--block" onclick="closeSheet();compartilharImovel(${im.id}, 'privado')">${ico('conversa')}Mandar só pra um cliente</button>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false });
+}
+function registrarAutorizacao(id, continuar) {
+  run('UPDATE imovel SET autorizacao_em=? WHERE id=?', [todayISO(0), id]);
+  renderVI();
+  if (continuar) { closeSheet(); compartilharImovel(id, continuar === 'share' ? undefined : continuar); }
+  else openDetail('imovel', id);
+  showToast('Autorização registrada.', { label: 'Desfazer', fn: () => { run('UPDATE imovel SET autorizacao_em=NULL WHERE id=?', [id]); renderVI(); } });
+}
+function tirarAutorizacao(id) {
+  run('UPDATE imovel SET autorizacao_em=NULL WHERE id=?', [id]);
+  renderVI(); openDetail('imovel', id);
+  showToast('Registro de autorização removido.');
+}
+
+// ---------- lixeira (B12) ----------
+// Nada podia ser apagado. Agora apagar move a linha (e o que depende dela) pra lixeira,
+// com Desfazer na hora e Restaurar por 30 dias. Restaura com o mesmo id: tudo que
+// apontava pra ela volta a se ligar sozinho.
+const APAGAVEIS = {
+  lead:     { tabela: 'lead', nome: 'Lead', rot: r => r.nome, filhos: [['sequencia_contato', 'lead_id'], ['interacao', 'lead_id']] },
+  cliente:  { tabela: 'cliente', nome: 'Cliente', rot: r => r.nome, filhos: [['interacao', 'cliente_id']] },
+  captacao: { tabela: 'captacao_lp', nome: 'Captação', rot: r => r.nome, filhos: [['interacao', 'captacao_id']] },
+  imovel:   { tabela: 'imovel', nome: 'Imóvel', rot: r => nomeImovel(r), filhos: [['imovel_foto', 'imovel_id'], ['checklist_item', 'imovel_id']] },
+  nota:     { tabela: 'nota', nome: 'Nota', rot: r => r.referencia || 'Nota', filhos: [] },
+  arquivo:  { tabela: 'documento_carteira', nome: 'Arquivo', rot: r => r.nome, filhos: [] },
+  foto:     { tabela: 'imovel_foto', nome: 'Foto', rot: () => 'Foto de imóvel', filhos: [], depois: r => openDetail('imovel', r.imovel_id) }
+};
+function botaoApagar(tipo, id, rotulo) {
+  return `<button class="btn btn--ghost btn--block" style="color:var(--danger);margin-top:var(--s4)" onclick="apagar('${tipo}', ${id})">${ico('lixeira')}${rotulo}</button>`;
+}
+function inserirLinha(tabela, row) {
+  const cols = Object.keys(row);
+  db.run(`INSERT OR REPLACE INTO ${tabela} (${cols.join(',')}) VALUES (${cols.map(() => '?').join(',')})`, cols.map(c => row[c]));
+}
+function apagar(tipo, id) {
+  const c = APAGAVEIS[tipo]; if (!c) return;
+  const row = q(`SELECT * FROM ${c.tabela} WHERE id=?`, [id])[0]; if (!row) return;
+  const pacote = { tipo, row, filhos: c.filhos.map(([t, col]) => [t, q(`SELECT * FROM ${t} WHERE ${col}=?`, [id])]) };
+  let lid;
+  try {
+    db.run('BEGIN');
+    db.run('INSERT INTO lixeira (tabela, rotulo, dados, apagado_em) VALUES (?,?,?,?)', [tipo, c.rot(row), JSON.stringify(pacote), agoraISO()]);
+    lid = q('SELECT MAX(id) m FROM lixeira')[0].m;
+    c.filhos.forEach(([t, col]) => db.run(`DELETE FROM ${t} WHERE ${col}=?`, [id]));
+    db.run(`DELETE FROM ${c.tabela} WHERE id=?`, [id]);
+    db.run('COMMIT');
+  } catch (e) {
+    try { db.run('ROLLBACK'); } catch (_) { /* ok */ }
+    return showToastErr('Não consegui apagar: ' + (e.message || e));
+  }
+  persist();
+  if (sheetAberta()) closeSheet();
+  renderAll();
+  if (viewAtual === 'visita') renderVisita();
+  if (viewAtual === 'lixo') renderLixeira();
+  if (c.depois) c.depois(row);
+  showToast('Apagado: ' + c.rot(row) + ' · fica 30 dias na lixeira', { label: 'Desfazer', fn: () => restaurar(lid) });
+}
+function restaurar(lid) {
+  const r = q('SELECT * FROM lixeira WHERE id=?', [lid])[0];
+  if (!r) return showToastErr('Esse item não está mais na lixeira.');
+  let p; try { p = JSON.parse(r.dados); } catch (e) { return showToastErr('Não consegui ler o item da lixeira.'); }
+  const c = APAGAVEIS[p.tipo]; if (!c) return;
+  try {
+    db.run('BEGIN');
+    inserirLinha(c.tabela, p.row);
+    (p.filhos || []).forEach(([t, rows]) => rows.forEach(row => inserirLinha(t, row)));
+    db.run('DELETE FROM lixeira WHERE id=?', [lid]);
+    db.run('COMMIT');
+  } catch (e) {
+    try { db.run('ROLLBACK'); } catch (_) { /* ok */ }
+    return showToastErr('Não consegui restaurar: ' + (e.message || e));
+  }
+  persist(); renderAll();
+  if (viewAtual === 'lixo') renderLixeira();
+  if (viewAtual === 'visita') renderVisita();
+  showToast('Restaurado: ' + r.rotulo);
+}
+function renderLixeira() {
+  const body = document.getElementById('lixo-body'); if (!body) return;
+  const rows = q('SELECT id, tabela, rotulo, apagado_em FROM lixeira ORDER BY id DESC');
+  body.innerHTML = `<p class="muted" style="margin:0 0 var(--s3)">O que foi apagado fica aqui por 30 dias e volta com tudo que estava ligado a ele.</p>` +
+    (rows.length ? rows.map(r => `<div class="card between">
+        <span style="min-width:0"><b>${esc(r.rotulo || '')}</b><br><span class="row__s">${esc((APAGAVEIS[r.tabela] || {}).nome || r.tabela)} · apagado ${esc(fmtRelDate(r.apagado_em))}</span></span>
+        <button class="btn btn--sm" onclick="restaurar(${r.id})">${ico('reset')}Restaurar</button></div>`).join('')
+      : `<div class="empty">${ico('lixeira')}<p>A lixeira está vazia.</p></div>`);
+}
+
+// ---------- trava por PIN e apagar dados (B13) ----------
+// O PIN impede abrir o app; não criptografa o banco do aparelho — a Mais diz isso. Guardado
+// só o hash (PBKDF2, 150 mil iterações, sal aleatório). 5 erros seguidos: 30 s de espera.
+const PIN_ITER = 150000, TRAVA_APOS_MS = 5 * 60 * 1000;
+let saiuDoAppEm = null;
+function pinSalvo() { try { return JSON.parse(localStorage.getItem('pin:v1') || 'null'); } catch (e) { return null; } }
+function travaDisponivel() { return !!(window.isSecureContext && window.crypto && crypto.subtle); }
+function bytesParaB64(b) { let t = ''; new Uint8Array(b).forEach(x => { t += String.fromCharCode(x); }); return btoa(t); }
+async function hashPin(pin, salt) {
+  const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
+  return bytesParaB64(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: b64ToBytes(salt), iterations: PIN_ITER }, k, 256));
+}
+function travaAberta() { const t = document.getElementById('trava'); return !!t && !t.hidden; }
+function travar() {
+  if (!pinSalvo()) return;
+  const t = document.getElementById('trava'); if (!t) return;
+  t.hidden = false;
+  document.getElementById('trava-pedir').hidden = false; document.getElementById('trava-esqueci').hidden = true;
+  const shell = document.querySelector('.app-shell'); if (shell) shell.setAttribute('inert', '');
+  document.getElementById('trava-pin').value = ''; document.getElementById('trava-erro').textContent = '';
+  setTimeout(() => { const i = document.getElementById('trava-pin'); if (i) i.focus(); }, 60);
+}
+function soltarTrava() {
+  document.getElementById('trava').hidden = true;
+  const shell = document.querySelector('.app-shell'); if (shell) shell.removeAttribute('inert');
+}
+async function destravar() {
+  const p = pinSalvo(); if (!p) return soltarTrava();
+  const erro = document.getElementById('trava-erro'), campoPin = document.getElementById('trava-pin');
+  let espera = 0, tentativas = 0;
+  try { espera = +(localStorage.getItem('pin:bloqueado-ate') || 0); tentativas = +(localStorage.getItem('pin:tentativas') || 0); } catch (e) { /* ok */ }
+  if (Date.now() < espera) { erro.textContent = 'Muitas tentativas. Tente de novo em ' + Math.ceil((espera - Date.now()) / 1000) + ' s.'; return; }
+  if (await hashPin(campoPin.value, p.salt) === p.hash) {
+    try { localStorage.removeItem('pin:tentativas'); } catch (e) { /* ok */ }
+    return soltarTrava();
+  }
+  tentativas++;
+  try {
+    localStorage.setItem('pin:tentativas', String(tentativas));
+    if (tentativas % 5 === 0) localStorage.setItem('pin:bloqueado-ate', String(Date.now() + 30000));
+  } catch (e) { /* ok */ }
+  erro.textContent = tentativas % 5 === 0 ? 'PIN errado 5 vezes. Espere 30 segundos.' : 'PIN errado.';
+  campoPin.value = ''; campoPin.focus();
+}
+document.addEventListener('visibilitychange', () => {
+  if (!pinSalvo()) return;
+  if (document.visibilityState === 'hidden') { saiuDoAppEm = Date.now(); return; }
+  if (saiuDoAppEm && Date.now() - saiuDoAppEm > TRAVA_APOS_MS && !travaAberta()) travar();
+  saiuDoAppEm = null;
+});
+function renderTrava() {
+  const box = document.getElementById('trava-box'); if (!box) return;
+  if (!travaDisponivel()) {
+    box.innerHTML = '<h4>Trava do app</h4><p class="muted" style="margin:0">A trava por PIN precisa do app aberto por HTTPS (instalado ou pelo endereço publicado).</p>';
+    return;
+  }
+  const tem = !!pinSalvo();
+  box.innerHTML = `<h4>Trava do app</h4>
+    <p class="muted" style="margin:0 0 var(--s3)">Pede um PIN ao abrir o app e depois de 5 minutos fora dele. O PIN impede abrir o app; não criptografa os dados do aparelho.</p>
+    ${tem ? `<div class="btn-row"><button class="btn btn--sm btn--grow" onclick="travar()">${ico('check')}Travar agora</button>
+             <button class="btn btn--sm btn--grow" onclick="folhaPin('remover')">Tirar a trava</button></div>`
+          : `<button class="btn btn--sm btn--block" onclick="folhaPin('criar')">${ico('check')}Criar PIN</button>`}`;
+}
+function folhaPin(modo) {
+  const criar = modo === 'criar';
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">${criar ? 'Criar PIN' : 'Tirar a trava'}</h2>
+    <form id="form-pin" onsubmit="event.preventDefault();salvarPin('${modo}')" novalidate>
+      ${campo('pin-1', criar ? 'PIN de 4 a 8 números' : 'PIN atual', '<input id="pin-1" type="password" inputmode="numeric" autocomplete="off" maxlength="8">')}
+      ${criar ? campo('pin-2', 'Repita o PIN', '<input id="pin-2" type="password" inputmode="numeric" autocomplete="off" maxlength="8">') : ''}
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${criar ? 'Criar PIN' : 'Tirar a trava'}</button>
+        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+      </div>
+    </form>`);
+}
+async function salvarPin(modo) {
+  const a = val('pin-1');
+  if (modo === 'criar') {
+    if (!/^\d{4,8}$/.test(a)) return erroCampo('pin-1', 'Use de 4 a 8 números.');
+    if (a !== val('pin-2')) return erroCampo('pin-2', 'Os dois PINs não batem.');
+    const salt = bytesParaB64(crypto.getRandomValues(new Uint8Array(16)));
+    try { localStorage.setItem('pin:v1', JSON.stringify({ salt, hash: await hashPin(a, salt), iter: PIN_ITER })); }
+    catch (e) { return showToastErr('Não consegui guardar o PIN neste navegador.'); }
+    closeSheet(); renderTrava();
+    showToast('PIN criado. O app pede o PIN ao abrir.');
+  } else {
+    const p = pinSalvo(); if (!p) return closeSheet();
+    if (await hashPin(a, p.salt) !== p.hash) return erroCampo('pin-1', 'PIN errado.');
+    try { localStorage.removeItem('pin:v1'); localStorage.removeItem('pin:tentativas'); } catch (e) { /* ok */ }
+    closeSheet(); renderTrava();
+    showToast('Trava removida.');
+  }
+}
+function confirmarApagarAparelho() {
+  confirmar('Apagar todos os dados deste aparelho?',
+    'Apaga o banco (imóveis, leads, clientes, notas e arquivos), os rascunhos, a trava e as preferências deste aparelho. Não dá pra desfazer — exporte antes se quiser guardar. O app volta a abrir com os dados de exemplo.',
+    'Apagar tudo', apagarAparelho);
+}
+async function apagarAparelho() {
+  try { await idbClear(); } catch (e) { /* segue */ }
+  try { localStorage.clear(); sessionStorage.clear(); } catch (e) { /* segue */ }
+  location.reload();
+}
+
+// =============================================================================
+// LOTE B (rodada 33) — pessoas, contato e linha do tempo
+// =============================================================================
+let contatoPendente = null;   // { tipo: 'ligacao'|'whatsapp', pessoa, texto, t, saiu }
+const TABELA_PESSOA = { lead: 'lead', cliente: 'cliente', captacao: 'captacao_lp' };
+const COLUNA_PESSOA = { lead: 'lead_id', cliente: 'cliente_id', captacao: 'captacao_id' };
+function parsePessoa(txt) {
+  const [tipo, id] = String(txt || '').split(':');
+  if (!TABELA_PESSOA[tipo] || !+id) return null;
+  const r = q(`SELECT id, nome FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [+id])[0];
+  return r ? { tipo, id: r.id, nome: r.nome } : null;
+}
+// Sem a pessoa explícita (ex.: botão de ligar do Hoje), acha pelo telefone: comprador,
+// depois cliente, depois captação. Compara os 8 últimos dígitos.
+function pessoaPorTelefone(tel) {
+  const d = String(tel || '').replace(/\D/g, '').slice(-8); if (d.length < 8) return null;
+  for (const tipo of ['lead', 'cliente', 'captacao']) {
+    const r = q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[tipo]}`).find(x => String(x.telefone || '').replace(/\D/g, '').slice(-8) === d);
+    if (r) return { tipo, id: r.id, nome: r.nome };
+  }
+  return null;
+}
+function registrarInteracao(p, tipo, resultado, texto) {
+  return insertAndGetId(`INSERT INTO interacao (${COLUNA_PESSOA[p.tipo]}, tipo, resultado, texto, criado_em) VALUES (?,?,?,?,?)`,
+    [p.id, tipo, resultado || null, texto || null, agoraISO()]);
+}
+document.addEventListener('visibilitychange', () => {
+  const c = contatoPendente; if (!c || !db) return;
+  if (document.visibilityState === 'hidden') { c.saiu = true; return; }
+  if (!c.saiu) return;
+  contatoPendente = null;
+  const primeiro = (c.pessoa.nome || '').split(' ')[0];
+  if (c.tipo === 'ligacao') {
+    // voltou em menos de 10 s: a ligação provavelmente nem completou
+    if (Date.now() - c.t < 10000 || sheetAberta()) return;
+    folhaComoFoi(c.pessoa.tipo + ':' + c.pessoa.id, false);
+  } else {
+    showToast('Mandou a mensagem pra ' + primeiro + '?', { label: 'Registrar', fn: () => {
+      const iid = registrarInteracao(c.pessoa, 'whatsapp', 'mensagem enviada', (c.texto || '').slice(0, 200));
+      renderAll();
+      showToast('Registrado na linha do tempo de ' + primeiro + '.', { label: 'Desfazer', fn: () => { run('DELETE FROM interacao WHERE id=?', [iid]); renderAll(); } });
+    } });
+  }
+});
+
+// ---------- como foi a ligação (B1) ----------
+const RESULTADOS_CONTATO = [
+  { k: 'Conversamos', prox: 0 }, { k: 'Quer visitar', prox: 0 }, { k: 'Pediu retorno', prox: 3 },
+  { k: 'Não atendeu', prox: 1 }, { k: 'Número errado', prox: 0 }
+];
+function folhaComoFoi(pessoaTxt, manual) {
+  const p = parsePessoa(pessoaTxt); if (!p) return;
+  window.__cf = { res: null, prox: 0, canal: 'ligacao' };
+  const grupo = (id, itens) => `<div class="chip-row" style="flex-wrap:wrap;overflow:visible" id="${id}">${itens}</div>`;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">${manual ? 'Registrar contato' : 'Como foi a ligação?'}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(p.nome)}${manual ? '' : ' · você voltou do telefone agora'}</p>
+    ${manual ? grupo('cf-canal', [['ligacao', 'Ligação'], ['whatsapp', 'WhatsApp'], ['pessoalmente', 'Pessoalmente']].map(([k, t], i) =>
+      `<button type="button" class="chip ${i === 0 ? 'on' : ''}" aria-pressed="${i === 0}" onclick="marcarChipCf(this, 'canal', '${k}')">${t}</button>`).join('')) : ''}
+    ${grupo('cf-res', RESULTADOS_CONTATO.map((r, i) => `<button type="button" class="chip" aria-pressed="false" onclick="escolherResultado(this, ${i})">${r.k}</button>`).join(''))}
+    <div class="field"><label for="cf-texto">O que ficou combinado</label><textarea id="cf-texto" placeholder="Ex.: quer ver sábado de manhã"></textarea></div>
+    ${p.tipo === 'lead' ? `<h3 class="blk-title">Próximo contato</h3>` + grupo('cf-prox', [[0, 'Nenhum'], [1, 'Amanhã'], [3, 'Em 3 dias'], [7, 'Em 7 dias']].map(([d, t]) =>
+      `<button type="button" class="chip ${d === 0 ? 'on' : ''}" data-d="${d}" aria-pressed="${d === 0}" onclick="marcarChipCf(this, 'prox', ${d})">${t}</button>`).join('')) : ''}
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" onclick="salvarComoFoi('${pessoaTxt}')">${ico('check')}Registrar</button>
+      <button class="btn btn--grow" onclick="closeSheet()">${manual ? 'Cancelar' : 'Pular'}</button>
+    </div>`, { foco: false });
+}
+function marcarChipCf(el, campo, valor) {
+  el.parentNode.querySelectorAll('.chip').forEach(c => { c.classList.remove('on'); c.setAttribute('aria-pressed', 'false'); });
+  el.classList.add('on'); el.setAttribute('aria-pressed', 'true');
+  window.__cf[campo] = valor;
+}
+function escolherResultado(el, i) {
+  marcarChipCf(el, 'res', i);
+  const d = RESULTADOS_CONTATO[i].prox, alvo = document.querySelector(`#cf-prox .chip[data-d="${d}"]`);
+  if (alvo) marcarChipCf(alvo, 'prox', d);
+}
+function salvarComoFoi(pessoaTxt) {
+  const p = parsePessoa(pessoaTxt), cf = window.__cf; if (!p || !cf) return;
+  if (cf.res == null) return showToastErr('Escolha como foi.');
+  const r = RESULTADOS_CONTATO[cf.res], texto = val('cf-texto'), dias = p.tipo === 'lead' ? cf.prox : 0;
+  const iid = registrarInteracao(p, cf.canal, r.k, texto);
+  let seqId = null, estagioAntes = null;
+  if (p.tipo === 'lead') {
+    if (dias) seqId = insertAndGetId(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
+      [p.id, dias, cf.canal === 'whatsapp' ? 'WhatsApp' : 'Ligação', texto || r.k, todayISO(dias)]);
+    // quem atendeu deixa de ser "novo"
+    const l = q('SELECT estagio FROM lead WHERE id=?', [p.id])[0];
+    if (l && l.estagio === 'novo' && ['Conversamos', 'Quer visitar', 'Pediu retorno'].includes(r.k)) {
+      estagioAntes = 'novo'; run(`UPDATE lead SET estagio='contato' WHERE id=?`, [p.id]);
+    }
+  }
+  vibrar(); closeSheet(); renderAll();
+  const desfazer = () => {
+    run('DELETE FROM interacao WHERE id=?', [iid]);
+    if (seqId) run('DELETE FROM sequencia_contato WHERE id=?', [seqId]);
+    if (estagioAntes) run('UPDATE lead SET estagio=? WHERE id=?', [estagioAntes, p.id]);
+    renderAll();
+  };
+  if (r.k === 'Quer visitar' && p.tipo === 'lead') {
+    showToast('Contato registrado.', { label: 'Agendar visita', fn: () => openForm('visita', { tipo: 'lead', id: p.id }) });
+  } else {
+    showToast('Contato registrado' + (seqId ? ' · próximo ' + fmtDataCurta(todayISO(dias)) : '') + (estagioAntes ? ' · lead em Contato' : '') + '.',
+      { label: 'Desfazer', fn: desfazer });
+  }
+}
+
+// ---------- linha do tempo (B2) ----------
+// A ficha não tinha história: visita, ligação, mensagem, nota e arquivo ficavam cada um
+// na sua tela. Aqui entram juntos, do mais recente pro mais antigo, sem digitar de novo.
+function quandoTL(v) {
+  if (!v) return '';
+  const ymd = String(v).slice(0, 10), hm = String(v).slice(11, 16);
+  return fmtRelDate(ymd) + (hm && hm !== '00:00' ? ', ' + hm : '');
+}
+function linhaDoTempoHTML(tipo, id) {
+  const col = COLUNA_PESSOA[tipo], it = [];
+  const IC = { ligacao: 'telefone', whatsapp: 'conversa', pessoalmente: 'pessoa' };
+  const NOME = { ligacao: 'Ligação', whatsapp: 'WhatsApp', pessoalmente: 'Conversa' };
+  q(`SELECT * FROM interacao WHERE ${col}=?`, [id]).forEach(r => it.push({ q: r.criado_em, ic: IC[r.tipo] || 'conversa',
+    t: (NOME[r.tipo] || 'Contato') + (r.resultado ? ' · ' + r.resultado : ''), s: r.texto }));
+  if (tipo !== 'captacao') {
+    q(`SELECT * FROM nota WHERE ${col}=?`, [id]).forEach(n => it.push({ q: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : ''),
+      ic: { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo', t: n.modo === 'camera' ? 'Foto' : n.modo === 'audio' ? 'Nota de voz' : 'Nota',
+      s: (n.texto || '').slice(0, 160), audio: n.audio_base64 }));
+    q(`SELECT id, nome, criado_em FROM documento_carteira WHERE ${col}=?`, [id]).forEach(d => it.push({ q: d.criado_em, ic: 'arquivo', t: 'Arquivo', s: d.nome, go: `openDetail('arquivo', ${d.id})` }));
+  }
+  if (tipo === 'lead') {
+    q(`SELECT v.*, i.codigo, i.nome as imovel_nome FROM visita v JOIN imovel i ON i.id=v.imovel_id WHERE v.lead_id=?`, [id]).forEach(v => it.push({
+      q: (v.data || '') + ' ' + (v.hora || ''), ic: 'visita', t: 'Visita · ' + nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }),
+      s: v.desfecho || (v.fim ? 'encerrada' : v.status), go: `abrirVisita(${v.id})`, futuro: !v.fim && v.data > todayISO(0) }));
+    q(`SELECT * FROM sequencia_contato WHERE lead_id=?`, [id]).forEach(sq => it.push({ q: sq.vence_em || '', ic: sq.status === 'feito' ? 'check' : 'relogio',
+      t: sq.status === 'feito' ? 'Follow-up feito' : 'Próximo contato', s: [sq.descricao, sq.canal].filter(Boolean).join(' · '), futuro: sq.status !== 'feito' }));
+    const l = q('SELECT criado_em, canal_origem FROM lead WHERE id=?', [id])[0];
+    if (l) it.push({ q: l.criado_em, ic: 'somar', t: 'Chegou', s: l.canal_origem || '' });
+  } else {
+    const r = q(`SELECT criado_em FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [id])[0];
+    if (r) it.push({ q: r.criado_em, ic: 'somar', t: 'Cadastro', s: '' });
+  }
+  if (!it.length) return `<div class="empty">${ico('relogio')}<p>Nada registrado ainda.</p></div>`;
+  it.sort((a, b) => String(b.q).localeCompare(String(a.q)));
+  return `<div class="tl">${it.slice(0, 20).map(x => `<div class="tl-item${x.futuro ? ' tl-item--futuro' : ''}">
+      <span class="tl-ico">${ico(x.ic, 'ic-sm')}</span>
+      <span class="tl-main">
+        <span class="tl-t">${x.go ? `<button class="link" onclick="${x.go}">${esc(x.t)}</button>` : esc(x.t)}</span>
+        ${x.s ? `<span class="tl-s">${esc(x.s)}</span>` : ''}
+        ${x.audio ? `<audio controls preload="none" src="${x.audio}"></audio>` : ''}
+        <span class="tl-q">${esc(quandoTL(x.q))}</span>
+      </span></div>`).join('')}</div>`;
+}
+
+// ---------- lead a partir dos contatos do celular (B8, só Android) ----------
+function temContatos() { return 'contacts' in navigator && 'ContactsManager' in window; }
+function botaoContatos(idNome, idTel) {
+  return temContatos()
+    ? `<button type="button" class="btn btn--block" style="margin:calc(var(--s2) * -1) 0 var(--s3)" onclick="escolherContato('${idNome}', '${idTel}')">${ico('pessoa')}Escolher dos contatos do celular</button>` : '';
+}
+async function escolherContato(idNome, idTel) {
+  try {
+    const [c] = await navigator.contacts.select(['name', 'tel'], { multiple: false });
+    if (!c) return;
+    const set = (id, v) => { const e = document.getElementById(id); if (e && v) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); } };
+    set(idNome, (c.name || [])[0]); set(idTel, (c.tel || [])[0]);
+  } catch (e) { showToastErr('Não consegui abrir os contatos.'); }
+}
+
+// ---------- receber do WhatsApp e de outros apps (B7, só Android) ----------
+// O manifest declara o app como destino de compartilhamento; o sw.js guarda o que chegou
+// num cache e abre ?acao=compartilhado. Aqui o corretor decide o que fazer com aquilo.
+function reduzirImagem(arquivo, max, qualidade) {
+  max = max || 1280; qualidade = qualidade || 0.8;
+  return new Promise((ok, falha) => {
+    const url = URL.createObjectURL(arquivo), img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      ok(c.toDataURL('image/jpeg', qualidade));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); falha(new Error('imagem inválida')); };
+    img.src = url;
+  });
+}
+function extrairTelefone(t) {
+  const m = String(t || '').match(/(?:\+?55[\s-]?)?\(?\d{2}\)?[\s-]?9?\d{4}[\s.-]?\d{4}/);
+  return m ? m[0].trim() : '';
+}
+Object.assign(ACOES_ATALHO, { compartilhado: () => { receberCompartilhado(); } });
+async function receberCompartilhado() {
+  if (!('caches' in window)) return;
+  let cache; try { cache = await caches.open('ohubimob-compartilhado'); } catch (e) { return; }
+  const ler = async k => cache.match('/__compartilhado/' + k);
+  const rt = await ler('texto'), texto = rt ? (await rt.text()).trim() : '';
+  const rq = await ler('qtd'), qtd = rq ? (parseInt(await rq.text(), 10) || 0) : 0;
+  const fotos = [];
+  for (let i = 0; i < Math.min(qtd, 5); i++) {
+    const r = await ler('arquivo-' + i);
+    if (r) { try { fotos.push(await reduzirImagem(await r.blob())); } catch (e) { /* não era imagem */ } }
+  }
+  await Promise.all((await cache.keys()).map(k => cache.delete(k)));
+  if (!texto && !fotos.length) return showToastErr('Nada chegou do compartilhamento.');
+  const tel = extrairTelefone(texto);
+  window.__recebido = { texto, fotos, tel };
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Recebido</h2>
+    ${texto ? `<div class="card card--sunken"><p style="margin:0;white-space:pre-wrap;overflow-wrap:anywhere">${esc(texto.slice(0, 600))}</p></div>` : ''}
+    ${fotos.length ? `<div class="fotos-grade">${fotos.map(f => `<img src="${f}" alt="Foto recebida">`).join('')}</div>` : ''}
+    ${tel ? `<button class="btn btn--primary btn--block" onclick="recebidoVirarLead()">${ico('leads')}Criar lead com ${esc(tel)}</button>` : ''}
+    <button class="btn btn--block" style="margin-top:var(--s2)" onclick="recebidoVirarNota()">${ico('teclado')}Salvar como nota</button>
+    ${fotos.length ? `<button class="btn btn--block" style="margin-top:var(--s2)" onclick="recebidoVirarArquivos()">${ico('pasta')}Salvar ${plural(fotos.length, 'foto', 'fotos')} em Arquivos</button>` : ''}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Descartar</button>`, { foco: false });
+}
+function recebidoVirarLead() {
+  const r = window.__recebido; if (!r) return;
+  closeSheet(); openForm('lead-venda');
+  const t = document.getElementById('fv-telefone');
+  if (t) { t.value = r.tel; t.dispatchEvent(new Event('input', { bubbles: true })); }
+}
+function recebidoVirarNota() {
+  const r = window.__recebido; if (!r) return;
+  limparNotaCtx();
+  gravarNota('texto', 'Recebido por compartilhamento', r.texto || '(foto recebida)', r.fotos[0] || null);
+  closeSheet();
+}
+function recebidoVirarArquivos() {
+  const r = window.__recebido; if (!r) return;
+  r.fotos.forEach((f, i) => run(`INSERT INTO documento_carteira (nome,categoria,imagem_base64,ocr_simulado,criado_em) VALUES (?,?,?,0,?)`,
+    ['Foto recebida ' + (i + 1), 'negociacao', f, agoraISO()]));
+  closeSheet(); renderCART();
+  showToast(plural(r.fotos.length, 'foto salva', 'fotos salvas') + ' em Arquivos.', { label: 'Ver', fn: () => go('cart') });
+}
+
+// =============================================================================
+// LOTE B (rodada 33) — imóvel, calculadoras, mapa, notificação e áudio
+// =============================================================================
+
+// ---------- fatos do imóvel (B3) ----------
+// A ficha só tinha preço e bairro; os portais do DF mostram área, quartos, suítes, vagas,
+// condomínio, IPTU e posição do sol — é o que o cliente pergunta na porta.
+const FATOS = [
+  ['area_util', 'Área útil', 'm²', 'num'], ['area_total', 'Área total', 'm²', 'num'],
+  ['quartos', 'Quartos', '', 'int'], ['suites', 'Suítes', '', 'int'], ['banheiros', 'Banheiros', '', 'int'], ['vagas', 'Vagas', '', 'int'],
+  ['condominio', 'Condomínio', 'R$', 'preco'], ['iptu', 'IPTU por ano', 'R$', 'preco'],
+  ['andar', 'Andar', '', 'txt'], ['posicao_sol', 'Posição do sol', '', 'sol'], ['chaves', 'Chaves', '', 'txt']
+];
+function valorFato(im, f) {
+  const v = im[f[0]];
+  if (v == null || v === '') return null;
+  if (f[3] === 'preco') return fmtBRL(v);
+  if (f[3] === 'num') return String(v).replace('.', ',') + ' m²';
+  return String(v);
+}
+function reabrirDetalhe(tipo, id) {
+  const sh = document.getElementById('sheet'), y = sh ? sh.scrollTop : 0;
+  openDetail(tipo, id);
+  setTimeout(() => { if (sh) sh.scrollTop = y; }, 90);
+}
+function editarFatos(id) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [id])[0]; if (!im) return;
+  const campoFato = f => {
+    const [k, rot, suf, t] = f, v = im[k];
+    if (t === 'sol') return campo('ff-' + k, rot, `<select id="ff-${k}">${['', 'Nascente', 'Poente', 'Norte', 'Sul'].map(o =>
+      `<option value="${o}" ${o === (v || '') ? 'selected' : ''}>${o || '(não informado)'}</option>`).join('')}</select>`);
+    const modo = t === 'int' ? 'numeric' : t === 'txt' ? 'text' : 'decimal';
+    const valor = v == null ? '' : t === 'preco' ? Number(v).toLocaleString('pt-BR') : t === 'txt' ? v : String(v).replace('.', ',');
+    return campo('ff-' + k, rot + (suf === 'm²' ? ' (m²)' : ''), `<input id="ff-${k}" inputmode="${modo}" autocomplete="off" value="${esc(valor)}">`);
+  };
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Fatos do imóvel</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(nomeImovel(im))}</p>
+    <form id="form-fatos" onsubmit="event.preventDefault();salvarFatos(${id})" novalidate>
+      <div class="field-grid">${FATOS.filter(f => f[3] !== 'txt' && f[3] !== 'sol').map(campoFato).join('')}</div>
+      ${FATOS.filter(f => f[3] === 'txt' || f[3] === 'sol').map(campoFato).join('')}
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>`);
+  prepararEnter(document.getElementById('form-fatos'));
+  ligarRascunho('fatos:' + id, document.getElementById('form-fatos'));
+}
+function salvarFatos(id) {
+  const lido = {};
+  for (const [k, , , t] of FATOS) {
+    const raw = val('ff-' + k);
+    if (t === 'txt' || t === 'sol') { lido[k] = raw || null; continue; }
+    if (!raw) { lido[k] = null; continue; }
+    const n = t === 'preco' ? precoBR(raw) : numeroBR(raw);
+    if (n == null || isNaN(n) || n < 0) return erroCampo('ff-' + k, 'Não entendi "' + raw + '".');
+    lido[k] = t === 'int' ? Math.round(n) : n;
+  }
+  const cols = Object.keys(lido);
+  run(`UPDATE imovel SET ${cols.map(c => c + '=?').join(', ')} WHERE id=?`, cols.map(c => lido[c]).concat([id]));
+  limparRascunho(); vibrar(); renderVI(); renderCalcImovelSelect();
+  openDetail('imovel', id);
+  showToast('Fatos salvos.');
+}
+
+// ---------- fotos do imóvel (B3) ----------
+// A foto nunca era gravada. Agora várias, reduzidas a 1280 px pra não estourar o banco.
+async function adicionarFotos(id, input) {
+  const files = [...(input.files || [])].slice(0, 10); if (!files.length) return;
+  let n = 0;
+  for (const f of files) {
+    try {
+      const url = await reduzirImagem(f);
+      run('INSERT INTO imovel_foto (imovel_id, imagem_base64, criado_em) VALUES (?,?,?)', [id, url, agoraISO()]);
+      const im = q('SELECT imagem_base64 FROM imovel WHERE id=?', [id])[0];
+      if (im && !im.imagem_base64) run('UPDATE imovel SET imagem_base64=? WHERE id=?', [url, id]);
+      n++;
+    } catch (e) { /* arquivo que não é imagem */ }
+  }
+  input.value = '';
+  renderVI(); reabrirDetalhe('imovel', id);
+  if (n) showToast(plural(n, 'foto salva', 'fotos salvas') + '.'); else showToastErr('Não consegui ler as fotos.');
+}
+function abrirFoto(fid) {
+  const f = q('SELECT * FROM imovel_foto WHERE id=?', [fid])[0]; if (!f) return;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Foto do imóvel</h2>
+    <img class="shot" src="${f.imagem_base64}" alt="">
+    <div class="btn-row">
+      <button class="btn btn--grow" onclick="usarDeCapa(${fid})">${ico('check')}Usar de capa</button>
+      <button class="btn btn--grow" style="color:var(--danger)" onclick="apagar('foto', ${fid})">${ico('lixeira')}Apagar</button>
+    </div>
+    <button class="btn btn--block sheet__close" onclick="openDetail('imovel', ${f.imovel_id})">${ico('voltar')}Voltar ao imóvel</button>`, { foco: false });
+}
+function usarDeCapa(fid) {
+  const f = q('SELECT * FROM imovel_foto WHERE id=?', [fid])[0]; if (!f) return;
+  run('UPDATE imovel SET imagem_base64=? WHERE id=?', [f.imagem_base64, f.imovel_id]);
+  renderVI(); openDetail('imovel', f.imovel_id);
+  showToast('Capa trocada.');
+}
+
+// ---------- CMA pela ficha (B11) ----------
+// A CMA comparava qualquer tipo, inclusive imóvel vendido. Agora mesmo tipo, sem vendidos,
+// e pelo m² quando há área útil.
+function cmaDe(id) {
+  const ref = q('SELECT * FROM imovel WHERE id=?', [id])[0]; if (!ref) return null;
+  const comps = q(`SELECT * FROM imovel WHERE id!=? AND COALESCE(status,'')!='vendido' AND COALESCE(tipo,'')=COALESCE(?,'')
+                   ORDER BY ABS(COALESCE(valor,0)-?) LIMIT 5`, [id, ref.tipo, ref.valor || 0]);
+  const comM2 = comps.filter(c => c.area_util > 0 && c.valor > 0);
+  const m2 = comM2.length ? comM2.reduce((t, c) => t + c.valor / c.area_util, 0) / comM2.length : null;
+  const vals = comps.map(c => c.valor).filter(v => v > 0);
+  return { ref, comps, m2, estimado: (m2 && ref.area_util > 0) ? m2 * ref.area_util : null,
+           faixa: vals.length ? [Math.min(...vals), Math.max(...vals)] : null };
+}
+function cmaHTML(c) {
+  if (!c || !c.comps.length) return `<div class="empty">${ico('calculadora')}<p>Nenhum imóvel do mesmo tipo à venda na carteira pra comparar.</p></div>`;
+  return `<div class="card">
+    ${c.comps.slice(0, 3).map(x => `<div class="between" style="font-size:var(--t-sm);margin-bottom:var(--s1);gap:var(--s2)"><span>${objLink('imovel', x.id, nomeImovel(x))}</span>
+      <span class="num" style="text-align:right">${fmtBRL(x.valor)}${x.area_util > 0 ? '<br>' + fmtBRL(x.valor / x.area_util) + '/m²' : ''}</span></div>`).join('')}
+    ${c.faixa ? `<div class="calc-sub"><span>Faixa</span><span>${fmtBRL(c.faixa[0])} – ${fmtBRL(c.faixa[1])}</span></div>` : ''}
+    ${c.estimado ? `<div class="calc-sub"><span>Pelo m² médio</span><span>${fmtBRL(c.estimado)}</span></div>`
+      : `<p class="muted" style="margin:var(--s2) 0 0">${c.ref.area_util ? 'Os comparáveis ainda não têm área útil.' : 'Preencha a área útil pra comparar pelo m².'}</p>`}
+    <p class="muted" style="margin:var(--s2) 0 0">Compara com a sua carteira (mesmo tipo, sem vendidos), não com o mercado.</p>
+  </div>`;
+}
+
+// ---------- checklist de documentos da venda (B10) ----------
+const CHECKLIST_VENDA = [
+  'Matrícula atualizada do imóvel',
+  'Certidão de ônus reais',
+  'Certidões pessoais do vendedor',
+  'IPTU e TLP quitados',
+  'Declaração de quitação do condomínio',
+  'Documentos pessoais de comprador e vendedor',
+  'Comprovante de renda do comprador (se houver financiamento)'
+];
+function checklistDe(id) {
+  const por = {};
+  q('SELECT * FROM checklist_item WHERE imovel_id=?', [id]).forEach(r => { por[r.item] = r; });
+  const itens = CHECKLIST_VENDA.map(item => ({ item, r: por[item] }));
+  return { itens, feitos: itens.filter(x => x.r && x.r.feito_em).length, total: itens.length };
+}
+function checklistHTML(id, c) {
+  return `<div class="card">${c.itens.map((x, i) => {
+    const feito = !!(x.r && x.r.feito_em);
+    return `<div class="chk ${feito ? 'is-feito' : ''}">
+      <button class="chk__main" aria-pressed="${feito}" onclick="marcarChecklist(${id}, ${i})"><span class="chk__box">${feito ? ico('check', 'ic-sm') : ''}</span><span class="chk__t">${esc(x.item)}</span></button>
+      ${x.r && x.r.documento_id
+        ? `<button class="btn btn--sm btn--icon btn--ghost" onclick="openDetail('arquivo', ${x.r.documento_id})" aria-label="Ver a foto: ${esc(x.item)}">${ico('arquivo')}</button>`
+        : `<button class="btn btn--sm btn--icon btn--ghost" onclick="document.getElementById('chk-cam-${id}-${i}').click()" aria-label="Fotografar: ${esc(x.item)}">${ico('camera')}</button>
+           <input type="file" id="chk-cam-${id}-${i}" accept="image/*" capture="environment" hidden onchange="fotografarChecklist(${id}, ${i}, this)">`}
+    </div>`;
+  }).join('')}</div>`;
+}
+function marcarChecklist(imovelId, i) {
+  const item = CHECKLIST_VENDA[i];
+  const r = q('SELECT * FROM checklist_item WHERE imovel_id=? AND item=?', [imovelId, item])[0];
+  if (r) run('UPDATE checklist_item SET feito_em=? WHERE id=?', [r.feito_em ? null : agoraISO(), r.id]);
+  else run('INSERT INTO checklist_item (imovel_id, item, feito_em) VALUES (?,?,?)', [imovelId, item, agoraISO()]);
+  renderCART(); reabrirDetalhe('imovel', imovelId);
+}
+async function fotografarChecklist(imovelId, i, input) {
+  const f = input.files && input.files[0]; if (!f) return;
+  const item = CHECKLIST_VENDA[i];
+  let url; try { url = await reduzirImagem(f, 1600, 0.85); } catch (e) { return showToastErr('Não consegui ler a foto.'); }
+  const docId = insertAndGetId(`INSERT INTO documento_carteira (nome,categoria,imagem_base64,ocr_simulado,imovel_id,criado_em) VALUES (?,?,?,0,?,?)`,
+    [item, 'negociacao', url, imovelId, agoraISO()]);
+  const r = q('SELECT * FROM checklist_item WHERE imovel_id=? AND item=?', [imovelId, item])[0];
+  if (r) run('UPDATE checklist_item SET feito_em=?, documento_id=? WHERE id=?', [agoraISO(), docId, r.id]);
+  else run('INSERT INTO checklist_item (imovel_id, item, feito_em, documento_id) VALUES (?,?,?,?)', [imovelId, item, agoraISO(), docId]);
+  renderCART(); reabrirDetalhe('imovel', imovelId);
+  showToast('Documento guardado em Arquivos.');
+}
+
+// ---------- ITBI do DF (B9) ----------
+let itbiAliq = 2;
+function setItbi(a) {
+  itbiAliq = a;
+  document.querySelectorAll('#c-itbi-tipo .chip').forEach(c => { const on = +c.dataset.itbi === a; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+  cCalcITBI();
+}
+function cCalcITBI() {
+  const el = document.getElementById('c-itbi-valor'); if (!el) return;
+  document.getElementById('c-itbi-total').textContent = fmtBRL(numOuZero(el.value) * itbiAliq / 100);
+  document.getElementById('c-itbi-aliq').textContent = itbiAliq + '%';
+}
+
+// ---------- notificação "Visita em andamento" (B15) ----------
+// Nota de voz e Encerrar sem abrir o app. A permissão só é pedida por um toque do corretor,
+// oferecido no primeiro check-in; recusar não pergunta de novo.
+const NOTIF_TAG = 'visita-andamento';
+function podeNotificar() { return 'Notification' in window && 'serviceWorker' in navigator && window.isSecureContext; }
+function swPronto(ms) {
+  return Promise.race([navigator.serviceWorker.ready, new Promise((_, falha) => setTimeout(() => falha(new Error('sem service worker')), ms || 3000))]);
+}
+function visitaEmAndamento() {
+  const r = q(`SELECT id FROM visita WHERE inicio IS NOT NULL AND fim IS NULL ORDER BY inicio DESC LIMIT 1`)[0];
+  return r ? r.id : null;
+}
+async function mostrarNotifVisita(id) {
+  if (!podeNotificar() || Notification.permission !== 'granted') return false;
+  const v = visitaFull(id); if (!v) return false;
+  try {
+    const reg = await swPronto();
+    await reg.showNotification('Visita em andamento', {
+      body: [nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }), v.lead_nome].filter(Boolean).join(' · '),
+      tag: NOTIF_TAG, renotify: false, requireInteraction: true, silent: true,
+      icon: 'icon-192.png', badge: 'icon-192.png', data: { url: location.pathname },
+      actions: [{ action: 'voz', title: 'Nota de voz' }, { action: 'encerrar', title: 'Encerrar' }]
+    });
+    return true;
+  } catch (e) { return false; }
+}
+async function fecharNotifVisita() {
+  if (!podeNotificar()) return;
+  try {
+    const reg = await navigator.serviceWorker.getRegistration(); if (!reg) return;
+    (await reg.getNotifications({ tag: NOTIF_TAG })).forEach(n => n.close());
+  } catch (e) { /* ok */ }
+}
+function oferecerNotifVisita(id) {
+  if (!podeNotificar() || Notification.permission === 'denied') return;
+  if (Notification.permission === 'granted') { mostrarNotifVisita(id); return; }
+  let recusou = false; try { recusou = localStorage.getItem('notif:visita') === 'nao'; } catch (e) { /* ok */ }
+  if (recusou) return;
+  showToast('Deixar a visita na barra de notificações, com Nota de voz e Encerrar?', { label: 'Ativar', fn: async () => {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') mostrarNotifVisita(id);
+    else { try { localStorage.setItem('notif:visita', 'nao'); } catch (e) { /* ok */ } }
+  } });
+}
+Object.assign(ACOES_ATALHO, {
+  visita: () => { const v = visitaEmAndamento(); if (v) abrirVisita(v); else go('ag'); },
+  'voz-visita': () => { const v = visitaEmAndamento(); if (!v) return go('ag'); abrirVisita(v); notaDaVisita(v, 'audio'); },
+  encerrar: () => { const v = visitaEmAndamento(); if (!v) return go('ag'); abrirVisita(v); encerrarVisitaSheet(v); }
+});
+
+// ---------- gravar o áudio da nota (B5) ----------
+// Sem reconhecimento de voz (iPhone instalado, sem internet, navegador sem suporte) a nota
+// grava o áudio de verdade e guarda na nota; o resumo em texto fica opcional.
+let gravador = null, gravadorStream = null, gravadorPedacos = [], gravadorTimer = null, audioDataUrl = null;
+function soltarMicrofone() {
+  clearInterval(gravadorTimer); gravadorTimer = null;
+  if (gravadorStream) { gravadorStream.getTracks().forEach(t => t.stop()); gravadorStream = null; }
+}
+function pararGravador() {
+  if (gravador && gravador.state === 'recording') { try { gravador.stop(); } catch (e) { /* ok */ } }
+  soltarMicrofone();
+}
+function gravarAudioSheet(msg) {
+  const daVisita = micPfx === 'vmic-';
+  window.__audioCtx = notaCtx;
+  audioDataUrl = null;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Gravar áudio</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">A transcrição não está disponível aqui. Grave o áudio: ele fica guardado na nota${notaCtx && notaCtx.referencia ? ' de ' + esc(notaCtx.referencia) : ''}.</p>
+    <div class="compose">
+      <button class="mic-big" id="aud-btn" onclick="alternarGravacaoAudio()" aria-label="Gravar áudio">${ico('mic')}</button>
+      <div id="aud-status" style="font-weight:600;font-size:var(--t-sm)" role="status">Toque pra gravar</div>
+      <audio id="aud-player" controls hidden style="width:100%;margin-top:var(--s3)"></audio>
+    </div>
+    <div class="field"><label for="aud-texto">Resumo (opcional)</label><textarea id="aud-texto" placeholder="Dá pra ditar pelo microfone do teclado"></textarea></div>
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" id="aud-salvar" disabled onclick="salvarAudio()">${ico('check')}Salvar nota</button>
+      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+    </div>`, { foco: false, aoFechar: () => { pararGravador(); if (daVisita) limparNotaCtx(); } });
+}
+async function alternarGravacaoAudio() {
+  const btn = document.getElementById('aud-btn'), st = document.getElementById('aud-status');
+  if (gravador && gravador.state === 'recording') { gravador.stop(); return; }
+  try { gravadorStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch (e) { if (st) st.textContent = e && e.name === 'NotAllowedError' ? 'Permissão de microfone negada. Libere nas configurações do navegador.' : 'Não consegui usar o microfone.'; return; }
+  const tipo = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'].find(t => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  try { gravador = new MediaRecorder(gravadorStream, tipo ? { mimeType: tipo, audioBitsPerSecond: 32000 } : undefined); }
+  catch (e) { soltarMicrofone(); if (st) st.textContent = 'Este navegador não grava áudio.'; return; }
+  gravadorPedacos = [];
+  gravador.ondataavailable = e => { if (e.data && e.data.size) gravadorPedacos.push(e.data); };
+  gravador.onstop = () => {
+    soltarMicrofone();
+    const blob = new Blob(gravadorPedacos, { type: gravador.mimeType || tipo || 'audio/webm' });
+    const r = new FileReader();
+    r.onload = () => {
+      audioDataUrl = r.result;
+      const a = document.getElementById('aud-player'), b = document.getElementById('aud-btn'), s2 = document.getElementById('aud-status'), sv = document.getElementById('aud-salvar');
+      if (a) { a.src = audioDataUrl; a.hidden = false; }
+      if (b) b.classList.remove('rec');
+      if (s2) s2.textContent = 'Gravado. Ouça, e salve ou grave de novo.';
+      if (sv) sv.disabled = false;
+    };
+    r.readAsDataURL(blob);
+  };
+  gravador.start();
+  if (btn) btn.classList.add('rec');
+  const t0 = Date.now();
+  gravadorTimer = setInterval(() => {
+    const seg = Math.floor((Date.now() - t0) / 1000);
+    const el = document.getElementById('aud-status');
+    if (el) el.textContent = 'Gravando ' + Math.floor(seg / 60) + ':' + String(seg % 60).padStart(2, '0') + ' · toque pra parar';
+    if (seg >= 180 && gravador && gravador.state === 'recording') gravador.stop();   // 3 min por nota
+  }, 500);
+}
+function salvarAudio() {
+  if (!audioDataUrl) return showToastErr('Grave o áudio antes de salvar.');
+  const antes = notaCtx; notaCtx = window.__audioCtx || null;
+  gravarNota('audio', refNota('Nota de voz'), val('aud-texto') || 'Áudio sem transcrição', null, audioDataUrl);
+  notaCtx = antes; audioDataUrl = null;
+  vibrar(); closeSheet();
+}
+
 // ---------- boot geral ----------
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
-  renderCalcImovelSelect(); cCalcFin(); cCalcCom(); renderCamLinkSelects(); renderInstallBox();
-  atualizarSino(); marcarTamanhoTexto();
+  renderCalcImovelSelect(); cCalcFin(); cCalcCom(); cCalcITBI(); renderCamLinkSelects(); renderInstallBox(); marcarMapaApp();
+  atualizarSino(); marcarTamanhoTexto(); renderPerfil(); renderTrava();
   const n = q('SELECT COUNT(*) c FROM imovel')[0].c;
   const nl = q('SELECT COUNT(*) c FROM lead')[0].c;
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';
@@ -3809,7 +4889,7 @@ if (window.matchMedia && matchMedia('(pointer: coarse)').matches) {
 // nota sendo digitada, gravação em andamento e foto ainda não salva.
 function trabalhoEmAndamento() {
   const t = document.getElementById('texto-nota');
-  return sheetAberta() || recognizing || !!currentCameraDataUrl || !!fotoVisitaDataUrl || !!(t && t.value.trim());
+  return sheetAberta() || recognizing || !!currentCameraDataUrl || !!fotoVisitaDataUrl || !!(t && t.value.trim()) || !!(gravador && gravador.state === 'recording');
 }
 // ---------- PWA: service worker + prompt de instalação ----------
 // Service Worker só roda em HTTPS (ou localhost) — abrindo o arquivo direto (file://)
@@ -3844,6 +4924,8 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     if (evento.data && evento.data.tipo === 'ds2-ping' && evento.source) {
       evento.source.postMessage({ tipo: 'ds2-pong' });
     }
+    // toque na notificação da visita (B15): o worker foca esta aba e manda a ação
+    if (evento.data && evento.data.tipo === 'acao' && evento.data.acao) executarAtalho('?acao=' + encodeURIComponent(evento.data.acao));
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
