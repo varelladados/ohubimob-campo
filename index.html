@@ -2349,7 +2349,7 @@ function seedDatabase() {
   db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, beatriz, todayISO(1), '10:00', 'confirmada']);
   db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [c2, rodrigo, todayISO(1), '18:00', 'pendente']);
 
-  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [rodrigo, 7, 'E-mail', 'Conteúdo de valor', 'agendado', todayISO(-1)]);
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [rodrigo, 7, 'WhatsApp', 'Conteúdo de valor', 'agendado', todayISO(-1)]);
 
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Renata Kunz', TEST_PHONES[0 % 3], 'Ex-cliente', 'Fechou V1 · Vista Verde, há 12 dias', todayISO(-12)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Dias', TEST_PHONES[1 % 3], 'Comprador', 'Parceiro da Renata Kunz no fechamento', todayISO(-12)]);
@@ -3141,6 +3141,8 @@ function heroVisitaHTML(v) {
 // canal do follow-up vira o botão principal. "E-mail" não tem como sair daqui (lead não
 // guarda e-mail), então cai no WhatsApp.
 function canalAcao(canal) { return /liga/i.test(canal || '') ? 'ligar' : 'whats'; }
+// o texto do canal segue o botão: follow-up gravado como "E-mail" em banco antigo diz WhatsApp
+function canalRotulo(canal) { return canalAcao(canal) === 'ligar' ? 'Ligação' : 'WhatsApp'; }
 function heroPendenciaHTML(r) {
   const tel = esc(r.telefone || '');
   const leadId = r._leadId;
@@ -3233,7 +3235,7 @@ function pendenciasDoDia(leadsComVisita) {
      FROM sequencia_contato sc JOIN lead l ON l.id=sc.lead_id LEFT JOIN imovel i ON i.id=l.imovel_id
      WHERE sc.status='agendado' AND (sc.vence_em IS NULL OR sc.vence_em <= ?) ORDER BY sc.vence_em, sc.dia`, [todayISO(0)]).forEach(r => {
     if (vistos.has(r.lead_id)) return; vistos.add(r.lead_id);
-    out.push(Object.assign(r, { _tipo: 'seq', _leadId: r.lead_id, _quando: [quandoVence(r.vence_em), r.canal].filter(Boolean).join(' · ') }));
+    out.push(Object.assign(r, { _tipo: 'seq', _leadId: r.lead_id, _quando: [quandoVence(r.vence_em), canalRotulo(r.canal)].filter(Boolean).join(' · ') }));
   });
   // lead em "contato" com follow-up marcado pra frente não é pendência de hoje
   q(`SELECT l.*, i.codigo, i.nome as imovel_nome FROM lead l LEFT JOIN imovel i ON i.id=l.imovel_id
@@ -4607,7 +4609,7 @@ function linhaDoTempoHTML(tipo, id) {
       q: (v.data || '') + ' ' + (v.hora || ''), ic: 'visita', t: 'Visita · ' + nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }),
       s: v.desfecho || (v.fim ? 'encerrada' : v.status), go: `abrirVisita(${v.id})`, futuro: !v.fim && v.data > todayISO(0) }));
     q(`SELECT * FROM sequencia_contato WHERE lead_id=?`, [id]).forEach(sq => it.push({ q: sq.vence_em || '', ic: sq.status === 'feito' ? 'check' : 'relogio',
-      t: sq.status === 'feito' ? 'Follow-up feito' : 'Próximo contato', s: [sq.descricao, sq.canal].filter(Boolean).join(' · '), futuro: sq.status !== 'feito' }));
+      t: sq.status === 'feito' ? 'Follow-up feito' : 'Próximo contato', s: [sq.descricao, sq.status === 'feito' ? sq.canal : canalRotulo(sq.canal)].filter(Boolean).join(' · '), futuro: sq.status !== 'feito' }));
     const l = q('SELECT criado_em, canal_origem FROM lead WHERE id=?', [id])[0];
     if (l) it.push({ q: l.criado_em, ic: 'somar', t: 'Chegou', s: l.canal_origem || '' });
   } else {
