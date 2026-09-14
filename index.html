@@ -9,7 +9,7 @@
 </script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#2A2B2D">
+<meta name="theme-color" content="#0B6B70">
 <title>OHubImob Campo</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -21,7 +21,7 @@
 <!-- Duas famílias, não três: a monoespaçada saiu na rodada 32 (número tabular vem
      da própria Figtree). crossorigin: sem ele a resposta é opaca e o sw.js não
      cacheia as fontes — offline caía em fonte do sistema. -->
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 
 <style>
   /* ===========================================================================
@@ -35,18 +35,18 @@
   /* gerado por sync-ds2.py a partir de tokens-ohubimob.css — NÃO editar aqui */
 :root {
   /* ---- superfície ---- */
-  --bg: #F0EFEC;
+  --bg: #F3F6F6;
   --surface: #FFFFFF;
-  --surface-2: #E6E4DE;
+  --surface-2: #E6EDED;
 
   /* ---- texto ---- */
-  --text: #23252A;
-  --text-2: #55585C;
-  --text-3: #616469;
+  --text: #0F1A2E;
+  --text-2: #3B475C;
+  --text-3: #55617A;
 
   /* ---- linha ---- */
-  --border: #DCDAD3;
-  --border-2: #86837A;   /* rodada 33: #8E8B82 dava 2,96:1 contra o fundo — virou borda de campo e precisa de 3:1 */
+  --border: #DDE5E6;
+  --border-2: #75828F;   /* borda de campo: precisa de 3:1 contra fundo e cartão (rodada 33) */
 
   /* ---- marca ----
      --graphite e --brand são CONSTANTES: são a medição do logo, não mudam com o
@@ -54,31 +54,31 @@
      o dourado #D0A868 só é legível sobre grafite (6,40:1); sobre branco dá
      2,21:1 e reprova até como texto grande. Por isso --brand-text é a versão
      escurecida no tema claro. */
-  --graphite: #2A2B2D;
-  --brand: #D0A868;
-  --brand-text: #8A6027;
-  --brand-fill: #8A6027;
+  --graphite: #0F1A2E;   /* Perto: a "tinta" azul-marinho faz o papel do grafite — fundo do boot, chip ativo, cartão da visita */
+  --brand: #0B6B70;      /* petróleo, o espelho d'água — branco por cima 6,3:1 */
+  --brand-text: #0B6B70;
+  --brand-fill: #0B6B70;
   --on-brand: #FFFFFF;
-  --brand-tint: #F2E6D2;
+  --brand-tint: #E4EFEF;
 
   /* ---- semântica ---- */
-  --ok: #1F6F5C;      --ok-bg: #E2F0EA;
-  --warn: #7A5320;    --warn-bg: #F7EDDD;
-  --danger: #9C2F2F;  --danger-bg: #F7E2E2;
-  --neutral: #55585C; --neutral-bg: #E8E8E4;
+  --ok: #137A4F;      --ok-bg: #E2F2EA;
+  --warn: #B04A06;    --warn-bg: #FCEADB;
+  --danger: #B42318;  --danger-bg: #FBE4E1;
+  --neutral: #3B475C; --neutral-bg: #E6EDED;
 
   /* ---- elevação ---- */
-  --shadow-1: 0 1px 2px rgba(42,43,45,0.10);
-  --shadow-2: 0 -6px 28px rgba(42,43,45,0.20);
-  --scrim: rgba(35,37,42,0.55);
-  --ring: #8A6027;
+  --shadow-1: 0 1px 2px rgba(15,26,46,0.10);
+  --shadow-2: 0 -6px 28px rgba(15,26,46,0.20);
+  --scrim: rgba(15,26,46,0.50);
+  --ring: #0B6B70;
 
   /* ---- tipografia ----
      Manrope pro display (grotesca geométrica de terminais retos, a mais próxima
      do desenho de HUB); Figtree pro corpo (x-height alto, contraforma aberta —
      medida por legibilidade em 390px na rodada 25). */
-  --font-display: "Manrope", "Segoe UI", system-ui, sans-serif;
-  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --t-xs: 0.78rem;
   --t-sm: 0.88rem;
   --t-md: 1rem;
@@ -119,49 +119,51 @@
    Editar SEMPRE os dois blocos juntos. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #191A1C;
-    --surface: #232426;
-    --surface-2: #131415;
-    --text: #F1F1EF;
-    --text-2: #C1C4C7;
-    --text-3: #9A9EA4;
-    --border: #34363A;
-    --border-2: #6C7075;
-    --brand-text: #D0A868;
-    --brand-fill: #D0A868;
-    --on-brand: #2A2B2D;
-    --brand-tint: rgba(208,168,104,0.15);
-    --ok: #6FC79E;      --ok-bg: #1E2D28;
-    --warn: #E0A33C;    --warn-bg: #332714;
-    --danger: #E8908F;  --danger-bg: #3A1F1F;
-    --neutral: #A7ACB2; --neutral-bg: #26282B;
+    --bg: #0B1220;
+    --surface: #121B2B;
+    --surface-2: #060B14;
+    --text: #EEF2F8;
+    --text-2: #C2CCDA;
+    --text-3: #A9B4C4;
+    --border: #243044;
+    --border-2: #6B7A90;
+    --brand: #5FC4BF;
+    --brand-text: #5FC4BF;
+    --brand-fill: #5FC4BF;
+    --on-brand: #06201F;
+    --brand-tint: #12302F;
+    --ok: #5CCB8E;      --ok-bg: #13281E;
+    --warn: #F0A061;    --warn-bg: #2E1E12;
+    --danger: #FF8A7A;  --danger-bg: #3A1F1F;
+    --neutral: #A9B4C4; --neutral-bg: #182335;
     --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
     --shadow-2: 0 -6px 28px rgba(0,0,0,0.6);
-    --scrim: rgba(10,11,12,0.62);
-    --ring: #D0A868;
+    --scrim: rgba(0,0,0,0.60);
+    --ring: #5FC4BF;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #191A1C;
-  --surface: #232426;
-  --surface-2: #131415;
-  --text: #F1F1EF;
-  --text-2: #C1C4C7;
-  --text-3: #9A9EA4;
-  --border: #34363A;
-  --border-2: #6C7075;
-  --brand-text: #D0A868;
-  --brand-fill: #D0A868;
-  --on-brand: #2A2B2D;
-  --brand-tint: rgba(208,168,104,0.15);
-  --ok: #6FC79E;      --ok-bg: #1E2D28;
-  --warn: #E0A33C;    --warn-bg: #332714;
-  --danger: #E8908F;  --danger-bg: #3A1F1F;
-  --neutral: #A7ACB2; --neutral-bg: #26282B;
+  --bg: #0B1220;
+  --surface: #121B2B;
+  --surface-2: #060B14;
+  --text: #EEF2F8;
+  --text-2: #C2CCDA;
+  --text-3: #A9B4C4;
+  --border: #243044;
+  --border-2: #6B7A90;
+  --brand: #5FC4BF;
+  --brand-text: #5FC4BF;
+  --brand-fill: #5FC4BF;
+  --on-brand: #06201F;
+  --brand-tint: #12302F;
+  --ok: #5CCB8E;      --ok-bg: #13281E;
+  --warn: #F0A061;    --warn-bg: #2E1E12;
+  --danger: #FF8A7A;  --danger-bg: #3A1F1F;
+  --neutral: #A9B4C4; --neutral-bg: #182335;
   --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-2: 0 -6px 28px rgba(0,0,0,0.6);
-  --scrim: rgba(10,11,12,0.62);
-  --ring: #D0A868;
+  --scrim: rgba(0,0,0,0.60);
+  --ring: #5FC4BF;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -424,7 +426,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: var(--z-bar);
 }
-.topbar__mark { width: 26px; height: 21px; color: var(--brand-text); flex: none; }
+.topbar__mark { width: 24px; height: 24px; color: var(--brand-text); flex: none; }
 .topbar__title { font-family: var(--font-display); font-weight: 800; font-size: var(--t-lg); flex: 1; min-width: 0; }
 .topbar__state { font-size: var(--t-xs); color: var(--text-3); display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .topbar__state .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; }
@@ -545,7 +547,7 @@ a { color: inherit; text-decoration: none; }
   .live { background: var(--graphite); color: #F5F5F4; border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
   .live__t { font-size: var(--t-2xl); font-weight: 800; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
   .live__l { font-size: var(--t-xs); letter-spacing: var(--track); text-transform: uppercase; color: var(--brand); font-weight: 600; }
-  .live a, .live .link { color: #F5F5F4; text-decoration-color: rgba(245,245,244,0.5); }
+  .live a, .live .link { color: inherit; text-decoration-color: currentColor; }
   .roteiro { list-style: none; margin: 0; padding: 0; }
   .roteiro li { display: flex; gap: var(--s2); align-items: flex-start; padding: var(--s2) 0; border-bottom: 1px solid var(--border); font-size: var(--t-sm); }
   .roteiro li:last-child { border-bottom: none; }
@@ -569,7 +571,7 @@ a { color: inherit; text-decoration: none; }
   /* ---- boot ---- */
   .boot { position: fixed; inset: 0; background: var(--graphite); color: #F5F5F4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); z-index: var(--z-boot); font-size: var(--t-sm); padding: var(--s5); text-align: center; }
   .boot.hidden { display: none; }
-  .boot .mark { width: 46px; height: 37px; color: var(--brand); }
+  .boot .mark { width: 44px; height: 44px; color: var(--brand); }
   .boot-spinner { width: 24px; height: 24px; border-radius: 50%; border: 3px solid rgba(245,245,244,0.22); border-top-color: var(--brand); animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -624,7 +626,7 @@ a { color: inherit; text-decoration: none; }
   .trava { position: fixed; inset: 0; z-index: 2000; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; padding: var(--s5); }
   .trava[hidden] { display: none; }
   .trava__caixa { width: 100%; max-width: 320px; text-align: center; }
-  .trava__marca { width: 56px; height: 46px; color: var(--brand); margin-bottom: var(--s3); }
+  .trava__marca { width: 52px; height: 52px; color: var(--brand); margin-bottom: var(--s3); }
   .trava__titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--t-xl); margin: 0 0 var(--s4); }
   .trava input { width: 100%; min-height: 52px; text-align: center; letter-spacing: 0.4em; font-size: var(--t-xl); margin-bottom: var(--s3);
     border: 1px solid var(--border-2); border-radius: var(--r-sm); background: var(--surface); color: var(--text); }
@@ -669,12 +671,10 @@ a { color: inherit; text-decoration: none; }
   <!-- gerado por sync-ds2.py a partir de icons-ohubimob.svg — NÃO editar aqui -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true" id="ds2-sprite">
   <!-- marca — reconstrução medida do logo (viewBox 128x104, três espessuras) -->
-  <symbol id="i-marca" viewBox="0 0 128 104" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="butt" stroke-linejoin="miter">
-    <rect x="2.4" y="2.4" width="123.2" height="99.4" rx="14"/>
-    <path d="M21.5 19.9 H52.4"/><path d="M23.9 19.9 V102"/><path d="M50.1 19.9 V102"/>
-    <path d="M48 66 L76 32 L106 64" stroke-width="5.6"/><path d="M103.8 62 V102"/>
-    <rect x="32.3" y="17.6" width="9.9" height="84.4" fill="currentColor" stroke="none"/>
-    <rect x="69.4" y="70.4" width="13.5" height="12.4" fill="currentColor" stroke="none"/>
+  <!-- rodada 35: o símbolo é o da Perto — pino de mapa de cabeça quadrada com o lote vazado.
+       Preenchido, não traçado: some menos a 16 px do que o quadro com a casa. -->
+  <symbol id="i-marca" viewBox="0 0 48 48" fill="currentColor" stroke="none">
+    <path fill-rule="evenodd" d="M16 5h16a6 6 0 0 1 6 6v14c0 2.6-1 4.6-2.6 6.3L24 44 12.6 31.3C11 29.6 10 27.6 10 25V11a6 6 0 0 1 6-6zm3 7v10h10V12z"/>
   </symbol>
 
   <!-- navegação -->
@@ -733,7 +733,7 @@ a { color: inherit; text-decoration: none; }
 <!-- Trava por PIN (B13). Fica fora do .app-shell: com a trava na tela, o app inteiro fica inerte. -->
 <div id="trava" class="trava" hidden role="dialog" aria-modal="true" aria-labelledby="trava-titulo">
   <div class="trava__caixa" id="trava-pedir">
-    <svg class="trava__marca" viewBox="0 0 128 104" aria-hidden="true"><use href="#i-marca"/></svg>
+    <svg class="trava__marca" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-marca"/></svg>
     <h1 id="trava-titulo" class="trava__titulo">Digite seu PIN</h1>
     <form onsubmit="event.preventDefault();destravar()">
       <input id="trava-pin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN" enterkeyhint="done">
@@ -762,7 +762,7 @@ a { color: inherit; text-decoration: none; }
     <button class="btn btn--ghost btn--icon btn--sm" id="top-back" onclick="voltar()" hidden aria-label="Voltar">
       <svg class="ic" aria-hidden="true"><use href="#i-voltar"/></svg>
     </button>
-    <svg class="topbar__mark" id="top-mark" viewBox="0 0 128 104" aria-hidden="true"><use href="#i-marca"/></svg>
+    <svg class="topbar__mark" id="top-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-marca"/></svg>
     <h1 class="topbar__title" id="top-title">Hoje</h1>
     <span class="topbar__state" id="top-state" title="estado da gravação local"><span class="dot"></span><span id="top-state-txt">salvo</span></span>
     <button class="btn btn--ghost btn--icon bell" id="bell" onclick="abrirNotificacoes()" aria-label="Notificações">
@@ -1364,7 +1364,16 @@ const SCHEMA_MIGRATIONS = [
   // B10 checklist de documentos da venda
   `CREATE TABLE IF NOT EXISTS checklist_item (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER, item TEXT, feito_em TEXT, documento_id INTEGER)`,
   // B12 lixeira: o que foi apagado volta por 30 dias
-  `CREATE TABLE IF NOT EXISTS lixeira (id INTEGER PRIMARY KEY AUTOINCREMENT, tabela TEXT, rotulo TEXT, dados TEXT, apagado_em TEXT)`
+  `CREATE TABLE IF NOT EXISTS lixeira (id INTEGER PRIMARY KEY AUTOINCREMENT, tabela TEXT, rotulo TEXT, dados TEXT, apagado_em TEXT)`,
+  // Rodada 35 — Interações viram entidade de verdade: além de canal e resultado, guardam
+  // o humor da pessoa, os sinais que o corretor percebeu e uma impressão livre; e as
+  // respostas às perguntas de qualificação ficam em tabela própria, com histórico.
+  `ALTER TABLE interacao ADD COLUMN humor INTEGER`,
+  `ALTER TABLE interacao ADD COLUMN sinais TEXT`,
+  `ALTER TABLE interacao ADD COLUMN impressao TEXT`,
+  `ALTER TABLE interacao ADD COLUMN imovel_id INTEGER`,
+  `ALTER TABLE interacao ADD COLUMN visita_id INTEGER`,
+  `CREATE TABLE IF NOT EXISTS qualificacao_resposta (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER, captacao_id INTEGER, chave TEXT, valor TEXT, interacao_id INTEGER, criado_em TEXT)`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1871,7 +1880,8 @@ const CRIAR_OPCOES = [
   { k: 'lead-venda',    ic: 'leads',     t: 'Lead comprador',   s: 'quem quer comprar' },
   { k: 'lead-captacao', ic: 'casa',      t: 'Lead captação',    s: 'quem quer vender' },
   { k: 'cliente',       ic: 'pessoa',    t: 'Cliente',          s: 'contato geral' },
-  { k: 'imovel',        ic: 'portfolio', t: 'Imóvel',           s: 'novo no portfólio' }
+  { k: 'imovel',        ic: 'portfolio', t: 'Imóvel',           s: 'novo no portfólio' },
+  { k: 'interacao',     ic: 'conversa',  t: 'Interação',        s: 'como foi o contato, humor, sinais' }
 ];
 function abrirCriar(tipo, id) {
   criarCtx = tipo ? { tipo, id, nome: nomeDoObjeto(tipo, id) } : null;
@@ -1905,6 +1915,10 @@ function nomeDoObjeto(tipo, id) {
   return tipo;
 }
 function criarEscolha(k) {
+  if (k === 'interacao') {
+    if (criarCtx && TABELA_PESSOA[criarCtx.tipo]) return folhaComoFoi(criarCtx.tipo + ':' + criarCtx.id, true);
+    return escolherPessoaSheet();
+  }
   closeSheet();
   if (k === 'nota-voz' || k === 'nota-texto' || k === 'foto') {
     aplicarCtxNaNota();
@@ -2351,6 +2365,15 @@ function seedDatabase() {
 
   db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [rodrigo, 7, 'WhatsApp', 'Conteúdo de valor', 'agendado', todayISO(-1)]);
 
+  // rodada 35 — interações com humor e sinais, e respostas de qualificação
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [marina, 'ligacao', 'Quer visitar', 'confirmou a visita de hoje às 14h', 1, '["urgencia"]', 'Decidida, o aluguel vence em 60 dias', b3, todayISO(-1) + 'T10:20']);
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [felipe, 'whatsapp', 'Conversamos', 'mandei o comparável', 0, '["preco_objecao","decide_sozinho"]', 'Gosta do imóvel, trava no preço', a5, todayISO(-2) + 'T17:40']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [marina, 'prazo', 'ate3m', todayISO(-1) + 'T10:21']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [marina, 'moradia_atual', 'aluguel', todayISO(-1) + 'T10:21']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [felipe, 'pagamento', 'a_vista', todayISO(-2) + 'T17:41']);
+
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Renata Kunz', TEST_PHONES[0 % 3], 'Ex-cliente', 'Fechou V1 · Vista Verde, há 12 dias', todayISO(-12)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Dias', TEST_PHONES[1 % 3], 'Comprador', 'Parceiro da Renata Kunz no fechamento', todayISO(-12)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['João Vitor', TEST_PHONES[2 % 3], 'Contato geral', 'Também cadastrado como lead de venda', todayISO(0)]);
@@ -2753,7 +2776,7 @@ function acoesContato(tel, pessoa) {
 }
 function blocoLinhaDoTempo(tipo, id) {
   return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Linha do tempo</h3>
-      <button class="btn btn--sm" onclick="folhaComoFoi('${tipo}:${id}', true)">${ico('somar')}Registrar contato</button></div>
+      <button class="btn btn--sm" onclick="folhaComoFoi('${tipo}:${id}', true)">${ico('somar')}Registrar interação</button></div>
     ${linhaDoTempoHTML(tipo, id)}`;
 }
 function detailClienteHTML(id) {
@@ -2782,6 +2805,7 @@ function detailCaptacaoHTML(id) {
       ${linhaCampo('Motivo', esc(c.motivo || '—'))}
       ${acoesContato(c.telefone, 'captacao:' + id)}
     </div>
+    ${blocoQualificacaoHTML('captacao', id)}
     <button class="btn btn--block" onclick="captacaoVirarImovel(${id})">${ico('portfolio')}Virar imóvel do portfólio</button>
     ${blocoLinhaDoTempo('captacao', id)}
     ${botaoApagar('captacao', id, 'Apagar captação')}`;
@@ -2863,6 +2887,7 @@ function detailLeadHTML(id) {
       ${linhaCampo('Estágio', `<select onchange="setLeadStage(${l.id}, this.value)" style="min-height:var(--tap);width:100%;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);color:var(--text);padding:0 var(--s3)">${Object.keys(STAGE_LABELS).map(st => `<option value="${st}" ${st === l.estagio ? 'selected' : ''}>${STAGE_LABELS[st]}</option>`).join('')}</select>`)}
       ${acoesContato(l.telefone, 'lead:' + id)}
     </div>
+    ${blocoQualificacaoHTML('lead', id)}
     <button class="btn btn--block" onclick="abrirCriar('lead', ${id})">${ico('somar')}Criar algo ligado a este lead</button>
     ${blocoLinhaDoTempo('lead', id)}
     ${botaoApagar('lead', id, 'Apagar lead')}`;
@@ -3349,7 +3374,7 @@ function cartaoLead(l, comTipo) {
       ${ico('chevron', 'row__chev')}
     </button>
     <div class="between" style="margin-bottom:var(--s2)">
-      <span class="pill brand">${comTipo ? 'comprador · ' + esc(STAGE_LABELS[l.estagio] || l.estagio) : esc(l.classificacao || '—')}</span>
+      <span style="display:flex;gap:var(--s2);flex-wrap:wrap"><span class="pill brand">${comTipo ? 'comprador · ' + esc(STAGE_LABELS[l.estagio] || l.estagio) : esc(l.classificacao || '—')}</span>${pillFaixaHTML('lead', l.id)}</span>
       <span class="row__meta">${esc(l.canal_origem || '')} · ${fmtRelDate(l.criado_em)}</span>
     </div>
     ${botoesContato(l.telefone, 'lead:' + l.id, `<button class="btn btn--sm btn--icon" onclick="abrirCriar('lead', ${l.id})" aria-label="Criar ligado a este lead">${ico('somar')}</button>`)}
@@ -3364,7 +3389,7 @@ function cartaoCaptacao(c) {
       ${ico('chevron', 'row__chev')}
     </button>
     <div class="between" style="margin-bottom:var(--s2)">
-      <span class="pill">captação · ${esc((c.motivo || '').toLowerCase())}</span>
+      <span style="display:flex;gap:var(--s2);flex-wrap:wrap"><span class="pill">captação · ${esc((c.motivo || '').toLowerCase())}</span>${pillFaixaHTML('captacao', c.id)}</span>
       <span class="row__meta">${fmtRelDate(c.criado_em)}</span>
     </div>
     ${botoesContato(c.telefone, 'captacao:' + c.id)}
@@ -3824,6 +3849,8 @@ function renderVisita() {
       </ul>
     </div>
 
+    ${v.lead_id ? blocoFaltaSaberHTML('lead', v.lead_id, 'Pra descobrir nesta visita') : ''}
+
     <h2 class="blk-title">Capturado nesta visita</h2>
     ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nada ainda. Use os botões acima.</p></div>`}
 
@@ -4005,6 +4032,10 @@ function encerrarVisitaSheet(id) {
     <div id="desfecho-chips" class="chip-row" style="flex-wrap:wrap;overflow:visible">
       ${DESFECHOS.map((d, i) => `<button class="chip" data-i="${i}" onclick="escolherDesfecho(${i})">${d.k}</button>`).join('')}
     </div>
+    ${v.lead_id ? `<div class="eyebrow" style="color:var(--text-3);margin-top:var(--s2)">Como a pessoa estava</div>
+    <div id="enc-humor" class="chip-row" style="flex-wrap:wrap;overflow:visible">
+      ${HUMORES.map(h => `<button type="button" class="chip" data-h="${h.v}" onclick="escolherHumorEnc(${h.v})">${h.t}</button>`).join('')}
+    </div>` : ''}
     <div class="field"><label for="enc-objecao">Objeção que apareceu</label>
       <input id="enc-objecao" placeholder="Ex.: achou o condomínio caro"></div>
     <div class="field"><label for="enc-proximo">Próximo passo</label>
@@ -4017,9 +4048,13 @@ function encerrarVisitaSheet(id) {
     </div>`, { foco: false });
   // Rodada 33: vinha marcado "Quer fazer proposta" — passar direto registrava o desfecho
   // errado e movia o lead pra Proposta. Agora a escolha é obrigatória.
-  window.__desfecho = null;
+  window.__desfecho = null; window.__humorEnc = null;
   ligarRascunho('encerrar:' + id, document.getElementById('sheet-body'),
     campos => { if (campos['enc-desfecho'] !== undefined && campos['enc-desfecho'] !== '') escolherDesfecho(+campos['enc-desfecho']); });
+}
+function escolherHumorEnc(h) {
+  window.__humorEnc = window.__humorEnc === h ? null : h;
+  document.querySelectorAll('#enc-humor .chip').forEach(c => c.classList.toggle('on', +c.dataset.h === window.__humorEnc));
 }
 function escolherDesfecho(i) {
   window.__desfecho = i;
@@ -4047,6 +4082,9 @@ function confirmarEncerramento(id) {
     run(`UPDATE lead SET estagio=?, proximo_passo=? WHERE id=?`, [d.estagio, proximo, v.lead_id]);
     run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
       [v.lead_id, d.dias, d.canal, proximo, todayISO(d.dias)]);
+    // a visita é uma interação: entra na linha do tempo e na qualificação com o humor
+    registrarInteracao({ tipo: 'lead', id: v.lead_id }, 'visita', d.k, objecao ? 'Objeção: ' + objecao : null,
+      { humor: window.__humorEnc, imovel_id: v.imovel_id, visita_id: id });
   }
   // o que o corretor marcou no roteiro vira nota da visita, sem digitar de novo
   if (marcadas.length || objecao) {
@@ -4275,9 +4313,9 @@ function tirarAutorizacao(id) {
 // com Desfazer na hora e Restaurar por 30 dias. Restaura com o mesmo id: tudo que
 // apontava pra ela volta a se ligar sozinho.
 const APAGAVEIS = {
-  lead:     { tabela: 'lead', nome: 'Lead', rot: r => r.nome, filhos: [['sequencia_contato', 'lead_id'], ['interacao', 'lead_id']] },
+  lead:     { tabela: 'lead', nome: 'Lead', rot: r => r.nome, filhos: [['sequencia_contato', 'lead_id'], ['interacao', 'lead_id'], ['qualificacao_resposta', 'lead_id']] },
   cliente:  { tabela: 'cliente', nome: 'Cliente', rot: r => r.nome, filhos: [['interacao', 'cliente_id']] },
-  captacao: { tabela: 'captacao_lp', nome: 'Captação', rot: r => r.nome, filhos: [['interacao', 'captacao_id']] },
+  captacao: { tabela: 'captacao_lp', nome: 'Captação', rot: r => r.nome, filhos: [['interacao', 'captacao_id'], ['qualificacao_resposta', 'captacao_id']] },
   imovel:   { tabela: 'imovel', nome: 'Imóvel', rot: r => nomeImovel(r), filhos: [['imovel_foto', 'imovel_id'], ['checklist_item', 'imovel_id'], ['visita', 'imovel_id']] },
   nota:     { tabela: 'nota', nome: 'Nota', rot: r => r.referencia || 'Nota', filhos: [] },
   arquivo:  { tabela: 'documento_carteira', nome: 'Arquivo', rot: r => r.nome, filhos: [] },
@@ -4340,7 +4378,7 @@ function restaurar(lid) {
 // Depois de 30 dias o item sai de vez. O que apontava pra ele (nota, arquivo, lead, visita)
 // fica, mas sem o vínculo: um id que não existe mais não pode sobrar solto no banco.
 const SOLTAR_AO_ESVAZIAR = {
-  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id']],
+  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id']],
   lead: [['visita', 'lead_id'], ['nota', 'lead_id'], ['documento_carteira', 'lead_id']],
   cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']]
 };
@@ -4498,9 +4536,13 @@ function pessoaPorTelefone(tel) {
   }
   return null;
 }
-function registrarInteracao(p, tipo, resultado, texto) {
-  return insertAndGetId(`INSERT INTO interacao (${COLUNA_PESSOA[p.tipo]}, tipo, resultado, texto, criado_em) VALUES (?,?,?,?,?)`,
-    [p.id, tipo, resultado || null, texto || null, agoraISO()]);
+function registrarInteracao(p, tipo, resultado, texto, extra) {
+  extra = extra || {};
+  let imovelId = extra.imovel_id || null;
+  if (!imovelId && p.tipo === 'lead') { const l = q('SELECT imovel_id FROM lead WHERE id=?', [p.id])[0]; imovelId = l ? l.imovel_id : null; }
+  return insertAndGetId(`INSERT INTO interacao (${COLUNA_PESSOA[p.tipo]}, tipo, resultado, texto, humor, sinais, impressao, imovel_id, visita_id, criado_em) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    [p.id, tipo, resultado || null, texto || null, extra.humor == null ? null : extra.humor,
+     extra.sinais && extra.sinais.length ? JSON.stringify(extra.sinais) : null, extra.impressao || null, imovelId, extra.visita_id || null, agoraISO()]);
 }
 document.addEventListener('visibilitychange', () => {
   const c = contatoPendente; if (!c || !db) return;
@@ -4526,23 +4568,59 @@ const RESULTADOS_CONTATO = [
   { k: 'Conversamos', prox: 0 }, { k: 'Quer visitar', prox: 0 }, { k: 'Pediu retorno', prox: 3 },
   { k: 'Não atendeu', prox: 1 }, { k: 'Número errado', prox: 0 }
 ];
+// Rodada 35: a interação passa a captar o que o corretor percebe — humor, sinais e uma
+// impressão livre — e aproveita o momento pra fazer uma ou duas perguntas de
+// qualificação que ainda não têm resposta. É daqui que a qualificação se alimenta.
 function folhaComoFoi(pessoaTxt, manual) {
   const p = parsePessoa(pessoaTxt); if (!p) return;
-  window.__cf = { res: null, prox: 0, canal: 'ligacao' };
+  window.__cf = { res: null, prox: 0, canal: 'ligacao', humor: null, sinais: {}, resp: {} };
   const grupo = (id, itens) => `<div class="chip-row" style="flex-wrap:wrap;overflow:visible" id="${id}">${itens}</div>`;
+  const sinais = sinaisDe(p.tipo);
+  const faltando = perguntasFaltando(p.tipo, p.id).slice(0, 2);
   openSheet(`
-    <h2 class="sheet__title" id="sheet-title">${manual ? 'Registrar contato' : 'Como foi a ligação?'}</h2>
+    <h2 class="sheet__title" id="sheet-title">${manual ? 'Registrar interação' : 'Como foi a ligação?'}</h2>
     <p class="muted" style="margin:0 0 var(--s3)">${esc(p.nome)}${manual ? '' : ' · você voltou do telefone agora'}</p>
     ${manual ? grupo('cf-canal', [['ligacao', 'Ligação'], ['whatsapp', 'WhatsApp'], ['pessoalmente', 'Pessoalmente']].map(([k, t], i) =>
       `<button type="button" class="chip ${i === 0 ? 'on' : ''}" aria-pressed="${i === 0}" onclick="marcarChipCf(this, 'canal', '${k}')">${t}</button>`).join('')) : ''}
     ${grupo('cf-res', RESULTADOS_CONTATO.map((r, i) => `<button type="button" class="chip" aria-pressed="false" onclick="escolherResultado(this, ${i})">${r.k}</button>`).join(''))}
     <div class="field"><label for="cf-texto">O que ficou combinado</label><textarea id="cf-texto" placeholder="Ex.: quer ver sábado de manhã"></textarea></div>
+    <h3 class="blk-title">Como a pessoa estava</h3>
+    ${grupo('cf-humor', HUMORES.map(h => `<button type="button" class="chip" aria-pressed="false" onclick="marcarChipCf(this, 'humor', ${h.v})">${h.t}</button>`).join(''))}
+    ${sinais.length ? `<h3 class="blk-title">Sinais que percebeu</h3>` + grupo('cf-sinais', sinais.map(sg =>
+      `<button type="button" class="chip" aria-pressed="false" onclick="alternarSinalCf(this, '${sg.k}')">${sg.t}</button>`).join('')) : ''}
+    ${faltando.length ? `<h3 class="blk-title">Descobriu algo?</h3>` + faltando.map(pg => `
+      <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s2)">${esc(pg.t)}</div>
+      ${grupo('cf-pg-' + pg.k, pg.op.map(o => `<button type="button" class="chip" aria-pressed="false" onclick="marcarRespostaCf(this, '${pg.k}', '${o[0]}')">${esc(o[1])}</button>`).join(''))}`).join('') : ''}
+    <div class="field"><label for="cf-impressao">Impressão (o que não cabe nos botões)</label><textarea id="cf-impressao" placeholder="Ex.: pareceu decidido, mas a esposa ainda não viu"></textarea></div>
     ${p.tipo === 'lead' ? `<h3 class="blk-title">Próximo contato</h3>` + grupo('cf-prox', [[0, 'Nenhum'], [1, 'Amanhã'], [3, 'Em 3 dias'], [7, 'Em 7 dias']].map(([d, t]) =>
       `<button type="button" class="chip ${d === 0 ? 'on' : ''}" data-d="${d}" aria-pressed="${d === 0}" onclick="marcarChipCf(this, 'prox', ${d})">${t}</button>`).join('')) : ''}
     <div class="btn-row sheet__acts">
       <button class="btn btn--primary btn--grow" onclick="salvarComoFoi('${pessoaTxt}')">${ico('check')}Registrar</button>
       <button class="btn btn--grow" onclick="closeSheet()">${manual ? 'Cancelar' : 'Pular'}</button>
-    </div>`, { foco: false });
+    </div>`, { foco: false, chave: 'interacao:' + pessoaTxt });
+}
+function alternarSinalCf(el, k) {
+  const on = !el.classList.contains('on');
+  el.classList.toggle('on', on); el.setAttribute('aria-pressed', String(on));
+  if (on) window.__cf.sinais[k] = 1; else delete window.__cf.sinais[k];
+}
+function marcarRespostaCf(el, chave, valor) {
+  marcarChipCf(el, '_r', null);
+  window.__cf.resp[chave] = valor;
+}
+// Criar › Interação sem contexto: escolhe a pessoa primeiro
+function escolherPessoaSheet() {
+  const pessoas = [];
+  q('SELECT id, nome FROM lead ORDER BY criado_em DESC').forEach(r => pessoas.push({ tipo: 'lead', id: r.id, nome: r.nome, s: 'comprador' }));
+  q('SELECT id, nome FROM captacao_lp ORDER BY criado_em DESC').forEach(r => pessoas.push({ tipo: 'captacao', id: r.id, nome: r.nome, s: 'captação' }));
+  q('SELECT id, nome FROM cliente ORDER BY criado_em DESC').forEach(r => pessoas.push({ tipo: 'cliente', id: r.id, nome: r.nome, s: 'cliente' }));
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Interação com quem?</h2>
+    ${pessoas.length ? pessoas.map(x => `<button class="card card--tap row" onclick="folhaComoFoi('${x.tipo}:${x.id}', true)">
+        <span class="row__ico">${ico(x.tipo === 'captacao' ? 'casa' : 'pessoa')}</span>
+        <span class="row__main"><span class="row__t">${esc(x.nome)}</span><span class="row__s">${x.s}</span></span>
+        ${ico('chevron', 'row__chev')}</button>`).join('') : `<div class="empty">${ico('leads')}<p>Cadastre uma pessoa primeiro.</p></div>`}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'escolher-pessoa' });
 }
 function marcarChipCf(el, campo, valor) {
   el.parentNode.querySelectorAll('.chip').forEach(c => { c.classList.remove('on'); c.setAttribute('aria-pressed', 'false'); });
@@ -4558,7 +4636,9 @@ function salvarComoFoi(pessoaTxt) {
   const p = parsePessoa(pessoaTxt), cf = window.__cf; if (!p || !cf) return;
   if (cf.res == null) return showToastErr('Escolha como foi.');
   const r = RESULTADOS_CONTATO[cf.res], texto = val('cf-texto'), dias = p.tipo === 'lead' ? cf.prox : 0;
-  const iid = registrarInteracao(p, cf.canal, r.k, texto);
+  const iid = registrarInteracao(p, cf.canal, r.k, texto, {
+    humor: cf.humor, sinais: Object.keys(cf.sinais), impressao: val('cf-impressao') });
+  const respIds = Object.keys(cf.resp).map(k => gravarResposta(p, k, cf.resp[k], iid));
   let seqId = null, estagioAntes = null;
   if (p.tipo === 'lead') {
     if (dias) seqId = insertAndGetId(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`,
@@ -4572,6 +4652,7 @@ function salvarComoFoi(pessoaTxt) {
   vibrar(); closeSheet(); renderAll();
   const desfazer = () => {
     run('DELETE FROM interacao WHERE id=?', [iid]);
+    respIds.forEach(rid => run('DELETE FROM qualificacao_resposta WHERE id=?', [rid]));
     if (seqId) run('DELETE FROM sequencia_contato WHERE id=?', [seqId]);
     if (estagioAntes) run('UPDATE lead SET estagio=? WHERE id=?', [estagioAntes, p.id]);
     renderAll();
@@ -4582,6 +4663,276 @@ function salvarComoFoi(pessoaTxt) {
     showToast('Contato registrado' + (seqId ? ' · próximo ' + fmtDataCurta(todayISO(dias)) : '') + (estagioAntes ? ' · lead em Contato' : '') + '.',
       { label: 'Desfazer', fn: desfazer });
   }
+}
+
+// ---------- qualificação (rodada 35) ----------
+// Lead de venda e captação ganham uma pontuação de 0 a 100 calculada só com o que o
+// corretor já registrou: dados da ficha, respostas às perguntas-chave, sinais e humor
+// das interações, visitas e follow-ups. Cada ponto tem um motivo escrito — pontuação
+// sem justificativa é caixa-preta, e o corretor precisa saber o que perguntar a seguir.
+// A mesma entrada (o dossiê) e a mesma saída (pontos, faixa, motivos, o que falta) são
+// o contrato pra um modelo externo assumir o cálculo depois — ver QUALIFICADOR.
+const HUMORES = [
+  { v: 2, t: 'Empolgado' }, { v: 1, t: 'Receptivo' }, { v: 0, t: 'Neutro' }, { v: -1, t: 'Reticente' }, { v: -2, t: 'Irritado' }
+];
+const SINAIS = [
+  // comprador
+  { k: 'urgencia',            t: 'Tem pressa',                  p: 10,  em: ['lead', 'captacao'] },
+  { k: 'credito_aprovado',    t: 'Crédito aprovado',            p: 15,  em: ['lead'], responde: ['pagamento', 'financiamento_aprovado'] },
+  { k: 'a_vista',             t: 'Compra à vista',              p: 15,  em: ['lead'], responde: ['pagamento', 'a_vista'] },
+  { k: 'pediu_documentos',    t: 'Pediu documentos',            p: 10,  em: ['lead'] },
+  { k: 'vai_trazer_alguem',   t: 'Vai trazer alguém pra ver',   p: 5,   em: ['lead'] },
+  { k: 'decide_sozinho',      t: 'Decide sozinho',              p: 5,   em: ['lead', 'captacao'] },
+  { k: 'depende_de_outro',    t: 'Depende de outra pessoa',     p: -3,  em: ['lead', 'captacao'] },
+  { k: 'comparando',          t: 'Comparando com outros',       p: -3,  em: ['lead'] },
+  { k: 'preco_objecao',       t: 'Preço é o problema',          p: -5,  em: ['lead'] },
+  { k: 'precisa_vender_antes', t: 'Precisa vender o dele antes', p: -5,  em: ['lead'] },
+  { k: 'nao_responde',        t: 'Some, não responde',          p: -8,  em: ['lead', 'captacao'] },
+  { k: 'so_olhando',          t: 'Só olhando',                  p: -12, em: ['lead'] },
+  // proprietário
+  { k: 'doc_ok',              t: 'Documentação em dia',         p: 15,  em: ['captacao'], responde: ['documentacao', 'em_dia'] },
+  { k: 'doc_pendente',        t: 'Documentação pendente',       p: -5,  em: ['captacao'], responde: ['documentacao', 'pendente'] },
+  { k: 'preco_realista',      t: 'Preço realista',              p: 10,  em: ['captacao'], responde: ['preco', 'realista'] },
+  { k: 'preco_acima',         t: 'Quer acima do mercado',       p: -10, em: ['captacao'], responde: ['preco', 'muito_acima'] },
+  { k: 'aceita_exclusividade', t: 'Aceita exclusividade',       p: 10,  em: ['captacao'], responde: ['exclusividade', 'aceita'] },
+  { k: 'outros_corretores',   t: 'Com outros corretores',       p: -5,  em: ['captacao'] },
+  { k: 'tem_onus',            t: 'Tem dívida ou ônus',          p: -5,  em: ['captacao'] },
+  // cliente (contato geral): sinal que muda o tipo de relação
+  { k: 'quer_comprar',        t: 'Quer comprar',                p: 0,   em: ['cliente'] },
+  { k: 'quer_vender',         t: 'Quer vender',                 p: 0,   em: ['cliente'] },
+  { k: 'indicou_alguem',      t: 'Indicou alguém',              p: 0,   em: ['cliente'] }
+];
+// Perguntas-chave. Cada opção vale pontos; a maior opção da pergunta é o "peso" dela,
+// usado pra ordenar o que falta saber (a maior incógnita primeiro).
+const PERGUNTAS = {
+  lead: [
+    { k: 'prazo',         t: 'Pra quando?',            op: [['ja', 'Pra já', 15], ['ate3m', 'Até 3 meses', 10], ['ate6m', 'Até 6 meses', 5], ['sem_pressa', 'Sem pressa', 0]] },
+    { k: 'pagamento',     t: 'Como paga?',             op: [['a_vista', 'À vista', 15], ['financiamento_aprovado', 'Financiamento aprovado', 15], ['vai_financiar', 'Vai financiar', 6], ['fgts', 'FGTS + financiamento', 6], ['nao_sabe', 'Não sabe ainda', 0]] },
+    { k: 'decisor',       t: 'Quem decide?',           op: [['sozinho', 'Só a pessoa', 8], ['conjuge', 'Com cônjuge', 5], ['familia', 'Família ou sócio', 2]] },
+    { k: 'moradia_atual', t: 'Mora hoje…',             op: [['aluguel', 'De aluguel', 8], ['proprio_mantem', 'No próprio, mantém', 6], ['com_familia', 'Com a família', 5], ['proprio_vende', 'No próprio, precisa vender', 3]] },
+    { k: 'ja_visitou',    t: 'Já visitou outros?',     op: [['alguns', 'Alguns', 6], ['muitos', 'Muitos', 4], ['nenhum', 'Nenhum', 2]] }
+  ],
+  captacao: [
+    { k: 'prazo',         t: 'Pra quando?',            op: [['ja', 'Pra já', 15], ['ate3m', 'Até 3 meses', 10], ['ate6m', 'Até 6 meses', 5], ['sem_pressa', 'Sem pressa', 0]] },
+    { k: 'documentacao',  t: 'Documentação',           op: [['em_dia', 'Em dia', 15], ['pendente', 'Pendente', 4], ['nao_sabe', 'Não sabe', 0]] },
+    { k: 'preco',         t: 'Preço esperado',         op: [['realista', 'Realista', 12], ['pouco_acima', 'Um pouco acima', 6], ['nao_definiu', 'Não definiu', 2], ['muito_acima', 'Muito acima', 0]] },
+    { k: 'exclusividade', t: 'Exclusividade',          op: [['aceita', 'Aceita', 10], ['pensa', 'Vai pensar', 5], ['nao', 'Não aceita', 0]] },
+    { k: 'motivo_venda',  t: 'Por que vende?',         op: [['mudanca', 'Mudança', 8], ['financeiro', 'Financeiro', 8], ['troca', 'Troca de imóvel', 8], ['heranca', 'Herança', 8], ['investimento', 'Investimento', 8]] },
+    { k: 'decisor',       t: 'Quem decide?',           op: [['sozinho', 'Só a pessoa', 8], ['conjuge', 'Com cônjuge', 5], ['herdeiros', 'Herdeiros ou sócios', 2]] },
+    { k: 'ocupacao',      t: 'Quem mora no imóvel',    op: [['vazio', 'Vazio', 6], ['proprietario', 'O proprietário', 4], ['inquilino', 'Inquilino', 1]] },
+    { k: 'onus',          t: 'Dívida ou ônus',         op: [['nenhum', 'Nenhum', 6], ['financiamento', 'Financiamento', 3], ['atrasados', 'Condomínio ou IPTU atrasado', 0], ['outro', 'Outro', 0]] }
+  ]
+};
+// Pistas lidas nas notas e nas interações: palavra que sugere uma pergunta ainda sem
+// resposta. Não pontua — o corretor confirma tocando.
+const PISTAS = [
+  { re: /financi|banco|caixa|fgts|\bà vista\b|\ba vista\b/i, lead: 'pagamento' },
+  { re: /urg|essa semana|este m[eê]s|vencendo|o quanto antes|logo/i, lead: 'prazo', captacao: 'prazo' },
+  { re: /esposa|marido|c[oô]njuge|mulher dele|s[oó]cio|pai|m[aã]e|fam[ií]lia|filh/i, lead: 'decisor', captacao: 'decisor' },
+  { re: /alugu|alugad|inquilin/i, lead: 'moradia_atual', captacao: 'ocupacao' },
+  { re: /document|escritura|matr[ií]cula|invent[aá]rio|heran[cç]a|certid/i, lead: 'pagamento', captacao: 'documentacao' },
+  { re: /caro|pre[cç]o alto|acima do|abaixo do|pede muito|negociar/i, captacao: 'preco' },
+  { re: /exclusiv/i, captacao: 'exclusividade' },
+  { re: /d[ií]vida|atrasad|penhora|[oô]nus/i, captacao: 'onus' },
+  { re: /outro corretor|outra imobili|olx|zap|vivareal|anunciad/i, lead: 'ja_visitou', captacao: 'exclusividade' }
+];
+const FAIXAS = [[60, 'Quente', 'ok'], [30, 'Morno', 'warn'], [0, 'Frio', '']];
+function sinaisDe(tipo) { return SINAIS.filter(x => x.em.includes(tipo)); }
+function rotuloSinal(k) { const x = SINAIS.find(y => y.k === k); return x ? x.t : ''; }
+function lerSinais(json) { try { return JSON.parse(json || '[]') || []; } catch (e) { return []; } }
+function perguntaPor(tipo, chave) { return (PERGUNTAS[tipo] || []).find(x => x.k === chave); }
+function rotuloResposta(pg, valor) { const o = pg.op.find(x => x[0] === valor); return o ? o[1] : valor; }
+function pesoPergunta(pg) { return Math.max(...pg.op.map(o => o[2])); }
+function respostasDe(tipo, id) {
+  const out = {};
+  q(`SELECT chave, valor FROM qualificacao_resposta WHERE ${COLUNA_PESSOA[tipo]}=? ORDER BY id`, [id]).forEach(r => { out[r.chave] = r.valor; });
+  return out;
+}
+function perguntasFaltando(tipo, id) {
+  if (!PERGUNTAS[tipo]) return [];
+  const resp = respostasDe(tipo, id);
+  return PERGUNTAS[tipo].filter(pg => !resp[pg.k]).sort((a, b) => pesoPergunta(b) - pesoPergunta(a));
+}
+function gravarResposta(p, chave, valor, interacaoId) {
+  return insertAndGetId(`INSERT INTO qualificacao_resposta (${COLUNA_PESSOA[p.tipo]}, chave, valor, interacao_id, criado_em) VALUES (?,?,?,?,?)`,
+    [p.id, chave, valor, interacaoId || null, agoraISO()]);
+}
+function faixaDe(pontos) { const f = FAIXAS.find(x => pontos >= x[0]) || FAIXAS[2]; return { nome: f[1], cls: f[2] }; }
+
+// O dossiê é tudo que o app sabe da pessoa, em forma estruturada. É a entrada do
+// qualificador local e o que um modelo externo receberia. CPF, documento e telefone
+// ficam de fora — a qualificação não precisa deles e eles não devem sair do aparelho.
+function dossie(tipo, id) {
+  const col = COLUNA_PESSOA[tipo];
+  const pessoa = q(`SELECT * FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [id])[0]; if (!pessoa) return null;
+  const d = { tipo, id, gerado_em: agoraISO(), hoje: todayISO(0),
+    pessoa: { nome: pessoa.nome, criado_em: pessoa.criado_em, tem_telefone: !!pessoa.telefone } };
+  if (tipo === 'lead') Object.assign(d.pessoa, { estagio: pessoa.estagio, classificacao: pessoa.classificacao, tipo_interesse: pessoa.tipo_interesse,
+    bairro_interesse: pessoa.bairro_interesse, orcamento: pessoa.orcamento, canal_origem: pessoa.canal_origem, motivacao: pessoa.motivacao, proximo_passo: pessoa.proximo_passo,
+    imovel_interesse: pessoa.imovel_id ? (q('SELECT codigo, nome, tipo, valor, bairro FROM imovel WHERE id=?', [pessoa.imovel_id])[0] || null) : null });
+  if (tipo === 'captacao') Object.assign(d.pessoa, { status: pessoa.status, tipo_imovel: pessoa.tipo_imovel, motivo: pessoa.motivo, tem_endereco: !!pessoa.endereco });
+  if (tipo === 'cliente') Object.assign(d.pessoa, { tipo_cliente: pessoa.tipo, observacoes: pessoa.observacoes });
+  d.respostas = tipo === 'cliente' ? {} : respostasDe(tipo, id);
+  d.interacoes = q(`SELECT tipo, resultado, texto, humor, sinais, impressao, criado_em FROM interacao WHERE ${col}=? ORDER BY criado_em DESC`, [id])
+    .map(r => ({ canal: r.tipo, resultado: r.resultado, texto: r.texto, humor: r.humor, sinais: lerSinais(r.sinais), impressao: r.impressao, quando: r.criado_em }));
+  d.notas = tipo === 'captacao' ? [] : q(`SELECT modo, texto, criado_em, hora FROM nota WHERE ${col}=? ORDER BY criado_em DESC`, [id])
+    .map(n => ({ modo: n.modo, texto: n.texto, quando: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : '') }));
+  if (tipo === 'lead') {
+    d.visitas = q(`SELECT v.data, v.hora, v.status, v.inicio, v.fim, v.desfecho, v.objecao, v.proximo_passo, i.codigo, i.nome FROM visita v JOIN imovel i ON i.id=v.imovel_id WHERE v.lead_id=? ORDER BY v.data DESC, v.hora DESC`, [id])
+      .map(v => ({ quando: v.data + ' ' + (v.hora || ''), imovel: nomeImovel(v), status: v.status, aconteceu: !!v.fim && !['Cancelada', 'Não compareceu'].includes(v.desfecho), desfecho: v.desfecho, objecao: v.objecao, proximo_passo: v.proximo_passo }));
+    d.follow_ups = q(`SELECT canal, descricao, status, vence_em FROM sequencia_contato WHERE lead_id=? ORDER BY vence_em DESC`, [id]);
+  }
+  return d;
+}
+function diasDesde(iso) { if (!iso) return null; const d = new Date(String(iso).slice(0, 10) + 'T12:00:00'); return Math.floor((new Date(todayISO(0) + 'T12:00:00') - d) / 86400000); }
+// Qualificador local: determinístico, cada ponto com motivo. Devolve o mesmo formato
+// que um qualificador remoto devolveria.
+function qualificarLocal(d) {
+  const motivos = [], faltando = [], pistas = [];
+  let pontos = 0, teto = 100;
+  const add = (p, t) => { if (!p) return; pontos += p; motivos.push({ p, t }); };
+  const per = PERGUNTAS[d.tipo] || [];
+  // 1. dados da ficha
+  if (d.pessoa.tem_telefone) add(4, 'Telefone na ficha'); else faltando.push({ k: '_tel', t: 'Telefone', peso: 4 });
+  if (d.tipo === 'lead') {
+    if (d.pessoa.imovel_interesse || d.pessoa.tipo_interesse || d.pessoa.bairro_interesse) add(4, 'Sabe o que procura'); else faltando.push({ k: '_interesse', t: 'O que procura (tipo, bairro ou imóvel)', peso: 4 });
+    if (d.pessoa.orcamento) add(4, 'Orçamento informado'); else faltando.push({ k: '_orcamento', t: 'Orçamento', peso: 4 });
+    if (d.pessoa.motivacao) add(6, 'Motivação registrada'); else faltando.push({ k: '_motivacao', t: 'Por que quer comprar agora', peso: 6 });
+  } else if (d.tipo === 'captacao') {
+    if (d.pessoa.tem_endereco) add(4, 'Endereço do imóvel'); else faltando.push({ k: '_endereco', t: 'Endereço do imóvel', peso: 4 });
+    if (d.pessoa.tipo_imovel) add(4, 'Tipo do imóvel'); else faltando.push({ k: '_tipo', t: 'Tipo do imóvel', peso: 4 });
+  }
+  // 2. perguntas-chave
+  per.forEach(pg => {
+    const v = d.respostas[pg.k];
+    if (!v) return faltando.push({ k: pg.k, t: pg.t, peso: pesoPergunta(pg), pergunta: true });
+    const o = pg.op.find(x => x[0] === v); if (!o) return;
+    add(o[2], pg.t + ' — ' + o[1]);
+    if (!o[2]) motivos.push({ p: 0, t: pg.t + ' — ' + o[1] });
+  });
+  // 3. sinais (cada sinal conta uma vez, o mais recente vale)
+  const vistos = new Set();
+  d.interacoes.forEach(i => (i.sinais || []).forEach(k => {
+    if (vistos.has(k)) return; vistos.add(k);
+    const sg = SINAIS.find(x => x.k === k); if (!sg || !sg.em.includes(d.tipo)) return;
+    if (sg.responde && d.respostas[sg.responde[0]] === sg.responde[1]) return; // já contou na pergunta
+    add(sg.p, 'Sinal: ' + sg.t);
+  }));
+  // 4. comportamento
+  const rec = d.interacoes.filter(i => i.canal !== 'visita' && diasDesde(i.quando) <= 14).length;
+  if (rec) add(Math.min(9, rec * 3), plural(rec, 'contato', 'contatos') + ' nos últimos 14 dias');
+  const humores = d.interacoes.filter(i => i.humor != null).slice(0, 3).map(i => i.humor);
+  if (humores.length) { const m = humores.reduce((a, b) => a + b, 0) / humores.length, ph = Math.round(m * 3);
+    if (ph) add(ph, 'Humor nos últimos contatos: ' + (m > 0 ? 'positivo' : 'negativo')); }
+  if (d.tipo === 'lead') {
+    const feitas = (d.visitas || []).filter(v => v.aconteceu);
+    if (feitas.length) add(10, plural(feitas.length, 'visita feita', 'visitas feitas'));
+    const ult = feitas[0];
+    if (ult && ult.desfecho) { const pd = { 'Quer fazer proposta': 15, 'Gostou, vai pensar': 6, 'Volta com outra pessoa': 6 }[ult.desfecho] || 0;
+      add(pd, 'Última visita: ' + ult.desfecho.toLowerCase()); if (!pd) motivos.push({ p: 0, t: 'Última visita: ' + ult.desfecho.toLowerCase() }); }
+    if (d.pessoa.estagio === 'proposta') add(10, 'Já em Proposta');
+    const atrasado = (d.follow_ups || []).find(f => f.status === 'agendado' && f.vence_em && diasDesde(f.vence_em) >= 7);
+    if (atrasado) add(-5, 'Follow-up atrasado há ' + plural(diasDesde(atrasado.vence_em), 'dia', 'dias'));
+    const ults = d.interacoes.filter(i => i.canal === 'ligacao').slice(0, 2);
+    if (ults.length === 2 && ults.every(i => i.resultado === 'Não atendeu')) add(-6, 'Duas ligações sem atender');
+    if (d.interacoes[0] && d.interacoes[0].resultado === 'Número errado') { teto = 10; motivos.push({ p: 0, t: 'Último contato: número errado — confirme o telefone' }); }
+  }
+  const ultimoContato = [d.interacoes[0] && d.interacoes[0].quando, d.notas[0] && d.notas[0].quando, (d.visitas || []).filter(v => v.aconteceu)[0] && (d.visitas || []).filter(v => v.aconteceu)[0].quando]
+    .filter(Boolean).map(x => String(x).slice(0, 10)).sort().pop() || String(d.pessoa.criado_em || '').slice(0, 10);
+  const semContato = diasDesde(ultimoContato);
+  if (semContato != null && semContato >= 21) add(-10, 'Sem contato há ' + plural(semContato, 'dia', 'dias'));
+  // 5. pistas nas notas e interações, só pra pergunta ainda sem resposta
+  const textos = d.notas.map(n => n.texto).concat(d.interacoes.map(i => [i.texto, i.impressao].filter(Boolean).join(' '))).filter(Boolean);
+  PISTAS.forEach(pt => { const chave = pt[d.tipo]; if (!chave || d.respostas[chave]) return;
+    const txt = textos.find(t => pt.re.test(t)); if (!txt) return;
+    const m = txt.match(pt.re), pg = perguntaPor(d.tipo, chave);
+    // mostra a palavra inteira em volta do que casou ("financiamento", não "financi")
+    const ini = txt.lastIndexOf(' ', m.index) + 1, fim = txt.indexOf(' ', m.index + m[0].length);
+    const trecho = txt.slice(ini, fim < 0 ? undefined : fim).replace(/[.,;:!?]+$/, '');
+    if (pg && !pistas.some(x => x.k === chave)) pistas.push({ k: chave, t: pg.t, trecho }); });
+  pontos = Math.max(0, Math.min(teto, pontos));
+  faltando.sort((a, b) => b.peso - a.peso);
+  const fx = faixaDe(pontos);
+  return { pontos, faixa: fx.nome, faixaCls: fx.cls, motivos, faltando, proxima: faltando.find(f => f.pergunta) || null, pistas,
+           fechado: d.tipo === 'lead' && d.pessoa.estagio === 'fechado', origem: 'local' };
+}
+// Contrato do qualificador. `remoto` fica pra quando houver API (nossa ou de terceiro):
+// recebe o mesmo dossiê, devolve o mesmo formato, e o app mostra os dois lado a lado
+// antes de qualquer um substituir o outro. Nunca decide sozinho: o corretor escolhe
+// "Usar" pra gravar a faixa na classificação.
+const QUALIFICADOR = { local: qualificarLocal, remoto: null };
+function qualificar(tipo, id) { const d = dossie(tipo, id); return d ? QUALIFICADOR.local(d) : null; }
+function pillFaixaHTML(tipo, id) {
+  const r = qualificar(tipo, id); if (!r || r.fechado) return '';
+  return `<span class="pill ${r.faixaCls}">${r.faixa.toLowerCase()} · ${r.pontos}</span>`;
+}
+function blocoFaltaSaberHTML(tipo, id, titulo) {
+  const r = qualificar(tipo, id); if (!r) return '';
+  const itens = r.faltando.filter(f => f.pergunta).slice(0, 3);
+  if (!itens.length) return '';
+  return `<h2 class="blk-title">${esc(titulo)}</h2>
+    <div class="card"><div class="chip-row" style="flex-wrap:wrap;overflow:visible">
+      ${itens.map(f => `<button class="chip" onclick="perguntaSheet('${tipo}', ${id}, '${f.k}')">${esc(f.t)}</button>`).join('')}
+    </div></div>`;
+}
+function blocoQualificacaoHTML(tipo, id) {
+  const r = qualificar(tipo, id); if (!r) return '';
+  const pessoa = tipo === 'lead' ? (q('SELECT classificacao FROM lead WHERE id=?', [id])[0] || {}) : {};
+  const barra = `<div style="height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:var(--s2) 0"><div style="width:${r.pontos}%;height:100%;background:${r.faixaCls === 'ok' ? 'var(--ok)' : r.faixaCls === 'warn' ? 'var(--warn)' : 'var(--text-3)'}"></div></div>`;
+  const mot = r.motivos.filter(m => m.p).slice(0, 8);
+  const resp = respostasDe(tipo, id);
+  return `<h3 class="blk-title">Qualificação</h3>
+    <div class="card">
+      ${r.fechado ? `<p class="muted" style="margin:0">Negócio fechado — a qualificação não se aplica mais.</p>` : `
+      <div class="between"><span style="white-space:nowrap"><span class="pill ${r.faixaCls}">${r.faixa}</span> <b style="font-variant-numeric:tabular-nums">${r.pontos}</b><span class="muted"> de 100</span></span>
+        ${tipo === 'lead' && (pessoa.classificacao || '').toLowerCase() !== r.faixa.toLowerCase() ? `<button class="btn btn--sm" onclick="usarFaixa(${id})">Usar como classificação</button>` : ''}</div>
+      ${barra}
+      ${mot.length ? `<div class="muted" style="font-size:var(--t-sm);line-height:1.6;white-space:normal">${mot.map(m => `<span>${m.p > 0 ? '+' : '−'}${Math.abs(m.p)} ${esc(m.t)}</span>`).join(' · ')}</div>` : `<p class="muted" style="margin:0">Nada registrado ainda — cada interação e resposta soma aqui.</p>`}
+      ${r.pistas.length ? `<div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Nas notas</div>
+        ${r.pistas.map(pt => `<button class="link" style="display:block;text-align:left;margin-top:4px" onclick="perguntaSheet('${tipo}', ${id}, '${pt.k}')">“${esc(pt.trecho)}” → ${esc(pt.t)}</button>`).join('')}` : ''}
+      ${r.faltando.length ? `<div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Falta saber</div>
+        <div class="chip-row" style="flex-wrap:wrap;overflow:visible;padding-bottom:0">${r.faltando.slice(0, 4).map(f => f.pergunta
+          ? `<button class="chip" onclick="perguntaSheet('${tipo}', ${id}, '${f.k}')">${esc(f.t)}</button>`
+          : `<span class="chip" style="opacity:.75">${esc(f.t)}</span>`).join('')}</div>` : ''}`}
+    </div>
+    <details style="margin-top:var(--s2)"><summary class="muted" style="cursor:pointer;min-height:var(--tap);display:flex;align-items:center">Perguntas-chave e dossiê</summary>
+      <div class="card" style="margin-top:var(--s2)">
+        ${(PERGUNTAS[tipo] || []).map(pg => `<button class="row" onclick="perguntaSheet('${tipo}', ${id}, '${pg.k}')" style="min-height:var(--tap)">
+          <span class="row__main"><span class="row__t" style="font-weight:500">${esc(pg.t)}</span><span class="row__s">${resp[pg.k] ? esc(rotuloResposta(pg, resp[pg.k])) : '—'}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+        <button class="btn btn--sm btn--block" style="margin-top:var(--s2)" onclick="copiarDossie('${tipo}', ${id})">${ico('copiar')}Copiar dossiê (pra colar num assistente)</button>
+      </div>
+    </details>`;
+}
+function perguntaSheet(tipo, id, chave) {
+  const pg = perguntaPor(tipo, chave); if (!pg) return;
+  const atual = respostasDe(tipo, id)[chave];
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">${esc(pg.t)}</h2>
+    <div class="chip-row" style="flex-wrap:wrap;overflow:visible">
+      ${pg.op.map(o => `<button class="chip ${o[0] === atual ? 'on' : ''}" onclick="responderPergunta('${tipo}', ${id}, '${chave}', '${o[0]}')">${esc(o[1])}</button>`).join('')}
+    </div>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false, chave: 'pergunta:' + tipo + ':' + id + ':' + chave });
+}
+function responderPergunta(tipo, id, chave, valor) {
+  const rid = gravarResposta({ tipo, id }, chave, valor, null);
+  vibrar(); closeSheet(); renderAll(); if (viewAtual === 'visita') renderVisita();
+  const pg = perguntaPor(tipo, chave);
+  showToast(pg.t + ' — ' + rotuloResposta(pg, valor) + '.', { label: 'Desfazer', fn: () => { run('DELETE FROM qualificacao_resposta WHERE id=?', [rid]); renderAll(); if (sheetAberta()) openDetail(tipo, id); } });
+}
+function usarFaixa(id) {
+  const r = qualificar('lead', id); if (!r) return;
+  const antes = (q('SELECT classificacao FROM lead WHERE id=?', [id])[0] || {}).classificacao;
+  run('UPDATE lead SET classificacao=? WHERE id=?', [r.faixa.toLowerCase(), id]);
+  renderAll(); openDetail('lead', id);
+  showToast('Classificação: ' + r.faixa.toLowerCase() + '.', { label: 'Desfazer', fn: () => { run('UPDATE lead SET classificacao=? WHERE id=?', [antes, id]); renderAll(); openDetail('lead', id); } });
+}
+function copiarDossie(tipo, id) {
+  const d = dossie(tipo, id); if (!d) return;
+  const r = qualificar(tipo, id);
+  const txt = JSON.stringify({ dossie: d, qualificacao_local: r }, null, 1);
+  (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(
+    () => showToast('Dossiê copiado. Sem telefone nem documento.'),
+    () => showToastErr('Não deu pra copiar neste navegador.'));
 }
 
 // ---------- linha do tempo (B2) ----------
@@ -4595,9 +4946,17 @@ function quandoTL(v) {
 function linhaDoTempoHTML(tipo, id) {
   const col = COLUNA_PESSOA[tipo], it = [];
   const IC = { ligacao: 'telefone', whatsapp: 'conversa', pessoalmente: 'pessoa' };
-  const NOME = { ligacao: 'Ligação', whatsapp: 'WhatsApp', pessoalmente: 'Conversa' };
-  q(`SELECT * FROM interacao WHERE ${col}=?`, [id]).forEach(r => it.push({ q: r.criado_em, ic: IC[r.tipo] || 'conversa',
-    t: (NOME[r.tipo] || 'Contato') + (r.resultado ? ' · ' + r.resultado : ''), s: r.texto }));
+  const NOME = { ligacao: 'Ligação', whatsapp: 'WhatsApp', pessoalmente: 'Conversa', visita: 'Visita' };
+  q(`SELECT * FROM interacao WHERE ${col}=?`, [id]).forEach(r => {
+    const h = HUMORES.find(x => x.v === r.humor), sg = lerSinais(r.sinais).map(rotuloSinal).filter(Boolean);
+    it.push({ q: r.criado_em, ic: IC[r.tipo] || 'conversa',
+      t: (NOME[r.tipo] || 'Contato') + (r.resultado ? ' · ' + r.resultado : '') + (h ? ' · ' + h.t.toLowerCase() : ''),
+      s: [r.texto, r.impressao, sg.length ? 'Sinais: ' + sg.join(', ') : ''].filter(Boolean).join(' — ') });
+  });
+  if (tipo !== 'cliente') q(`SELECT * FROM qualificacao_resposta WHERE ${col}=? AND interacao_id IS NULL`, [id]).forEach(r => {
+    const pg = perguntaPor(tipo, r.chave); if (!pg) return;
+    it.push({ q: r.criado_em, ic: 'check', t: 'Descobriu · ' + pg.t, s: rotuloResposta(pg, r.valor) });
+  });
   if (tipo !== 'captacao') {
     q(`SELECT * FROM nota WHERE ${col}=?`, [id]).forEach(n => it.push({ q: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : ''),
       ic: { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo', t: n.modo === 'camera' ? 'Foto' : n.modo === 'audio' ? 'Nota de voz' : 'Nota',
