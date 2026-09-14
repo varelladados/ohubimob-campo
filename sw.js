@@ -18,7 +18,7 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v11';  // v11: voltar e fechar a partir de uma ficha devolvem a ficha (teste no Xiaomi)
+const CACHE = 'ohubimob-campo-v11';  // v11: voltar e fechar a partir de uma ficha devolvem a ficha; remarcar depois do check-in e marcar outra visita depois de encerrada (teste no Xiaomi)
 // v10 anterior:  // v10: rodada 34 — aviso de backup, exportar antes de apagar, PIN esquecido pede confirmação, apagar imóvel leva as visitas
 const COMPARTILHADO = 'ohubimob-compartilhado';  // o que chegou pelo compartilhamento do Android, até o app ler
 

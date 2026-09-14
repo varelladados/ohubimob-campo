@@ -3774,7 +3774,8 @@ function renderVisita() {
         ${v.inicio ? linhaCampo('Duração', esc(fmtDuracao(v.inicio, v.fim))) : ''}
       </div>
       ${v.desfecho === 'Cancelada' || v.desfecho === 'Não compareceu'
-        ? `<button class="btn btn--primary btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>` : ''}
+        ? `<button class="btn btn--primary btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>`
+        : `<button class="btn btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id}, true)">${ico('agenda')}Marcar outra visita</button>`}
       <h2 class="blk-title">Notas desta visita</h2>
       ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nenhuma nota registrada.</p></div>`}`;
     return;
@@ -3782,7 +3783,7 @@ function renderVisita() {
 
   body.innerHTML = `
     <div class="live">
-      <div class="live__l">${v.inicio ? 'em andamento' : 'ainda não começou'}</div>
+      <div class="live__l">${v.inicio ? 'em andamento' : jaPassou(v) ? 'horário passou · dá pra registrar agora' : 'ainda não começou'}</div>
       <div class="live__t" id="visita-cron">${v.inicio ? tempoDecorrido(v.inicio) : esc(v.hora)}</div>
       <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
       <div style="opacity:.85;font-size:var(--t-sm)">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
@@ -3806,7 +3807,11 @@ function renderVisita() {
       <button class="btn" onclick="lembreteVisita(${v.id})">${ico('sino')}Lembrete</button>
       <button class="btn" onclick="naoCompareceu(${v.id})">${ico('alerta')}Não veio</button>
       <button class="btn" onclick="cancelarVisita(${v.id})">${ico('x')}Cancelar</button>
-    </div>` : ''}
+    </div>` : `<div class="acoes-3" style="margin-bottom:var(--s3)">
+      <button class="btn" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>
+      <button class="btn" onclick="naoCompareceu(${v.id})">${ico('alerta')}Não veio</button>
+      <button class="btn" onclick="cancelarVisita(${v.id})">${ico('x')}Cancelar</button>
+    </div>`}
 
     <h2 class="blk-title">Roteiro</h2>
     <div class="card">
@@ -3821,7 +3826,7 @@ function renderVisita() {
     ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nada ainda. Use os botões acima.</p></div>`}
 
     <button class="btn btn--primary btn--block" style="margin-top:var(--s4)" onclick="encerrarVisitaSheet(${v.id})">
-      ${ico('check')}Encerrar visita
+      ${ico('check')}${v.inicio ? 'Encerrar visita' : 'Registrar como foi'}
     </button>`;
 
   if (v.inicio) {
@@ -3836,13 +3841,19 @@ function renderVisita() {
 // Nada se remarcava nem se cancelava: visita que não aconteceu ficava "pendente" pra
 // sempre. Cancelar e "não veio" encerram (fim preenchido), então saem do Hoje e da Rota
 // pelas mesmas consultas de sempre; não mexem no estágio do lead nem oferecem agradecer.
-function remarcarVisitaSheet(id) {
+// Rodada 34 (pedido do usuário no teste): o corretor combina de boca e registra depois.
+// Remarcar vale também com a visita em andamento — desfaz o check-in, e o que foi anotado
+// continua ligado a ela —, e visita encerrada ganha "Marcar outra visita", que cria um
+// registro novo em vez de apagar o histórico da que aconteceu.
+function jaPassou(v) { return !v.inicio && (v.data < todayISO(0) || (v.data === todayISO(0) && horaPassou(v))); }
+function remarcarVisitaSheet(id, nova) {
   const v = visitaFull(id); if (!v) return;
-  if (v.inicio && !v.fim) return showToastErr('A visita já começou: encerre antes de remarcar.');
+  const emAndamento = v.inicio && !v.fim;
   openSheet(`
-    <h2 class="sheet__title" id="sheet-title">Remarcar visita</h2>
+    <h2 class="sheet__title" id="sheet-title">${nova ? 'Marcar outra visita' : 'Remarcar visita'}</h2>
     <p class="muted" style="margin:0 0 var(--s3)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}${v.lead_nome ? ' · ' + esc(v.lead_nome) : ''}</p>
-    <form id="form-remarcar" onsubmit="event.preventDefault();confirmarRemarcar(${id})" novalidate>
+    ${emAndamento && !nova ? `<p class="muted" style="margin:0 0 var(--s3)">O check-in é desfeito e a visita volta pra agenda no horário novo. As notas continuam ligadas a ela.</p>` : ''}
+    <form id="form-remarcar" onsubmit="event.preventDefault();confirmarRemarcar(${id}, ${nova ? 'true' : 'false'})" novalidate>
       <div class="field-grid">
         ${campo('fre-data', 'Data', `<input id="fre-data" type="date" value="${esc(v.fim || v.data < todayISO(0) ? todayISO(1) : v.data)}">`)}
         ${campo('fre-hora', 'Hora', `<input id="fre-hora" type="time" value="${esc(v.hora || '10:00')}">`)}
@@ -3856,34 +3867,44 @@ function remarcarVisitaSheet(id) {
         ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="document.getElementById('fre-hora').value='${h}'">${h.slice(0, 2)}h</button>`).join('')}
       </div>
       <div class="btn-row sheet__acts">
-        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Remarcar</button>
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}${nova ? 'Marcar' : 'Remarcar'}</button>
         <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
       </div>
     </form>`, { foco: false });
 }
 function restaurarVisita(id, a) {
-  run(`UPDATE visita SET data=?, hora=?, status=?, fim=?, desfecho=? WHERE id=?`, [a.data, a.hora, a.status, a.fim, a.desfecho, id]);
+  run(`UPDATE visita SET data=?, hora=?, status=?, inicio=?, fim=?, desfecho=? WHERE id=?`, [a.data, a.hora, a.status, a.inicio, a.fim, a.desfecho, id]);
   renderAll(); if (viewAtual === 'visita') renderVisita();
 }
-function antesDaVisita(v) { return { data: v.data, hora: v.hora, status: v.status, fim: v.fim, desfecho: v.desfecho }; }
-function confirmarRemarcar(id) {
+function antesDaVisita(v) { return { data: v.data, hora: v.hora, status: v.status, inicio: v.inicio, fim: v.fim, desfecho: v.desfecho }; }
+function confirmarRemarcar(id, nova) {
   const v = visitaFull(id); if (!v) return;
   const data = val('fre-data'); if (!data) return erroCampo('fre-data', 'Escolha a data.');
   const hora = val('fre-hora'); if (!hora) return erroCampo('fre-hora', 'Escolha a hora.');
-  const antes = antesDaVisita(v);
-  run(`UPDATE visita SET data=?, hora=?, status='pendente', fim=NULL, desfecho=NULL WHERE id=?`, [data, hora, id]);
-  closeSheet(); renderAll(); if (viewAtual === 'visita') renderVisita();
   const quando = (data === todayISO(0) ? 'hoje' : data === todayISO(1) ? 'amanhã' : fmtDataCurta(data)) + ' às ' + hora;
-  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Aqui é ${nomeCorretor()}. Podemos passar nossa visita (${v.imovel_nome}) pra ${quando}?`;
+  const primeiro = v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : '';
+  if (nova) {
+    const novaId = insertAndGetId(`INSERT INTO visita (imovel_id, lead_id, data, hora, status) VALUES (?,?,?,?,'pendente')`, [v.imovel_id, v.lead_id, data, hora]);
+    closeSheet(); renderAll();
+    const msg = `Oi${primeiro}! Aqui é ${nomeCorretor()}. Deixei marcada uma nova visita (${v.imovel_nome}) pra ${quando}. Pode ser?`;
+    return showToast('Nova visita ' + quando + '.', v.telefone
+      ? { label: 'Avisar', fn: () => abrirWhats(v.telefone, msg) }
+      : { label: 'Desfazer', fn: () => { run('DELETE FROM visita WHERE id=?', [novaId]); renderAll(); } });
+  }
+  const antes = antesDaVisita(v);
+  run(`UPDATE visita SET data=?, hora=?, status='pendente', inicio=NULL, fim=NULL, desfecho=NULL WHERE id=?`, [data, hora, id]);
+  if (antes.inicio && !antes.fim) fecharNotifVisita();
+  closeSheet(); renderAll(); if (viewAtual === 'visita') renderVisita();
+  const msg = `Oi${primeiro}! Aqui é ${nomeCorretor()}. Podemos passar nossa visita (${v.imovel_nome}) pra ${quando}?`;
   showToast('Remarcada pra ' + quando + '.', v.telefone
     ? { label: 'Avisar', fn: () => abrirWhats(v.telefone, msg) }
     : { label: 'Desfazer', fn: () => restaurarVisita(id, antes) });
 }
 function encerrarSemVisita(id, desfecho, status, msg) {
   const v = visitaFull(id); if (!v) return;
-  if (v.inicio) return showToastErr('A visita já começou: use Encerrar visita.');
   const antes = antesDaVisita(v);
   run(`UPDATE visita SET status=?, fim=?, desfecho=? WHERE id=?`, [status, agoraISO(), desfecho, id]);
+  if (v.inicio) fecharNotifVisita();
   vibrar(); renderAll(); if (viewAtual === 'visita') renderVisita();
   showToast(msg, { label: 'Desfazer', fn: () => restaurarVisita(id, antes) });
 }
@@ -4041,7 +4062,7 @@ function confirmarEncerramento(id) {
   renderAll();
   renderVisita();
 
-  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Obrigado pela visita de hoje (${v.imovel_nome}). ${proximo}`;
+  const msg = `Oi${v.lead_nome ? ' ' + v.lead_nome.split(' ')[0] : ''}! Obrigado pela visita${v.data === todayISO(0) ? ' de hoje' : ''} (${v.imovel_nome}). ${proximo}`;
   showToast('Visita encerrada · follow-up em ' + plural(d.dias, 'dia', 'dias') + '.',
     v.telefone ? { label: 'Mandar zap', fn: () => abrirWhats(v.telefone, msg) } : null);
 }
