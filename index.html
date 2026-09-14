@@ -744,8 +744,10 @@ a { color: inherit; text-decoration: none; }
   </div>
   <div class="trava__caixa" id="trava-esqueci" hidden>
     <h1 class="trava__titulo">Sem o PIN</h1>
-    <p>O único jeito de entrar é apagar os dados deste aparelho: imóveis, leads, notas e arquivos. Se você exportou o banco antes, dá pra importar depois.</p>
-    <button class="btn btn--danger btn--block" onclick="apagarAparelho()">Apagar tudo neste aparelho</button>
+    <p>O único jeito de entrar é apagar os dados deste aparelho: imóveis, leads, notas e arquivos. Com o app travado não dá pra exportar antes — só volta o que você já tinha exportado.</p>
+    <label for="trava-apagar" style="display:block;font-weight:600;margin:var(--s3) 0 var(--s1)">Para confirmar, digite APAGAR</label>
+    <input id="trava-apagar" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" oninput="document.getElementById('trava-apagar-btn').disabled = this.value.trim().toUpperCase() !== 'APAGAR'">
+    <button id="trava-apagar-btn" class="btn btn--danger btn--block" disabled onclick="if (document.getElementById('trava-apagar').value.trim().toUpperCase() === 'APAGAR') apagarAparelho()">Apagar tudo neste aparelho</button>
     <button class="btn btn--block" style="margin-top:var(--s2)" onclick="document.getElementById('trava-esqueci').hidden=true;document.getElementById('trava-pedir').hidden=false">Voltar</button>
   </div>
 </div>
@@ -774,6 +776,7 @@ a { color: inherit; text-decoration: none; }
     <section class="panel on" id="panel-hj">
       <div class="greet" id="hj-hello"></div>
       <span class="muted" id="hj-sum"></span>
+      <div id="hj-backup"></div>
 
       <h2 class="blk-title">Próxima ação</h2>
       <div id="hj-next"></div>
@@ -862,6 +865,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="data-box">
         <h4>Dados locais</h4>
+        <p class="muted" id="backup-info" style="margin:0 0 var(--s2)"></p>
         <div class="btn-row" style="margin-bottom:var(--s2)">
           <button class="btn btn--sm btn--grow" onclick="exportDb()"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Exportar</button>
           <button class="btn btn--sm btn--grow" onclick="document.getElementById('import-file').click()"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Importar</button>
@@ -1436,6 +1440,7 @@ async function idbClear() {
 // Falha ao gravar (ex. cota do aparelho cheia) avisa na tela.
 let persistTimer = null, persistPending = false;
 function persist() {
+  marcarAlteracao();
   persistPending = true;
   setEstado('salvando');
   clearTimeout(persistTimer);
@@ -1689,11 +1694,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && sheetAbert
 
 // Confirmação destrutiva sem confirm() nativo: título, consequência escrita e o botão
 // de risco visivelmente diferente do de cancelar.
-function confirmar(titulo, texto, labelOk, fn) {
+function confirmar(titulo, texto, labelOk, fn, opts = {}) {
   window.__confirmFn = fn;
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">${esc(titulo)}</h2>
     <p class="muted" style="margin:0 0 var(--s4)">${esc(texto)}</p>
+    ${opts.exportar ? `<p class="muted" style="margin:0 0 var(--s2)" id="confirmar-backup">${esc(textoUltimoBackup())}</p>
+      <button class="btn btn--block" style="margin-bottom:var(--s3)" onclick="exportDb()">${ico('download')}Exportar antes</button>` : ''}
     <div class="btn-row">
       <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
       <button class="btn btn--danger btn--grow" onclick="closeSheet();window.__confirmFn()">${esc(labelOk)}</button>
@@ -2333,10 +2340,10 @@ async function boot() {
     if (stored) {
       db = new SQL.Database(new Uint8Array(stored));
       runMigrations();
-      try { db.run('DELETE FROM lixeira WHERE apagado_em < ?', [todayISO(-30)]); } catch (e) { /* ok */ }
+      try { esvaziarLixeiraVencida(); } catch (e) { /* ok */ }
     } else {
       db = new SQL.Database();
-      seedDatabase();
+      semeando = true; seedDatabase(); semeando = false;
     }
     renderAll();
     // lido antes de iniciarHistorico(), que apaga o ?acao= do endereço
@@ -2362,15 +2369,15 @@ async function recomecarDoZeroNoBoot() {
 }
 function confirmarReset() {
   confirmar('Recomeçar do zero?',
-    'Apaga tudo que está gravado neste aparelho — imóveis, leads, clientes, notas e arquivos — e volta aos dados iniciais. Não dá pra desfazer. Exporte antes se quiser guardar.',
-    'Apagar tudo', resetDb);
+    'Apaga tudo que está gravado neste aparelho — imóveis, leads, clientes, notas e arquivos — e volta aos dados iniciais. Não dá pra desfazer.',
+    'Apagar tudo', resetDb, { exportar: true });
 }
 async function resetDb() {
   db = new SQL.Database();
-  seedDatabase();
+  semeando = true; seedDatabase(); semeando = false;
   crFilter = 'novo';
   // rascunhos, roteiros e o que o sino já mostrou pertencem ao banco apagado
-  try { Object.keys(localStorage).filter(k => /^(rascunho|roteiro|sino):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
+  try { Object.keys(localStorage).filter(k => /^(rascunho|roteiro|sino|dados|backup):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
   renderAll();
   colapsarPilha();
   showToast('Banco recomeçado do zero.');
@@ -2382,7 +2389,55 @@ function exportDb() {
   a.href = URL.createObjectURL(blob);
   a.download = 'ohubimob-campo-' + todayISO(0) + '.sqlite';
   a.click();
+  try { localStorage.setItem('backup:ultimo', String(Date.now())); } catch (e) { /* ok */ }
+  renderBackup();
+  const aviso = document.getElementById('confirmar-backup'); if (aviso) aviso.textContent = textoUltimoBackup();
   showToast('Banco exportado.');
+}
+
+// Backup: os dados só existem neste aparelho. "Alterado" é marcado por persist() fora da
+// semente; o aviso no Hoje aparece 1 dia depois da primeira alteração sem nenhum backup,
+// ou 7 dias depois do último, e "Depois" cala por 3 dias.
+let semeando = false;
+function marcarAlteracao() {
+  if (semeando) return;
+  try {
+    const agora = String(Date.now());
+    localStorage.setItem('dados:alterado', agora);
+    if (!localStorage.getItem('dados:primeira')) localStorage.setItem('dados:primeira', agora);
+  } catch (e) { /* ok */ }
+}
+function diasDesdeBackup() {
+  try { const t = +localStorage.getItem('backup:ultimo'); return t ? Math.floor((Date.now() - t) / 86400000) : null; } catch (e) { return null; }
+}
+function textoUltimoBackup() {
+  const d = diasDesdeBackup();
+  return d === null ? 'Nenhum backup exportado ainda.' : d === 0 ? 'Último backup: hoje.' : 'Último backup: há ' + plural(d, 'dia', 'dias') + '.';
+}
+function precisaBackup() {
+  try {
+    const alt = +localStorage.getItem('dados:alterado') || 0; if (!alt) return false;
+    const ult = +localStorage.getItem('backup:ultimo') || 0;
+    if (alt <= ult) return false;
+    if (Date.now() < (+localStorage.getItem('backup:adiado-ate') || 0)) return false;
+    const base = ult || +localStorage.getItem('dados:primeira') || alt;
+    return Date.now() - base > (ult ? 7 : 1) * 86400000;
+  } catch (e) { return false; }
+}
+function renderBackup() {
+  const info = document.getElementById('backup-info'); if (info) info.textContent = textoUltimoBackup();
+  const box = document.getElementById('hj-backup'); if (!box) return;
+  box.innerHTML = precisaBackup() ? `<div class="card" role="status" style="margin-top:var(--s3)">
+      <b>Faça um backup</b>
+      <p class="muted" style="margin:var(--s1) 0 var(--s2)">${esc(textoUltimoBackup())} Os dados só existem neste aparelho: se ele se perder, se perdem junto.</p>
+      <div class="btn-row">
+        <button class="btn btn--sm btn--primary btn--grow" onclick="exportDb()">${ico('download')}Exportar</button>
+        <button class="btn btn--sm btn--grow" onclick="adiarBackup()">Depois</button>
+      </div></div>` : '';
+}
+function adiarBackup() {
+  try { localStorage.setItem('backup:adiado-ate', String(Date.now() + 3 * 86400000)); } catch (e) { /* ok */ }
+  renderBackup();
 }
 function importDb(evt) {
   const file = evt.target.files[0];
@@ -4153,7 +4208,7 @@ const APAGAVEIS = {
   lead:     { tabela: 'lead', nome: 'Lead', rot: r => r.nome, filhos: [['sequencia_contato', 'lead_id'], ['interacao', 'lead_id']] },
   cliente:  { tabela: 'cliente', nome: 'Cliente', rot: r => r.nome, filhos: [['interacao', 'cliente_id']] },
   captacao: { tabela: 'captacao_lp', nome: 'Captação', rot: r => r.nome, filhos: [['interacao', 'captacao_id']] },
-  imovel:   { tabela: 'imovel', nome: 'Imóvel', rot: r => nomeImovel(r), filhos: [['imovel_foto', 'imovel_id'], ['checklist_item', 'imovel_id']] },
+  imovel:   { tabela: 'imovel', nome: 'Imóvel', rot: r => nomeImovel(r), filhos: [['imovel_foto', 'imovel_id'], ['checklist_item', 'imovel_id'], ['visita', 'imovel_id']] },
   nota:     { tabela: 'nota', nome: 'Nota', rot: r => r.referencia || 'Nota', filhos: [] },
   arquivo:  { tabela: 'documento_carteira', nome: 'Arquivo', rot: r => r.nome, filhos: [] },
   foto:     { tabela: 'imovel_foto', nome: 'Foto', rot: () => 'Foto de imóvel', filhos: [], depois: r => openDetail('imovel', r.imovel_id) }
@@ -4183,11 +4238,14 @@ function apagar(tipo, id) {
   }
   persist();
   if (sheetAberta()) closeSheet();
+  if (visitaAtivaId && !q('SELECT id FROM visita WHERE id=?', [visitaAtivaId]).length) visitaAtivaId = null;
+  if (!visitaEmAndamento()) fecharNotifVisita();
   renderAll();
   if (viewAtual === 'visita') renderVisita();
   if (viewAtual === 'lixo') renderLixeira();
   if (c.depois) c.depois(row);
-  showToast('Apagado: ' + c.rot(row) + ' · fica 30 dias na lixeira', { label: 'Desfazer', fn: () => restaurar(lid) });
+  const visitas = (pacote.filhos.find(([t]) => t === 'visita') || [null, []])[1].length;
+  showToast('Apagado: ' + c.rot(row) + (visitas ? ' e ' + plural(visitas, 'visita', 'visitas') : '') + ' · fica 30 dias na lixeira', { label: 'Desfazer', fn: () => restaurar(lid) });
 }
 function restaurar(lid) {
   const r = q('SELECT * FROM lixeira WHERE id=?', [lid])[0];
@@ -4208,6 +4266,27 @@ function restaurar(lid) {
   if (viewAtual === 'lixo') renderLixeira();
   if (viewAtual === 'visita') renderVisita();
   showToast('Restaurado: ' + r.rotulo);
+}
+// Depois de 30 dias o item sai de vez. O que apontava pra ele (nota, arquivo, lead, visita)
+// fica, mas sem o vínculo: um id que não existe mais não pode sobrar solto no banco.
+const SOLTAR_AO_ESVAZIAR = {
+  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id']],
+  lead: [['visita', 'lead_id'], ['nota', 'lead_id'], ['documento_carteira', 'lead_id']],
+  cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']]
+};
+function esvaziarLixeiraVencida() {
+  const vencidos = q('SELECT id, tabela, dados FROM lixeira WHERE apagado_em < ?', [todayISO(-30)]);
+  if (!vencidos.length) return;
+  vencidos.forEach(v => {
+    try {
+      const p = JSON.parse(v.dados);
+      (SOLTAR_AO_ESVAZIAR[v.tabela] || []).forEach(([t, col]) => db.run(`UPDATE ${t} SET ${col}=NULL WHERE ${col}=?`, [p.row.id]));
+      (p.filhos || []).filter(([t]) => t === 'visita').forEach(([, rows]) =>
+        rows.forEach(r => db.run('UPDATE nota SET visita_id=NULL WHERE visita_id=?', [r.id])));
+    } catch (e) { /* item ilegível: sai mesmo assim */ }
+    db.run('DELETE FROM lixeira WHERE id=?', [v.id]);
+  });
+  persist();
 }
 function renderLixeira() {
   const body = document.getElementById('lixo-body'); if (!body) return;
@@ -4239,6 +4318,7 @@ function travar() {
   document.getElementById('trava-pedir').hidden = false; document.getElementById('trava-esqueci').hidden = true;
   const shell = document.querySelector('.app-shell'); if (shell) shell.setAttribute('inert', '');
   document.getElementById('trava-pin').value = ''; document.getElementById('trava-erro').textContent = '';
+  document.getElementById('trava-apagar').value = ''; document.getElementById('trava-apagar-btn').disabled = true;
   setTimeout(() => { const i = document.getElementById('trava-pin'); if (i) i.focus(); }, 60);
 }
 function soltarTrava() {
@@ -4286,6 +4366,7 @@ function folhaPin(modo) {
   const criar = modo === 'criar';
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">${criar ? 'Criar PIN' : 'Tirar a trava'}</h2>
+    ${criar ? `<p class="muted" style="margin:0 0 var(--s3)">Se esquecer o PIN, o único jeito de entrar é apagar os dados. ${esc(textoUltimoBackup())}</p>` : ''}
     <form id="form-pin" onsubmit="event.preventDefault();salvarPin('${modo}')" novalidate>
       ${campo('pin-1', criar ? 'PIN de 4 a 8 números' : 'PIN atual', '<input id="pin-1" type="password" inputmode="numeric" autocomplete="off" maxlength="8">')}
       ${criar ? campo('pin-2', 'Repita o PIN', '<input id="pin-2" type="password" inputmode="numeric" autocomplete="off" maxlength="8">') : ''}
@@ -4315,11 +4396,12 @@ async function salvarPin(modo) {
 }
 function confirmarApagarAparelho() {
   confirmar('Apagar todos os dados deste aparelho?',
-    'Apaga o banco (imóveis, leads, clientes, notas e arquivos), os rascunhos, a trava e as preferências deste aparelho. Não dá pra desfazer — exporte antes se quiser guardar. O app volta a abrir com os dados de exemplo.',
-    'Apagar tudo', apagarAparelho);
+    'Apaga o banco (imóveis, leads, clientes, notas e arquivos), os rascunhos, a trava e as preferências deste aparelho. Não dá pra desfazer. O app volta a abrir com os dados de exemplo.',
+    'Apagar tudo', apagarAparelho, { exportar: true });
 }
 async function apagarAparelho() {
   try { await idbClear(); } catch (e) { /* segue */ }
+  try { if (window.caches) await caches.delete('ohubimob-compartilhado'); } catch (e) { /* segue */ }
   try { localStorage.clear(); sessionStorage.clear(); } catch (e) { /* segue */ }
   location.reload();
 }
@@ -4873,7 +4955,7 @@ function salvarAudio() {
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
   renderCalcImovelSelect(); cCalcFin(); cCalcCom(); cCalcITBI(); renderCamLinkSelects(); renderInstallBox(); marcarMapaApp();
-  atualizarSino(); marcarTamanhoTexto(); renderPerfil(); renderTrava();
+  atualizarSino(); marcarTamanhoTexto(); renderPerfil(); renderTrava(); renderBackup();
   const n = q('SELECT COUNT(*) c FROM imovel')[0].c;
   const nl = q('SELECT COUNT(*) c FROM lead')[0].c;
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';

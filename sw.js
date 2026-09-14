@@ -18,7 +18,7 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v9';  // v9: rodada 33 — lote B (pessoas, linha do tempo, fatos e fotos do imóvel, lixeira, PIN, receber do WhatsApp, notificação da visita)
+const CACHE = 'ohubimob-campo-v10';  // v10: rodada 34 — aviso de backup, exportar antes de apagar, PIN esquecido pede confirmação, apagar imóvel leva as visitas
 const COMPARTILHADO = 'ohubimob-compartilhado';  // o que chegou pelo compartilhamento do Android, até o app ler
 
 const ASSETS = [
