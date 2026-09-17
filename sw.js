@@ -18,7 +18,8 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v13';  // v13: Interações com humor e sinais; qualificação de lead e captação com motivos e o que falta saber
+const CACHE = 'ohubimob-campo-v14';  // v14: design system DS 3 (visual Leve: tinta + rosa-ipê, Atkinson Hyperlegible Next), Perto como alternativa em Mais
+// v13 anterior: Interações com humor e sinais; qualificação de lead e captação com motivos e o que falta saber
 // v12 anterior: texto do canal do follow-up segue o botão (E-mail virava WhatsApp só no botão)
 // v11 anterior: voltar e fechar a partir de uma ficha devolvem a ficha; remarcar depois do check-in e marcar outra visita depois de encerrada (teste no Xiaomi)
 // v10 anterior:  // v10: rodada 34 — aviso de backup, exportar antes de apagar, PIN esquecido pede confirmação, apagar imóvel leva as visitas

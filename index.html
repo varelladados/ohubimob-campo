@@ -6,10 +6,14 @@
   // raiz: espaço e alvo de toque ficam iguais, e não depende do navegador respeitar o
   // font-size do <html>.
   try { var __tx = localStorage.getItem('texto:v1'); if (__tx === '115' || __tx === '130') document.documentElement.setAttribute('data-texto', __tx); } catch (e) {}
+  // Visual (rodada 36): Leve é o padrão; Perto fica pra comparar. Mesmo motivo do texto:
+  // aplicar antes do primeiro desenho pra não piscar a paleta errada.
+  try { if (localStorage.getItem('visual:v1') === 'perto') document.documentElement.setAttribute('data-visual', 'perto'); } catch (e) {}
 </script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0B6B70">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3F5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E0F12">
 <title>OHubImob Campo</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -18,10 +22,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Duas famílias, não três: a monoespaçada saiu na rodada 32 (número tabular vem
-     da própria Figtree). crossorigin: sem ele a resposta é opaca e o sw.js não
-     cacheia as fontes — offline caía em fonte do sistema. -->
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
+<!-- Rodada 36: Atkinson Hyperlegible Next (visual Leve) e IBM Plex Sans (visual Perto).
+     O navegador só baixa o arquivo da família que a tela usa. crossorigin: sem ele a
+     resposta é opaca e o sw.js não cacheia as fontes — offline caía em fonte do sistema. -->
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin="anonymous">
 
 <style>
   /* ===========================================================================
@@ -33,70 +37,87 @@
 
   /* ds2-tokens:inicio */
   /* gerado por sync-ds2.py a partir de tokens-ohubimob.css — NÃO editar aqui */
+/* ======================= visual padrão: LEVE ======================= */
 :root {
   /* ---- superfície ---- */
-  --bg: #F3F6F6;
+  --bg: #F2F3F5;
   --surface: #FFFFFF;
-  --surface-2: #E6EDED;
+  --surface-2: #E8EAEE;
 
   /* ---- texto ---- */
-  --text: #0F1A2E;
-  --text-2: #3B475C;
-  --text-3: #55617A;
+  --text: #14161B;
+  --text-2: #444954;
+  --text-3: #5A606C;
 
   /* ---- linha ---- */
-  --border: #DDE5E6;
-  --border-2: #75828F;   /* borda de campo: precisa de 3:1 contra fundo e cartão (rodada 33) */
+  --border: #E1E3E8;
+  --border-2: #7A808C;   /* borda de campo: 3:1 contra fundo e cartão (rodada 33) */
 
   /* ---- marca ----
-     --graphite e --brand são CONSTANTES: são a medição do logo, não mudam com o
-     tema. O que muda é onde cada um pode aparecer. Regra de ouro da marca:
-     o dourado #D0A868 só é legível sobre grafite (6,40:1); sobre branco dá
-     2,21:1 e reprova até como texto grande. Por isso --brand-text é a versão
-     escurecida no tema claro. */
-  --graphite: #0F1A2E;   /* Perto: a "tinta" azul-marinho faz o papel do grafite — fundo do boot, chip ativo, cartão da visita */
-  --brand: #0B6B70;      /* petróleo, o espelho d'água — branco por cima 6,3:1 */
-  --brand-text: #0B6B70;
-  --brand-fill: #0B6B70;
+     --graphite é a tinta: fundo do boot e das superfícies escuras fixas.
+     --brand é o acento (rosa-ipê); --brand-fill é o botão principal (tinta). */
+  --graphite: #14161B;
+  --brand: #BD2F86;
+  --brand-text: #A82878;
+  --brand-fill: #14161B;
   --on-brand: #FFFFFF;
-  --brand-tint: #E4EFEF;
+  --brand-tint: #F9E7F1;
 
   /* ---- semântica ---- */
-  --ok: #137A4F;      --ok-bg: #E2F2EA;
-  --warn: #B04A06;    --warn-bg: #FCEADB;
-  --danger: #B42318;  --danger-bg: #FBE4E1;
-  --neutral: #3B475C; --neutral-bg: #E6EDED;
+  --ok: #17794A;      --ok-bg: #E2F3EA;
+  --warn: #9E4F08;    --warn-bg: #FBEEDC;
+  --danger: #BF2530;  --danger-bg: #FCE7E8;
+  --neutral: #444954; --neutral-bg: #E8EAEE;
 
   /* ---- elevação ---- */
-  --shadow-1: 0 1px 2px rgba(15,26,46,0.10);
-  --shadow-2: 0 -6px 28px rgba(15,26,46,0.20);
-  --scrim: rgba(15,26,46,0.50);
-  --ring: #0B6B70;
+  --shadow-1: 0 1px 2px rgba(20,22,27,0.06);
+  --shadow-2: 0 -8px 32px rgba(20,22,27,0.16);
+  --scrim: rgba(20,22,27,0.45);
+  --ring: #BD2F86;
 
-  /* ---- tipografia ----
-     Manrope pro display (grotesca geométrica de terminais retos, a mais próxima
-     do desenho de HUB); Figtree pro corpo (x-height alto, contraforma aberta —
-     medida por legibilidade em 390px na rodada 25). */
-  --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  /* ---- componentes (rodada 36) ---- */
+  --card-border: transparent;  --card-border-hover: transparent;
+  --card-shadow: 0 1px 2px rgba(20,22,27,0.05), 0 0 0 1px rgba(20,22,27,0.03);
+  --btn-bg: rgba(20,22,27,0.055);  --btn-bg-hover: rgba(20,22,27,0.09);
+  --btn-border: transparent;       --btn-border-hover: transparent;
+  --btn-text: var(--text);
+  --chip-bg: rgba(20,22,27,0.055); --chip-border: transparent;
+  --chip-on-bg: #14161B;  --chip-on-text: #FFFFFF;
+  --ico-bg: rgba(20,22,27,0.055);  --ico-fg: var(--text-2);
+  --hero-border: transparent;
+  --live-bg: #14161B;     --live-text: #FFFFFF;  --live-label: #F28DC0;
+  --toast-bg: #14161B;    --toast-text: #FFFFFF; --toast-act: #F28DC0;
+  --topbar-border: transparent;
+  --tab-on: var(--text);  --tab-ind: var(--brand);
+  --fab-shadow: 0 8px 24px rgba(20,22,27,0.24);
+  --on-ink-accent: #F28DC0;   /* acento como texto sobre a tinta (menu lateral do portal, boot): 6,6:1 */
+
+  /* ---- destaque (estrela) ----
+     Reservado pra agenda (plano-agenda-campo.md): cada toque na estrela avança uma cor
+     e o último apaga. Preenchimento + contorno escuro, porque amarelo sobre branco
+     sozinho não chega a 3:1. */
+  --star-1: #F2B600; --star-1-edge: #8A6200;
+  --star-2: #F07A1A; --star-2-edge: #9A4700;
+  --star-3: #E5484D; --star-3-edge: #A0202A;
+  --star-4: #8E4EC6; --star-4-edge: #5B2A8C;
+
+  /* ---- tipografia ---- */
+  --font-display: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
   --t-xs: 0.78rem;
   --t-sm: 0.88rem;
   --t-md: 1rem;
   --t-lg: 1.15rem;
   --t-xl: 1.4rem;
   --t-2xl: 1.8rem;
-  --track: 0.08em;   /* caixa alta da interface. A marca usa 0,22em; a interface
-                        usa menos porque aqui o texto é lido, não contemplado. */
+  --track: 0.08em;
 
   /* ---- espaço (base 4) ---- */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
   --s5: 20px; --s6: 24px; --s7: 32px; --s8: 48px;
 
-  /* ---- raio ----
-     --r-md nasce da geometria medida: o quadro do símbolo tem raio de canto de
-     12,9% da largura; num cartão de ~95px de altura isso dá 12px. Os outros são
-     a mesma família em escala — não são sete valores soltos como antes. */
-  --r-xs: 6px; --r-sm: 10px; --r-md: 12px; --r-lg: 20px; --r-pill: 999px;
+  /* ---- raio ---- Leve arredonda mais: cartão 16, folha 24 */
+  --r-xs: 8px; --r-sm: 12px; --r-md: 16px; --r-lg: 24px; --r-pill: 999px;
 
   /* ---- alvo de toque ---- */
   --tap: 44px;
@@ -112,13 +133,122 @@
   color-scheme: light dark;
 }
 
-/* ---- tema escuro ----
-   Dois gatilhos: a preferência do sistema (a menos que o usuário tenha forçado
-   claro) e o data-theme explícito. CSS não deixa um seletor herdar de dentro de
-   um @media, então a lista aparece duas vezes — mas só aqui, nunca no app.
-   Editar SEMPRE os dois blocos juntos. */
+/* ---- Leve escuro ----
+   Dois gatilhos: a preferência do sistema (a menos que o usuário tenha forçado claro)
+   e o data-theme explícito. Editar SEMPRE os dois blocos juntos. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --bg: #0E0F12;
+    --surface: #181A1F;
+    --surface-2: #08090B;
+    --text: #EEEFF2;
+    --text-2: #BEC2CA;
+    --text-3: #9DA2AC;
+    --border: #2A2D34;
+    --border-2: #6D737F;
+    --brand: #F07BB8;
+    --brand-text: #F28DC0;
+    --brand-fill: #EEEFF2;
+    --on-brand: #14161B;
+    --brand-tint: #33192A;
+    --ok: #5BC98A;      --ok-bg: #122A1D;
+    --warn: #F0A45B;    --warn-bg: #2E1F10;
+    --danger: #FF8C8C;  --danger-bg: #381A1C;
+    --neutral: #A9AEB8; --neutral-bg: #1F2227;
+    --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
+    --shadow-2: 0 -8px 32px rgba(0,0,0,0.6);
+    --scrim: rgba(0,0,0,0.60);
+    --ring: #F07BB8;
+    --card-shadow: none;
+    --btn-bg: rgba(255,255,255,0.07);  --btn-bg-hover: rgba(255,255,255,0.11);
+    --chip-bg: rgba(255,255,255,0.07);
+    --chip-on-bg: #EEEFF2;  --chip-on-text: #14161B;
+    --ico-bg: rgba(255,255,255,0.07);
+    --live-bg: #262930;     --live-text: #EEEFF2;  --live-label: #F28DC0;
+    --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #A82878;
+    --fab-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E0F12;
+  --surface: #181A1F;
+  --surface-2: #08090B;
+  --text: #EEEFF2;
+  --text-2: #BEC2CA;
+  --text-3: #9DA2AC;
+  --border: #2A2D34;
+  --border-2: #6D737F;
+  --brand: #F07BB8;
+  --brand-text: #F28DC0;
+  --brand-fill: #EEEFF2;
+  --on-brand: #14161B;
+  --brand-tint: #33192A;
+  --ok: #5BC98A;      --ok-bg: #122A1D;
+  --warn: #F0A45B;    --warn-bg: #2E1F10;
+  --danger: #FF8C8C;  --danger-bg: #381A1C;
+  --neutral: #A9AEB8; --neutral-bg: #1F2227;
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-2: 0 -8px 32px rgba(0,0,0,0.6);
+  --scrim: rgba(0,0,0,0.60);
+  --ring: #F07BB8;
+  --card-shadow: none;
+  --btn-bg: rgba(255,255,255,0.07);  --btn-bg-hover: rgba(255,255,255,0.11);
+  --chip-bg: rgba(255,255,255,0.07);
+  --chip-on-bg: #EEEFF2;  --chip-on-text: #14161B;
+  --ico-bg: rgba(255,255,255,0.07);
+  --live-bg: #262930;     --live-text: #EEEFF2;  --live-label: #F28DC0;
+  --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #A82878;
+  --fab-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* ======================= visual alternativo: PERTO (rodada 35) =======================
+   Especificidade maior que a do Leve escuro: com data-visual="perto" o bloco claro da
+   Perto vence o escuro do Leve, e os dois blocos escuros da Perto vêm depois com mais
+   um atributo. Os componentes voltam ao desenho do DS 2 (moldura, botão com borda). */
+:root[data-visual="perto"] {
+  --bg: #F3F6F6;
+  --surface: #FFFFFF;
+  --surface-2: #E6EDED;
+  --text: #0F1A2E;
+  --text-2: #3B475C;
+  --text-3: #55617A;
+  --border: #DDE5E6;
+  --border-2: #75828F;
+  --graphite: #0F1A2E;
+  --brand: #0B6B70;
+  --brand-text: #0B6B70;
+  --brand-fill: #0B6B70;
+  --on-brand: #FFFFFF;
+  --brand-tint: #E4EFEF;
+  --ok: #137A4F;      --ok-bg: #E2F2EA;
+  --warn: #B04A06;    --warn-bg: #FCEADB;
+  --danger: #B42318;  --danger-bg: #FBE4E1;
+  --neutral: #3B475C; --neutral-bg: #E6EDED;
+  --shadow-1: 0 1px 2px rgba(15,26,46,0.10);
+  --shadow-2: 0 -6px 28px rgba(15,26,46,0.20);
+  --scrim: rgba(15,26,46,0.50);
+  --ring: #0B6B70;
+  --card-border: var(--border);  --card-border-hover: var(--border-2);
+  --card-shadow: none;
+  --btn-bg: var(--surface);      --btn-bg-hover: var(--surface-2);
+  --btn-border: var(--border);   --btn-border-hover: var(--border-2);
+  --btn-text: var(--text-2);
+  --chip-bg: var(--surface);     --chip-border: var(--border-2);
+  --chip-on-bg: #0F1A2E;  --chip-on-text: #F5F5F4;
+  --ico-bg: var(--brand-tint);   --ico-fg: var(--brand-text);
+  --hero-border: var(--brand);
+  --live-bg: #0F1A2E;     --live-text: #F5F5F4;  --live-label: #5FC4BF;
+  --toast-bg: #0F1A2E;    --toast-text: #F5F5F4; --toast-act: #5FC4BF;
+  --topbar-border: var(--border);
+  --tab-on: var(--brand-text);  --tab-ind: var(--brand-text);
+  --fab-shadow: 0 6px 20px rgba(15,26,46,0.28);
+  --on-ink-accent: #5FC4BF;
+  --font-display: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --r-xs: 6px; --r-sm: 10px; --r-md: 12px; --r-lg: 20px;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-visual="perto"]:not([data-theme="light"]) {
     --bg: #0B1220;
     --surface: #121B2B;
     --surface-2: #060B14;
@@ -140,9 +270,15 @@
     --shadow-2: 0 -6px 28px rgba(0,0,0,0.6);
     --scrim: rgba(0,0,0,0.60);
     --ring: #5FC4BF;
+    /* no escuro a tinta azul-marinho some no fundo: chip ativo, cartão da visita e
+       número da rota usam o petróleo claro com texto escuro */
+    --chip-on-bg: #5FC4BF;  --chip-on-text: #06201F;
+    --live-bg: #5FC4BF;     --live-text: #06201F;  --live-label: #06201F;
+    --toast-bg: #22324A;    --toast-text: #EEF2F8; --toast-act: #5FC4BF;
+    --fab-shadow: 0 6px 20px rgba(0,0,0,0.5);
   }
 }
-:root[data-theme="dark"] {
+:root[data-visual="perto"][data-theme="dark"] {
   --bg: #0B1220;
   --surface: #121B2B;
   --surface-2: #060B14;
@@ -164,6 +300,12 @@
   --shadow-2: 0 -6px 28px rgba(0,0,0,0.6);
   --scrim: rgba(0,0,0,0.60);
   --ring: #5FC4BF;
+  /* no escuro a tinta azul-marinho some no fundo: chip ativo, cartão da visita e
+     número da rota usam o petróleo claro com texto escuro */
+  --chip-on-bg: #5FC4BF;  --chip-on-text: #06201F;
+  --live-bg: #5FC4BF;     --live-text: #06201F;  --live-label: #06201F;
+  --toast-bg: #22324A;    --toast-text: #EEF2F8; --toast-act: #5FC4BF;
+  --fab-shadow: 0 6px 20px rgba(0,0,0,0.5);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -225,12 +367,12 @@ a { color: inherit; text-decoration: none; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
   min-height: var(--tap); padding: 0 var(--s4);
-  border: 1px solid var(--border); border-radius: var(--r-sm);
-  background: var(--surface); color: var(--text-2);
+  border: 1px solid var(--btn-border); border-radius: var(--r-sm);
+  background: var(--btn-bg); color: var(--btn-text);
   font-size: var(--t-sm); font-weight: 600; text-align: center; cursor: pointer;
   transition: background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
 }
-.btn:hover { border-color: var(--border-2); background: var(--surface-2); }
+.btn:hover { border-color: var(--btn-border-hover); background: var(--btn-bg-hover); }
 .btn:active { transform: scale(0.98); }
 .btn[disabled], .btn.is-off { opacity: 0.45; pointer-events: none; }
 .btn .ic { width: 18px; height: 18px; }
@@ -254,14 +396,14 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- cartão ---- */
 .card {
-  background: var(--surface); border: 1px solid var(--border);
+  background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--card-shadow);
   border-radius: var(--r-md); padding: var(--s3); margin-bottom: var(--s2);
 }
 .card--accent { border-color: var(--brand); }
 .card--note { border-left: 3px solid var(--brand); }
 .card--sunken { background: var(--surface-2); border-color: transparent; }
 .card--tap { cursor: pointer; transition: border-color var(--dur-1) var(--ease); }
-.card--tap:hover { border-color: var(--border-2); }
+.card--tap:hover { border-color: var(--card-border-hover); }
 .card > :last-child { margin-bottom: 0; }
 
 /* ---- linha e lista ---- */
@@ -272,7 +414,7 @@ a { color: inherit; text-decoration: none; }
 }
 .row__ico {
   width: 40px; height: 40px; border-radius: var(--r-sm); flex: none; overflow: hidden;
-  background: var(--brand-tint); color: var(--brand-text);
+  background: var(--ico-bg); color: var(--ico-fg);
   display: flex; align-items: center; justify-content: center;
 }
 .row__ico img { width: 100%; height: 100%; object-fit: cover; }
@@ -301,12 +443,12 @@ a { color: inherit; text-decoration: none; }
 .chip {
   flex: none; min-height: 38px; display: inline-flex; align-items: center;
   padding: 0 var(--s3); border-radius: var(--r-pill);
-  border: 1px solid var(--border-2); background: var(--surface); color: var(--text-2);
+  border: 1px solid var(--chip-border); background: var(--chip-bg); color: var(--text-2);
   font-size: var(--t-sm); font-weight: 600; cursor: pointer;
   transition: background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
-.chip:hover { border-color: var(--border-2); }
-.chip.on { background: var(--graphite); color: #F5F5F4; border-color: var(--graphite); }
+.chip:hover { background: var(--btn-bg-hover); }
+.chip.on { background: var(--chip-on-bg); color: var(--chip-on-text); border-color: var(--chip-on-bg); }
 
 /* ---- link de objeto ---- */
 .link {
@@ -405,7 +547,7 @@ a { color: inherit; text-decoration: none; }
   position: fixed; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom));
   transform: translateX(-50%) translateY(12px);
   display: flex; align-items: center; gap: var(--s3);
-  background: var(--graphite); color: #F5F5F4;
+  background: var(--toast-bg); color: var(--toast-text);
   padding: var(--s3) var(--s4); border-radius: var(--r-sm);
   font-size: var(--t-sm); box-shadow: var(--shadow-2);
   z-index: var(--z-toast); max-width: min(90%, 420px);
@@ -414,7 +556,7 @@ a { color: inherit; text-decoration: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 .toast__msg { flex: 1; min-width: 0; }
-.toast__act { background: none; border: none; color: var(--brand); font: inherit; font-weight: 700; cursor: pointer; flex: none;
+.toast__act { background: none; border: none; color: var(--toast-act); font: inherit; font-weight: 700; cursor: pointer; flex: none;
   min-height: 44px; padding: 0 var(--s3); margin: -10px calc(var(--s3) * -1) -10px 0; }
 .toast--err { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
 .toast--err .toast__act { color: var(--danger); text-decoration: underline; }
@@ -423,7 +565,7 @@ a { color: inherit; text-decoration: none; }
 .topbar {
   flex: none; display: flex; align-items: center; gap: var(--s3);
   padding: calc(var(--s3) + env(safe-area-inset-top)) var(--s4) var(--s3);
-  background: var(--bg); border-bottom: 1px solid var(--border);
+  background: var(--bg); border-bottom: 1px solid var(--topbar-border);
   position: sticky; top: 0; z-index: var(--z-bar);
 }
 .topbar__mark { width: 24px; height: 24px; color: var(--brand-text); flex: none; }
@@ -454,10 +596,10 @@ a { color: inherit; text-decoration: none; }
    do design system A, que o derivou do quadro do próprio símbolo. */
 .tab-btn::before {
   content: ""; position: absolute; top: 0; left: 22%; right: 22%; height: 2px;
-  background: var(--brand-text); border-radius: 0 0 2px 2px;
+  background: var(--tab-ind); border-radius: 0 0 2px 2px;
   opacity: 0; transition: opacity var(--dur-1) var(--ease);
 }
-.tab-btn.on { color: var(--brand-text); }
+.tab-btn.on { color: var(--tab-on); }
 .tab-btn.on::before { opacity: 1; }
 
 /* ---- ação flutuante ---- */
@@ -466,7 +608,7 @@ a { color: inherit; text-decoration: none; }
   width: 56px; height: 56px; border-radius: 50%; border: none;
   background: var(--brand-fill); color: var(--on-brand);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 20px rgba(42,43,45,0.28); cursor: pointer; z-index: var(--z-fab);
+  box-shadow: var(--fab-shadow); cursor: pointer; z-index: var(--z-fab);
   transition: transform var(--dur-1) var(--ease);
 }
 .fab:active { transform: scale(0.94); }
@@ -475,11 +617,11 @@ a { color: inherit; text-decoration: none; }
 /* ---- grade de atalho ---- */
 .tile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
 .tile {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md);
+  background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: var(--r-md);
   padding: var(--s3); cursor: pointer; text-align: left; color: inherit; font: inherit;
   transition: border-color var(--dur-1) var(--ease);
 }
-.tile:hover { border-color: var(--border-2); }
+.tile:hover { border-color: var(--card-border-hover); }
 .tile .ic { color: var(--brand-text); margin-bottom: var(--s2); }
 .tile__n { font-weight: 600; font-size: var(--t-md); }
 .tile__p { font-size: var(--t-xs); color: var(--text-3); }
@@ -511,7 +653,7 @@ a { color: inherit; text-decoration: none; }
   .panel.on { display: block; }
 
   /* ---- Hoje: cartão de próxima ação ---- */
-  .hero { background: var(--surface); border: 1px solid var(--brand); border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
+  .hero { background: var(--surface); border: 1px solid var(--hero-border); box-shadow: var(--card-shadow); border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
   .hero__when { display: flex; align-items: center; gap: 6px; color: var(--brand-text); font-weight: 700; font-size: var(--t-lg); font-variant-numeric: tabular-nums; }
   .hero__what { font-family: var(--font-display); font-weight: 700; font-size: var(--t-xl); margin: var(--s1) 0 2px; line-height: 1.2; }
   .hero__who { color: var(--text-2); font-size: var(--t-sm); margin-bottom: var(--s3); }
@@ -540,13 +682,13 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Rota do dia ---- */
   .rota-step { display: flex; gap: var(--s3); align-items: flex-start; }
-  .rota-n { width: 26px; height: 26px; border-radius: 50%; background: var(--graphite); color: #F5F5F4; font-size: var(--t-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; margin-top: 2px; }
+  .rota-n { width: 26px; height: 26px; border-radius: 50%; background: var(--chip-on-bg); color: var(--chip-on-text); font-size: var(--t-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; margin-top: 2px; }
   .rota-line { border-left: 2px dashed var(--border); margin: 0 0 0 12px; height: var(--s3); }
 
   /* ---- Modo Visita ---- */
-  .live { background: var(--graphite); color: #F5F5F4; border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
+  .live { background: var(--live-bg); color: var(--live-text); border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
   .live__t { font-size: var(--t-2xl); font-weight: 800; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
-  .live__l { font-size: var(--t-xs); letter-spacing: var(--track); text-transform: uppercase; color: var(--brand); font-weight: 600; }
+  .live__l { font-size: var(--t-xs); letter-spacing: var(--track); text-transform: uppercase; color: var(--live-label); font-weight: 600; }
   .live a, .live .link { color: inherit; text-decoration-color: currentColor; }
   .roteiro { list-style: none; margin: 0; padding: 0; }
   .roteiro li { display: flex; gap: var(--s2); align-items: flex-start; padding: var(--s2) 0; border-bottom: 1px solid var(--border); font-size: var(--t-sm); }
@@ -617,6 +759,7 @@ a { color: inherit; text-decoration: none; }
   html[data-texto="130"] #top-state-txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .seg-texto { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
   .seg-texto .chip { justify-content: center; }
+  .seg-visual { grid-template-columns: 1fr 1fr; }
   .rascunho { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s3); }
   .acoes-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-bottom: var(--s3); }
   .acoes-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); }
@@ -841,6 +984,14 @@ a { color: inherit; text-decoration: none; }
       </div>
 
       <div class="data-box" id="install-box" hidden></div>
+
+      <div class="data-box">
+        <h4>Visual</h4>
+        <div class="seg-texto seg-visual" role="group" aria-label="Visual" id="seg-visual">
+          <button class="chip" data-visual="leve" onclick="setVisual('leve')">Leve (novo)</button>
+          <button class="chip" data-visual="perto" onclick="setVisual('perto')">Perto</button>
+        </div>
+      </div>
 
       <div class="data-box">
         <h4>Tamanho do texto</h4>
@@ -3658,6 +3809,17 @@ function setTamanhoTexto(tx) {
   try { if (tx === '100') localStorage.removeItem('texto:v1'); else localStorage.setItem('texto:v1', tx); } catch (e) { /* ok */ }
   marcarTamanhoTexto();
 }
+// Visual (rodada 36): troca só tokens — mesma tela, mesma distribuição
+function setVisual(v) {
+  const r = document.documentElement;
+  if (v === 'perto') r.setAttribute('data-visual', 'perto'); else r.removeAttribute('data-visual');
+  try { if (v === 'perto') localStorage.setItem('visual:v1', 'perto'); else localStorage.removeItem('visual:v1'); } catch (e) { /* ok */ }
+  marcarVisual();
+}
+function marcarVisual() {
+  const atual = document.documentElement.getAttribute('data-visual') || 'leve';
+  document.querySelectorAll('#seg-visual .chip').forEach(b => { const on = b.dataset.visual === atual; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+}
 function marcarTamanhoTexto() {
   const atual = document.documentElement.getAttribute('data-texto') || '100';
   document.querySelectorAll('#seg-texto .chip').forEach(b => { const on = b.dataset.tx === atual; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
@@ -5384,7 +5546,7 @@ function salvarAudio() {
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
   renderCalcImovelSelect(); cCalcFin(); cCalcCom(); cCalcITBI(); renderCamLinkSelects(); renderInstallBox(); marcarMapaApp();
-  atualizarSino(); marcarTamanhoTexto(); renderPerfil(); renderTrava(); renderBackup();
+  atualizarSino(); marcarTamanhoTexto(); marcarVisual(); renderPerfil(); renderTrava(); renderBackup();
   const n = q('SELECT COUNT(*) c FROM imovel')[0].c;
   const nl = q('SELECT COUNT(*) c FROM lead')[0].c;
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';
