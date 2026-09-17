@@ -2830,6 +2830,7 @@ async function resetDb() {
   limparMarcasPorId();
   renderAll();
   colapsarPilha();
+  agendarSyncPush(1000);
   showToast('Banco recomeçado do zero.');
 }
 // Marcas guardadas fora do banco que apontam pra um item pelo id: com outro banco os ids se
@@ -2918,6 +2919,7 @@ function importDb(evt) {
     persist(); persistNow();
     renderAll();
     colapsarPilha();
+    agendarSyncPush(1000);
     evt.target.value = '';
     showToast('Banco importado.');
   };
@@ -4933,7 +4935,10 @@ function confirmarApagarAparelho() {
     'Apagar tudo', apagarAparelho, { exportar: true });
 }
 async function apagarAparelho() {
+  // primeiro, porque desligar precisa do segredo que localStorage.clear() abaixo vai apagar
+  try { await desligarPush(true); } catch (e) { /* segue */ }
   try { await idbClear(); } catch (e) { /* segue */ }
+  try { indexedDB.deleteDatabase(IDB_AVISOS); } catch (e) { /* segue */ }
   try { if (window.caches) await caches.delete('ohubimob-compartilhado'); } catch (e) { /* segue */ }
   try { localStorage.clear(); sessionStorage.clear(); } catch (e) { /* segue */ }
   location.reload();
@@ -5846,7 +5851,11 @@ function hhmm(min) { min = ((Math.round(min) % 1440) + 1440) % 1440; return Stri
 function dataHora(ymd, hora) { const d = dataLocal(ymd); const m = minDe(hora); if (m != null) d.setHours(Math.floor(m / 60), m % 60, 0, 0); return d; }
 function somarDias(ymd, n) { const d = dataLocal(ymd); d.setDate(d.getDate() + n); return localYMD(d); }
 function inicioSemana(ymd) { const d = dataLocal(ymd); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return localYMD(d); }
-function rotuloDia(ymd) { return ymd === todayISO(0) ? 'Hoje' : ymd === todayISO(1) ? 'Amanhã' : ymd === todayISO(-1) ? 'Ontem' : fmtDataCurta(ymd); }
+function rotuloDiaDe(ymd, refHoje) {
+  refHoje = refHoje || todayISO(0);
+  return ymd === refHoje ? 'Hoje' : ymd === somarDias(refHoje, 1) ? 'Amanhã' : ymd === somarDias(refHoje, -1) ? 'Ontem' : fmtDataCurta(ymd);
+}
+function rotuloDia(ymd) { return rotuloDiaDe(ymd); }
 
 // ---------- padrões por tipo ----------
 function duracaoPadrao(tipo) { return +cfg('agenda:duracao:' + tipo) || (TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao).dur; }
@@ -6285,7 +6294,7 @@ function limparFiltroAg(naFolha) {
   renderAG();
   if (naFolha && folhaAtual && folhaAtual.chave === 'filtro-ag' && window.__filtroHTML) openSheet(window.__filtroHTML(), { foco: false, chave: 'filtro-ag', refazer: window.__filtroHTML });
 }
-function atualizarAgenda() { renderAGSemRolar(); renderHJ(); atualizarSino(); verificarLembretes(); }
+function atualizarAgenda() { renderAGSemRolar(); renderHJ(); atualizarSino(); verificarLembretes(); agendarSyncPush(); }
 
 // ---------- abrir, marcar ----------
 function abrirItemAgenda(k, id) { if (k === 'visita') abrirVisita(id); else abrirCompromisso(id); }
@@ -6824,40 +6833,51 @@ function verificarLembretes() {
 }
 setInterval(verificarLembretes, 60000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') verificarLembretes(); });
-function tituloLembrete(p) {
-  const it = p.it, falta = Math.round((p.ini - Date.now()) / 60000), tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
-  const quando = it.diaInteiro ? (it.data === todayISO(0) ? 'hoje' : rotuloDia(it.data).toLowerCase())
-    : falta <= 1 ? 'agora' : falta < 60 ? 'em ' + falta + ' min' : it.data === todayISO(0) ? 'às ' + it.hora : rotuloDia(it.data).toLowerCase() + ' às ' + it.hora;
+function tituloLembrete(p, agora) {
+  agora = agora == null ? Date.now() : agora;
+  const it = p.it, falta = Math.round((p.ini - agora) / 60000), tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao, refHoje = localYMD(new Date(agora));
+  const quando = it.diaInteiro ? (it.data === refHoje ? 'hoje' : rotuloDiaDe(it.data, refHoje).toLowerCase())
+    : falta <= 1 ? 'agora' : falta < 60 ? 'em ' + falta + ' min' : it.data === refHoje ? 'às ' + it.hora : rotuloDiaDe(it.data, refHoje).toLowerCase() + ' às ' + it.hora;
   return tp.curto + ' ' + quando;
 }
-async function dispararLembrete(p) {
+// Monta o texto e os dados de um aviso — usado na hora (camada 1, abaixo) e com antecedência,
+// pro push guardar o texto pronto no aparelho (camada 3, lote C3). "agora" é o instante que conta
+// como referência pra "em X min"/"hoje"/"amanhã": na hora, é o relógio de verdade; com antecedência,
+// é o próprio horário em que o aviso vai aparecer.
+function montarAviso(p, agora) {
+  agora = agora == null ? Date.now() : agora;
   const ocultar = cfg('notif:ocultar_nomes') === '1';
-  let titulo, corpo, dados, acoes, toastAcao;
+  let titulo, corpo, dados, acoes;
   if (p.especial === 'resumo') {
-    const r = resumoAmanha(); if (!r.itens.length && !r.tarefas.length) return;
+    const r = p.resumo || resumoDe(somarDias(localYMD(new Date(agora)), 1), { semLocal: ocultar }); if (!r.itens.length && !r.tarefas.length) return null;
     titulo = 'Amanhã: ' + r.texto;
     corpo = ocultar ? '' : r.itens.slice(0, 3).map(it => (it.diaInteiro ? 'dia inteiro' : it.hora) + ' ' + it.titulo).join(' · ');
     dados = { item: 'resumo' };
     acoes = r.itens.some(it => it.pessoas.some(x => x.telefone)) ? [{ action: 'confirmar', title: 'Confirmar com clientes' }, { action: 'abrir', title: 'Ver amanhã' }] : [{ action: 'abrir', title: 'Ver amanhã' }];
-    toastAcao = { label: acoes.length > 1 ? 'Confirmar' : 'Ver', fn: () => acaoLembrete('resumo', acoes.length > 1 ? 'confirmar' : 'abrir') };
   } else {
     const it = p.it, tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
-    titulo = p.especial === 'sair' ? 'Hora de sair · ' + tp.curto + ' às ' + it.hora : tituloLembrete(p);
+    titulo = p.especial === 'sair' ? 'Hora de sair · ' + tp.curto + ' às ' + it.hora : tituloLembrete(p, agora);
     corpo = p.especial === 'sair'
       ? (ocultar ? fmtKm(p.sair.km) + ', uns ' + p.sair.min + ' min' : fmtKm(p.sair.km) + ' até ' + it.titulo + ': uns ' + p.sair.min + ' min, sem trânsito')
       : ocultar ? (it.diaInteiro ? 'Dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur)) : [it.titulo, it.pessoas.map(x => x.nome).join(', '), it.local].filter(Boolean).join(' · ');
     dados = { item: it.k + ':' + it.id, chave: p.chave };
     acoes = [{ action: 'adiar', title: 'Adiar 10 min' }, { action: 'abrir', title: 'Abrir' }];
-    toastAcao = { label: 'Abrir', fn: () => abrirItemAgenda(it.k, it.id) };
   }
+  return { titulo, corpo, dados, acoes };
+}
+async function dispararLembrete(p) {
+  const m = montarAviso(p, Date.now()); if (!m) return;
+  const toastAcao = p.especial === 'resumo'
+    ? { label: m.acoes.length > 1 ? 'Confirmar' : 'Ver', fn: () => acaoLembrete('resumo', m.acoes.length > 1 ? 'confirmar' : 'abrir') }
+    : { label: 'Abrir', fn: () => abrirItemAgenda(p.it.k, p.it.id) };
   if (podeNotificar() && Notification.permission === 'granted') {
     try {
       const reg = await swPronto();
-      await reg.showNotification(titulo, { body: corpo, tag: 'lemb:' + dados.item, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png',
-        data: Object.assign({ url: location.pathname }, dados), actions: acoes });
+      await reg.showNotification(m.titulo, { body: m.corpo, tag: 'lemb:' + m.dados.item, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png',
+        data: Object.assign({ url: location.pathname }, m.dados), actions: m.acoes });
     } catch (e) { /* segue com o aviso na tela */ }
   }
-  if (document.visibilityState === 'visible') showToast(titulo + (corpo ? ' · ' + corpo : ''), toastAcao);
+  if (document.visibilityState === 'visible') showToast(m.titulo + (m.corpo ? ' · ' + m.corpo : ''), toastAcao);
 }
 function adiarLembrete(item, chave) {
   const [k, id] = String(item || '').split(':'); if (!k || !+id) return;
@@ -6878,17 +6898,18 @@ function renderAgendaCfg() {
   box.innerHTML = `<h4>Agenda e avisos</h4>
     <p style="margin:0 0 var(--s2)"><b>Avisos do app:</b> ${esc(estadoAvisosTexto())}</p>
     ${'Notification' in window && window.isSecureContext && Notification.permission === 'default' ? `<button class="btn btn--sm btn--block" style="margin-bottom:var(--s2)" onclick="ativarAvisos()">${ico('sino')}Ativar avisos</button>` : ''}
-    <p class="muted" style="margin:0 0 var(--s2)">Com o app fechado, o aviso garantido é o da agenda do celular: em cada compromisso, Lembrete › Pôr na agenda do celular.</p>
-    <label class="lembrar"><input type="checkbox" ${cfg('notif:ocultar_nomes') === '1' ? 'checked' : ''} onchange="setCfg('notif:ocultar_nomes', this.checked ? '1' : '0')"> Ocultar nomes nas notificações</label>
-    <label class="lembrar"><input type="checkbox" ${cfg('agenda:aviso_sair') !== '0' ? 'checked' : ''} onchange="setCfg('agenda:aviso_sair', this.checked ? '1' : '0');verificarLembretes()"> Avisar na hora de sair (quando dá pra calcular o caminho)</label>
+    ${blocoPushHTML()}
+    <p class="muted" style="margin:0 0 var(--s2)">Sem esse serviço, o aviso garantido é o da agenda do celular: em cada compromisso, Lembrete › Pôr na agenda do celular.</p>
+    <label class="lembrar"><input type="checkbox" ${cfg('notif:ocultar_nomes') === '1' ? 'checked' : ''} onchange="setCfg('notif:ocultar_nomes', this.checked ? '1' : '0');agendarSyncPush(500)"> Ocultar nomes nas notificações</label>
+    <label class="lembrar"><input type="checkbox" ${cfg('agenda:aviso_sair') !== '0' ? 'checked' : ''} onchange="setCfg('agenda:aviso_sair', this.checked ? '1' : '0');verificarLembretes();agendarSyncPush(500)"> Avisar na hora de sair (quando dá pra calcular o caminho)</label>
     <div class="field" style="margin-top:var(--s2)"><label for="cfg-resumo">Resumo de amanhã</label>
-      <select id="cfg-resumo" onchange="setCfg('agenda:resumo_hora', this.value);renderHJ();verificarLembretes()">
+      <select id="cfg-resumo" onchange="setCfg('agenda:resumo_hora', this.value);renderHJ();verificarLembretes();agendarSyncPush(500)">
         ${[['off', 'desligado'], ['18:00', 'às 18h'], ['19:00', 'às 19h'], ['20:00', 'às 20h'], ['21:00', 'às 21h']].map(([v, t]) => `<option value="${v}" ${(hr || 'off') === v ? 'selected' : ''}>${t}</option>`).join('')}
       </select></div>
     <button class="row agcfg-row" onclick="expedienteSheet()"><span class="row__main"><span class="row__t" style="font-weight:500">Expediente</span>
       <span class="row__s">${hhmm(exp.ini)}–${hhmm(exp.fim)} · ${DIAS_EXPEDIENTE.find(x => x[0] === exp.dias)[1]} · onde o app procura horário livre</span></span>${ico('chevron', 'row__chev')}</button>
     <div class="field" style="margin-top:var(--s3)"><label>Deslocamento médio (sem trânsito)</label>
-      <div class="chip-row chip-row--wrap">${[20, 30, 40, 50].map(v => `<button class="chip ${velocidadeKmh() === v ? 'on' : ''}" aria-pressed="${velocidadeKmh() === v}" onclick="setCfg('agenda:velocidade', '${v}');renderAgendaCfg()">${v} km/h</button>`).join('')}</div></div>
+      <div class="chip-row chip-row--wrap">${[20, 30, 40, 50].map(v => `<button class="chip ${velocidadeKmh() === v ? 'on' : ''}" aria-pressed="${velocidadeKmh() === v}" onclick="setCfg('agenda:velocidade', '${v}');renderAgendaCfg();agendarSyncPush(500)">${v} km/h</button>`).join('')}</div></div>
     <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s2)">Duração e lembretes por tipo</div>
     ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="row agcfg-row" onclick="tipoPadraoSheet('${k}')">
       <span class="row__main"><span class="row__t" style="font-weight:500">${esc(t.t)}</span><span class="row__s">${esc(fmtAntecedencia(duracaoPadrao(k)) + ' · ' + textoLembretes(lembretesPadrao(k)))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
@@ -7707,16 +7728,21 @@ function linhaSairHTML(it, cls) {
 }
 
 // ---------- resumo de amanhã ----------
-function resumoAmanha() {
-  const d = todayISO(1);
+function resumoDe(d, opts) {
+  opts = opts || {};
   const itens = itensDaAgenda(d, d).filter(it => it.aberto && !it.cancelado), tarefas = tarefasDoDia(d);
   const primeiro = itens.find(it => !it.diaInteiro) || itens[0];
+  // opts.semLocal: o título da notificação (que fica visível na tela de bloqueio) respeita
+  // "ocultar nomes"; a tela do Hoje e a folha de confirmar amanhã chamam sem essa opção
   const texto = itens.length
-    ? plural(itens.length, 'compromisso', 'compromissos') + (primeiro.diaInteiro ? '' : ', o primeiro às ' + horaFalada(primeiro.hora)) + (primeiro.local ? ', ' + primeiro.local.split(' · ')[0] : '')
+    ? plural(itens.length, 'compromisso', 'compromissos') + (primeiro.diaInteiro ? '' : ', o primeiro às ' + horaFalada(primeiro.hora)) + (!opts.semLocal && primeiro.local ? ', ' + primeiro.local.split(' · ')[0] : '')
       + (tarefas.length ? ' e ' + plural(tarefas.length, 'tarefa', 'tarefas') : '')
     : tarefas.length ? plural(tarefas.length, 'tarefa', 'tarefas') + ', nada marcado com hora' : 'nada marcado';
   return { itens, tarefas, texto };
 }
+// usado pela camada 1 (hoje real); o push (C3) monta o resumo de um dia futuro com antecedência,
+// então passa resumoDe(dia) direto — não dá pra usar "amanhã" real na hora de montar o aviso.
+function resumoAmanha() { return resumoDe(todayISO(1)); }
 function horaResumo() { const v = cfg('agenda:resumo_hora'); return v === 'off' ? null : (v || '20:00'); }
 function cartaoAmanhaHTML() {
   const h = horaResumo(); if (!h) return '';
@@ -7926,7 +7952,7 @@ function tipoPadraoSheet(tipo) {
 function salvarTipoPadrao(tipo) {
   let lemb = []; try { lemb = JSON.parse(val('tp-lemb') || '[]'); } catch (e) { /* vazio */ }
   setCfg('agenda:duracao:' + tipo, val('tp-dur')); setCfg('agenda:lembretes:' + tipo, JSON.stringify(lemb));
-  closeSheet(); renderAgendaCfg(); verificarLembretes();
+  closeSheet(); renderAgendaCfg(); verificarLembretes(); agendarSyncPush(500);
   showToast(TIPOS_AGENDA[tipo].t + ': ' + fmtAntecedencia(+val('tp-dur') || duracaoPadrao(tipo)) + ' · ' + textoLembretes(lemb) + '.');
   pedirAvisosUmaVez(lemb);
 }
@@ -7950,7 +7976,7 @@ function salvarExpediente() {
   const ini = val('ex-ini'), fim = val('ex-fim');
   if (!ini || !fim || minDe(fim) <= minDe(ini)) return erroCampo('ex-fim', 'O fim precisa ser depois do começo.');
   setCfg('agenda:exp_ini', ini); setCfg('agenda:exp_fim', fim); setCfg('agenda:exp_dias', val('ex-dias') || 'seg-sab');
-  closeSheet(); renderAgendaCfg(); showToast('Expediente salvo.');
+  closeSheet(); renderAgendaCfg(); showToast('Expediente salvo.'); agendarSyncPush(500);
 }
 
 // ---------- auxiliares do formulário (repetição, série, mensagens da visita) ----------
@@ -7978,6 +8004,271 @@ function mensagensDaVisita(id) {
   const p = it.pessoas.find(x => x.principal) || it.pessoas[0] || { nome: '' };
   escolherMensagem({ contexto: 'visita', vars: varsItem(it, p), tel: it.telefone, pessoa: p.tipo ? p.tipo + ':' + p.id : '' });
 }
+
+// ============================================================================================
+// AGENDA — lote C3 (rodada 36, plano-agenda-campo.md §4.E, camada 3): aviso com o app fechado
+// ============================================================================================
+// Um serviço mínimo (push-servico/, Cloudflare Worker) guarda só o endereço de push deste
+// navegador e os MINUTOS em que há aviso. Na hora, manda um push vazio; o service worker acorda,
+// lê aqui no aparelho os avisos já montados e mostra o texto. Nome, título, lugar e telefone
+// nunca saem do celular. O app guarda os avisos dos próximos PUSH_DIAS dias e manda os horários
+// de novo a cada mudança na agenda.
+const PUSH_SERVICO = { url: '', vapid: '' };   // preencher depois de publicar o serviço (push-servico/LEIA-ME.md)
+const PUSH_DIAS = 9;                            // o serviço aceita até 10 dias à frente
+const IDB_AVISOS = 'ohubimob-avisos';           // lido também pelo sw.js
+var syncPushTimer = null, syncPushFila = Promise.resolve();
+
+function servicoPush() {
+  // no computador de desenvolvimento dá pra apontar pro serviço local (push-servico/dev.mjs)
+  try {
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+      const d = JSON.parse(localStorage.getItem('push:servico-dev') || 'null');
+      if (d && d.url && d.vapid) return d;
+    }
+  } catch (e) { /* segue */ }
+  return PUSH_SERVICO.url && PUSH_SERVICO.vapid ? PUSH_SERVICO : null;
+}
+function pushSuportado() { return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && window.isSecureContext; }
+function iphoneSemInstalar() { return /iPhone|iPad|iPod/.test(navigator.userAgent) && !navigator.standalone && !matchMedia('(display-mode: standalone)').matches; }
+function estadoPush() { return lerLocalJSON('push:v1', null); }
+function bytesParaB64u(b) { return bytesParaB64(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function b64uParaBytes(t) {
+  const s = String(t).replace(/-/g, '+').replace(/_/g, '/'), bin = atob(s + '==='.slice((s.length + 3) % 4));
+  return Uint8Array.from(bin, c => c.charCodeAt(0));
+}
+function hhmmDe(ts) { const d = new Date(ts); return hhmm(d.getHours() * 60 + d.getMinutes()); }
+function momentoFalado(ts) { const d = localYMD(new Date(ts)); return (d === todayISO(0) ? 'hoje' : d === todayISO(-1) ? 'ontem' : diaCurto(d)) + ' às ' + hhmmDe(ts); }
+
+// ---------- IndexedDB compartilhado com o service worker ----------
+function abrirIdbAvisos() {
+  return new Promise((ok, falha) => {
+    const r = indexedDB.open(IDB_AVISOS, 1);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains('avisos')) d.createObjectStore('avisos', { keyPath: 'chave' });
+      if (!d.objectStoreNames.contains('mostrados')) d.createObjectStore('mostrados');
+      if (!d.objectStoreNames.contains('estado')) d.createObjectStore('estado');
+    };
+    r.onsuccess = () => ok(r.result); r.onerror = () => falha(r.error);
+  });
+}
+function idbPedido(r) { return new Promise((ok, falha) => { r.onsuccess = () => ok(r.result); r.onerror = () => falha(r.error); }); }
+function idbFim(tx) { return new Promise((ok, falha) => { tx.oncomplete = () => ok(); tx.onerror = tx.onabort = () => falha(tx.error); }); }
+async function idbAvisosLer() {
+  const d = await abrirIdbAvisos();
+  try {
+    const tx = d.transaction(['avisos', 'mostrados', 'estado']);
+    const [avisos, mostrados, cfgSw] = await Promise.all([idbPedido(tx.objectStore('avisos').getAll()),
+      idbPedido(tx.objectStore('mostrados').getAllKeys()), idbPedido(tx.objectStore('estado').get('cfg'))]);
+    return { avisos: avisos || [], mostrados: new Set(mostrados || []), cfg: cfgSw || null };
+  } finally { d.close(); }
+}
+async function idbAvisosGravar(lista, cfgSw) {
+  const d = await abrirIdbAvisos();
+  try {
+    const tx = d.transaction(['avisos', 'estado'], 'readwrite'), s = tx.objectStore('avisos');
+    s.clear(); lista.forEach(a => s.put(a));
+    if (cfgSw) tx.objectStore('estado').put(cfgSw, 'cfg');
+    await idbFim(tx);
+  } finally { d.close(); }
+}
+async function marcarMostradoPush(chaves) {
+  if (!chaves || !chaves.length) return;
+  try {
+    const d = await abrirIdbAvisos();
+    try {
+      const tx = d.transaction(['avisos', 'mostrados'], 'readwrite'), s = tx.objectStore('mostrados'), agora = Date.now();
+      chaves.forEach(k => { s.put(agora, k); tx.objectStore('avisos').delete(k); });
+      await idbFim(tx);
+    } finally { d.close(); }
+  } catch (e) { /* o pior caso é o aviso aparecer duas vezes */ }
+}
+async function limparIdbAvisos(tudo) {
+  const d = await abrirIdbAvisos();
+  try {
+    const tx = d.transaction(['avisos', 'mostrados', 'estado'], 'readwrite');
+    tx.objectStore('avisos').clear(); tx.objectStore('mostrados').clear();
+    if (tudo) tx.objectStore('estado').clear();
+    await idbFim(tx);
+  } finally { d.close(); }
+}
+
+// ---------- o que vai pro aparelho: os avisos dos próximos dias, já com texto ----------
+function avisosParaPush(agora) {
+  agora = agora || Date.now();
+  const hoje = todayISO(0), fim = somarDias(hoje, PUSH_DIAS), limite = dataLocal(fim).getTime();
+  const itens = itensDaAgenda(hoje, somarDias(fim, 2)).filter(it => it.aberto && !it.cancelado && !it.emAndamento);
+  const inicio = it => it.diaInteiro ? dataLocal(it.data).getTime() + 8 * 3600000 : dataHora(it.data, it.hora).getTime();
+  const valeHorario = t => t > agora - 60000 && t < limite, out = [];
+  // mesmas chaves da camada 1 (lembretesPendentes): o que um mostrou o outro não repete
+  itens.forEach(it => it.lembretes.forEach(m => {
+    const quando = inicio(it) - m * 60000;
+    if (valeHorario(quando)) out.push({ chave: `${it.k}:${it.id}:${it.data}:${it.hora || 'dia'}:${m}`, it, m, quando, ini: inicio(it) });
+  }));
+  if (cfg('agenda:aviso_sair') !== '0') itens.filter(it => it.data < fim).forEach(it => {
+    const sair = horaDeSair(it); if (!sair || sair.sair < 0) return;
+    const quando = dataHora(it.data, hhmm(sair.sair)).getTime();
+    if (valeHorario(quando)) out.push({ chave: `sair:${it.k}:${it.id}:${it.data}:${it.hora}:${hhmm(sair.sair)}`, it, m: null, quando, ini: inicio(it), especial: 'sair', sair });
+  });
+  const hr = horaResumo(), ocultarPush = cfg('notif:ocultar_nomes') === '1';
+  if (hr) for (let i = 0; i < PUSH_DIAS; i++) {
+    const d = somarDias(hoje, i), quando = dataHora(d, hr).getTime();
+    if (!valeHorario(quando)) continue;
+    const resumo = resumoDe(somarDias(d, 1), { semLocal: ocultarPush });
+    if (resumo.itens.length || resumo.tarefas.length) out.push({ chave: 'resumo:' + d, it: null, m: null, quando, ini: quando + 4 * 3600000, especial: 'resumo', resumo });
+  }
+  Object.entries(lerLocalJSON(LEMB_ADIADOS, {})).forEach(([chave, a]) => {
+    const it = itens.find(x => x.k === a.k && x.id === a.id);
+    if (it && valeHorario(a.quando)) out.push({ chave, it, m: null, quando: a.quando, ini: inicio(it), adiado: true });
+  });
+  return out;
+}
+function avisoParaGuardar(p) {
+  const m = montarAviso(p, p.quando); if (!m) return null;
+  return { chave: p.chave, quando: p.quando, especial: p.especial || null, titulo: m.titulo, corpo: m.corpo || '',
+    tag: 'lemb:' + m.dados.item, dados: Object.assign({ url: location.pathname }, m.dados), acoes: m.acoes, origem: p.adiado ? 'adiado' : 'app' };
+}
+
+// ---------- sincronizar: grava no aparelho e manda os minutos pro serviço ----------
+function agendarSyncPush(ms) {
+  if (typeof estadoPush !== 'function' || !estadoPush() || !servicoPush()) return;
+  clearTimeout(syncPushTimer);
+  syncPushTimer = setTimeout(() => { sincronizarPush(); }, ms == null ? 5000 : ms);
+}
+// em fila: duas mudanças seguidas nunca gravam uma por cima da outra pela metade
+function sincronizarPush() {
+  const vez = syncPushFila.then(sincronizarPushJa);
+  syncPushFila = vez.catch(() => false);
+  return vez.catch(() => false);
+}
+async function sincronizarPushJa() {
+  const est = estadoPush(), serv = servicoPush();
+  if (!est || !serv || !db) return false;
+  const agora = Date.now();
+  try {
+    const guardado = await idbAvisosLer();
+    // "Adiar 10 min" tocado com o app fechado: o worker guardou; aqui vira adiamento do app
+    const adiados = lerLocalJSON(LEMB_ADIADOS, {}); let mudou = false;
+    guardado.avisos.filter(a => a.origem === 'sw-adiado' && a.quando > agora).forEach(a => {
+      const [k, id] = String((a.dados && a.dados.item) || '').split(':');
+      if (k && +id && !adiados[a.chave]) { adiados[a.chave] = { k, id: +id, quando: a.quando }; mudou = true; }
+    });
+    if (mudou) gravarLocalJSON(LEMB_ADIADOS, adiados);
+    const lista = avisosParaPush(agora).map(avisoParaGuardar).filter(Boolean);
+    guardado.avisos.filter(a => a.origem === 'teste' && a.quando > agora - 15 * 60000).forEach(a => lista.push(a));
+
+    const reg = await swPronto(5000);
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub && Notification.permission === 'granted') sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64uParaBytes(serv.vapid) });
+    if (!sub) throw new Error('o navegador cancelou a permissão de aviso');
+    await idbAvisosGravar(lista, { url: serv.url, vapid: serv.vapid, id: est.id, segredo: est.segredo, endpoint: sub.endpoint, app: location.pathname });
+
+    const quandos = [...new Set(lista.filter(a => a.quando > agora - 60000).map(a => Math.floor(a.quando / 60000)))];
+    const res = await fetch(serv.url.replace(/\/$/, '') + '/v1/inscricao/' + est.id, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ segredo: est.segredo, endpoint: sub.endpoint, quandos }) });
+    if (!res.ok) throw new Error('o serviço respondeu ' + res.status);
+    gravarLocalJSON('push:v1', Object.assign(estadoPush() || est, { sincronizadoEm: Date.now(), qtd: lista.filter(a => a.origem !== 'teste').length, erro: null }));
+    return true;
+  } catch (e) {
+    const atual = estadoPush();
+    if (atual) gravarLocalJSON('push:v1', Object.assign(atual, { erro: navigator.onLine === false ? 'sem internet' : String((e && e.message) || e).slice(0, 80) }));
+    return false;
+  } finally {
+    if (viewAtual === 'mais' || document.getElementById('agenda-cfg')) renderAgendaCfg();
+  }
+}
+
+// ---------- ligar, testar, desligar ----------
+async function ligarPush() {
+  const serv = servicoPush();
+  if (!serv) return showToastErr('O serviço de avisos ainda não está no ar.');
+  if (!pushSuportado()) return showToastErr(iphoneSemInstalar() ? 'No iPhone, ponha o app na tela de início e abra por lá.' : 'Este navegador não recebe aviso com o app fechado.');
+  const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+  if (perm !== 'granted') { renderAgendaCfg(); return showToastErr('Sem permissão de notificação, o aviso com o app fechado não liga.'); }
+  try {
+    const reg = await swPronto(5000);
+    let sub = await reg.pushManager.getSubscription();
+    const chave = b64uParaBytes(serv.vapid);
+    if (sub && sub.options && sub.options.applicationServerKey && bytesParaB64u(sub.options.applicationServerKey) !== bytesParaB64u(chave)) { await sub.unsubscribe(); sub = null; }
+    if (!sub) await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: chave });
+  } catch (e) {
+    renderAgendaCfg();
+    return showToastErr('Não consegui ligar neste navegador (' + String((e && e.message) || e).slice(0, 60) + ').');
+  }
+  // id e segredo sorteados aqui; o serviço guarda só o hash do segredo
+  if (!estadoPush()) gravarLocalJSON('push:v1', { id: bytesParaB64u(crypto.getRandomValues(new Uint8Array(18))), segredo: bytesParaB64u(crypto.getRandomValues(new Uint8Array(32))), ligadoEm: Date.now() });
+  const foi = await sincronizarPush();
+  renderAgendaCfg();
+  if (foi) showToast('Aviso com o app fechado ligado.', { label: 'Testar', fn: testarPush });
+  else showToastErr('Ligado aqui, mas o serviço não respondeu. Tento de novo quando tiver internet.');
+}
+async function testarPush() {
+  if (!estadoPush()) return;
+  const agora = Date.now(), quando = Math.ceil((agora + 45000) / 60000) * 60000;
+  const teste = { chave: 'teste:' + agora, quando, especial: 'teste', titulo: 'Teste do aviso com o app fechado',
+    corpo: 'Chegou. Os lembretes da agenda chegam assim.', tag: 'lemb:teste', dados: { url: location.pathname, item: 'teste' }, acoes: [], origem: 'teste' };
+  try { const g = await idbAvisosLer(); await idbAvisosGravar(g.avisos.concat(teste), g.cfg); }
+  catch (e) { return showToastErr('Não consegui preparar o teste neste navegador.'); }
+  if (await sincronizarPush()) showToast('Feche o app agora. O teste chega perto das ' + hhmmDe(quando) + '.');
+  else showToastErr('O serviço não respondeu, então o teste não sai. Confira a internet.');
+}
+async function desligarPush(silencioso) {
+  const est = estadoPush(), serv = servicoPush();
+  let apagouLa = !est;
+  if (est && serv) {
+    try {
+      const ctl = new AbortController(); setTimeout(() => ctl.abort(), 4000);
+      const res = await fetch(serv.url.replace(/\/$/, '') + '/v1/inscricao/' + est.id, { method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ segredo: est.segredo }), signal: ctl.signal });
+      apagouLa = res.ok;
+    } catch (e) { /* o serviço apaga sozinho depois de 60 dias sem sincronizar */ }
+  }
+  try { const reg = await swPronto(3000); const sub = await reg.pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) { /* segue */ }
+  try { await limparIdbAvisos(true); } catch (e) { /* segue */ }
+  try { localStorage.removeItem('push:v1'); } catch (e) { /* segue */ }
+  if (silencioso) return apagouLa;
+  renderAgendaCfg();
+  if (apagouLa) showToast('Desligado. O serviço apagou os horários deste aparelho.');
+  else showToast('Desligado aqui. Sem internet, o serviço apaga os horários sozinho em até 60 dias.');
+  return apagouLa;
+}
+// o push chegou com o app na frente: o worker não mostra, quem mostra é o app
+function receberAvisosPush(lista) {
+  verificarLembretes();
+  const testes = lista.filter(a => String(a.chave).startsWith('teste:'));
+  testes.forEach(a => showToast(a.titulo + ' · ' + a.corpo));
+  marcarMostradoPush(testes.map(a => a.chave));
+}
+
+function blocoPushHTML() {
+  const serv = servicoPush(), est = estadoPush();
+  let corpo;
+  if (!serv) corpo = `<p class="muted" style="margin:0">O serviço que acorda o celular com o app fechado ainda não está no ar. Até lá, o aviso garantido é o da agenda do celular: em cada compromisso, Lembrete › Pôr na agenda do celular.</p>`;
+  else if (!pushSuportado()) corpo = `<p class="muted" style="margin:0">${iphoneSemInstalar() ? 'No iPhone, esse aviso só funciona com o app na tela de início: Compartilhar › Adicionar à Tela de Início, e abrir por lá.' : 'Este navegador não recebe aviso com o app fechado.'} Pra garantir, use Lembrete › Pôr na agenda do celular.</p>`;
+  else if (!est) corpo = `<p style="margin:0 0 var(--s2)">Um serviço mínimo acorda o celular na hora de cada lembrete, da hora de sair e do resumo de amanhã, mesmo com o app fechado. O texto do aviso é montado aqui no celular.</p>
+      <p class="muted" style="margin:0 0 var(--s2)">Vai pro serviço só o endereço de aviso deste navegador e os horários. Nenhum nome, título, lugar ou telefone. Desligar apaga tudo lá.</p>
+      <button class="btn btn--sm btn--primary btn--block" onclick="ligarPush()">${ico('sino')}Ligar aviso com o app fechado</button>`;
+  else corpo = `<p style="margin:0 0 var(--s2)"><b>Ligado.</b> ${est.sincronizadoEm ? 'Horários enviados ' + momentoFalado(est.sincronizadoEm) + ': ' + plural(est.qtd || 0, 'aviso', 'avisos') + ' nos próximos ' + PUSH_DIAS + ' dias.' : 'Esperando internet pra enviar os horários.'}</p>
+      ${est.erro ? `<p class="muted" style="margin:0 0 var(--s2)">A última tentativa falhou: ${esc(est.erro)}. Tento de novo sozinho.</p>` : ''}
+      ${Notification.permission !== 'granted' ? `<p class="muted" style="margin:0 0 var(--s2)">A permissão de notificação foi tirada nas configurações do navegador. Sem ela, o aviso não aparece.</p>` : ''}
+      <p class="muted" style="margin:0 0 var(--s2)">Abra o app pelo menos uma vez a cada ${PUSH_DIAS} dias: é quando ele manda os horários seguintes.</p>
+      <div class="btn-row"><button class="btn btn--sm btn--grow" onclick="testarPush()">${ico('sino')}Testar</button><button class="btn btn--sm btn--grow" onclick="desligarPush()">Desligar</button></div>`;
+  return `<div class="eyebrow" style="color:var(--text-3);margin:var(--s2) 0 var(--s1)">Aviso com o app fechado</div><div class="card card--sunken" style="margin-bottom:var(--s2)">${corpo}</div>`;
+}
+
+// abrir o app, voltar pra ele e a internet voltar mandam os horários de novo
+(function esperarBancoPush(n) {
+  if (typeof db !== 'undefined' && db) { if (estadoPush()) agendarSyncPush(3000); return; }
+  if (n < 240) setTimeout(() => esperarBancoPush(n + 1), 500);
+})(0);
+window.addEventListener('online', () => { const e = estadoPush(); if (e && (e.erro || !e.sincronizadoEm)) agendarSyncPush(1000); });
+document.addEventListener('visibilitychange', () => {
+  const e = estadoPush();
+  if (document.visibilityState === 'visible' && e && Date.now() - (e.sincronizadoEm || 0) > 3 * 3600000) agendarSyncPush(1500);
+});
+setInterval(() => { if (estadoPush()) agendarSyncPush(0); }, 6 * 3600000);
+
 
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();

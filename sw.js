@@ -18,7 +18,8 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v16';  // v16: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)
+const CACHE = 'ohubimob-campo-v17';  // v17: agenda C3 — aviso com o app fechado (push por um serviço mínimo, camada 3)
+// v16 anterior: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)
 // v15 anterior: agenda nova (compromissos, pessoas, favorito, visões, lembretes, .ics), imóvel com CEP e posição conferida, busca em tudo
 // v14 anterior: design system DS 3 (visual Leve: tinta + rosa-ipê, Atkinson Hyperlegible Next), Perto como alternativa em Mais
 // v13 anterior: Interações com humor e sinais; qualificação de lead e captação com motivos e o que falta saber
@@ -140,11 +141,89 @@ self.addEventListener('fetch', event => {
   );
 });
 
+// ---------- avisos com o app fechado (lote C3, rodada 36) ----------
+// O serviço mínimo (push-servico/) guarda só o endereço de push e os MINUTOS com aviso — nunca
+// texto. Ele manda um push VAZIO na hora; o texto (já pronto, sem telefone, montado pela página
+// com antecedência) mora aqui no aparelho, neste IndexedDB, que a página também escreve.
+const IDB_AVISOS = 'ohubimob-avisos';
+function abrirIdbAvisosSw() {
+  return new Promise((ok, falha) => {
+    const r = indexedDB.open(IDB_AVISOS, 1);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      if (!d.objectStoreNames.contains('avisos')) d.createObjectStore('avisos', { keyPath: 'chave' });
+      if (!d.objectStoreNames.contains('mostrados')) d.createObjectStore('mostrados');
+      if (!d.objectStoreNames.contains('estado')) d.createObjectStore('estado');
+    };
+    r.onsuccess = () => ok(r.result); r.onerror = () => falha(r.error);
+  });
+}
+function idbPedidoSw(r) { return new Promise((ok, falha) => { r.onsuccess = () => ok(r.result); r.onerror = () => falha(r.error); }); }
+function idbFimSw(tx) { return new Promise((ok, falha) => { tx.oncomplete = () => ok(); tx.onerror = tx.onabort = () => falha(tx.error); }); }
+
+self.addEventListener('push', event => {
+  event.waitUntil((async () => {
+    const agora = Date.now();
+    let avisos = [];
+    try {
+      const d = await abrirIdbAvisosSw();
+      try { avisos = (await idbPedidoSw(d.transaction('avisos').objectStore('avisos').getAll())) || []; } finally { d.close(); }
+    } catch (e) { /* sem IndexedDB legível, mostra o aviso genérico abaixo */ }
+    // "vencido há mais de 15 min não ajuda" é a mesma régua da camada 1 (verificarLembretes)
+    const devidos = avisos.filter(a => a.quando <= agora + 30000 && a.quando > agora - 15 * 60000).sort((a, b) => a.quando - b.quando).slice(0, 3);
+    if (!devidos.length) {
+      // o navegador exige que todo push mostre alguma notificação, mesmo sem nada vencido agora
+      await self.registration.showNotification('OHubImob Campo', { body: 'Abra o app pra ver a agenda.', tag: 'lemb:geral', icon: 'icon-192.png', badge: 'icon-192.png' });
+      return;
+    }
+    await Promise.all(devidos.map(a => self.registration.showNotification(a.titulo, { body: a.corpo || '', tag: a.tag || ('lemb:' + (a.dados && a.dados.item)),
+      renotify: true, icon: 'icon-192.png', badge: 'icon-192.png', data: a.dados, actions: a.acoes || [] })));
+    try {
+      const d = await abrirIdbAvisosSw();
+      try {
+        const tx = d.transaction(['avisos', 'mostrados'], 'readwrite'), s = tx.objectStore('avisos'), m = tx.objectStore('mostrados');
+        devidos.forEach(a => { s.delete(a.chave); m.put(agora, a.chave); });
+        await idbFimSw(tx);
+      } finally { d.close(); }
+    } catch (e) { /* na próxima sincronização a página resolve sozinha */ }
+  })());
+});
+
+// "Adiar 10 min" tocado sem nenhuma aba aberta: sem servidor não haveria como reagendar (o que
+// ficou registrado como limite do lote C1). Com o serviço, o worker reagenda direto — regrava o
+// horário local (10 min à frente) e manda o novo horário pro serviço, sem precisar abrir o app.
+async function adiarSemAba(dados) {
+  const item = String((dados && dados.item) || ''); if (!item || item === 'resumo') return;
+  const novoQuando = Date.now() + 10 * 60000;
+  let avisos = [], cfgSw = null;
+  try {
+    const d = await abrirIdbAvisosSw();
+    try {
+      const tx = d.transaction(['avisos', 'estado']);
+      [avisos, cfgSw] = await Promise.all([idbPedidoSw(tx.objectStore('avisos').getAll()), idbPedidoSw(tx.objectStore('estado').get('cfg'))]);
+    } finally { d.close(); }
+  } catch (e) { return; }
+  const registro = { chave: 'adiado:' + (dados.chave || item) + ':' + Date.now(), quando: novoQuando, especial: null, titulo: 'Lembrete adiado', corpo: '',
+    tag: 'lemb:' + item, dados: Object.assign({}, dados, { item }), acoes: [{ action: 'adiar', title: 'Adiar 10 min' }, { action: 'abrir', title: 'Abrir' }], origem: 'sw-adiado' };
+  try {
+    const d = await abrirIdbAvisosSw();
+    try { const tx = d.transaction('avisos', 'readwrite'); tx.objectStore('avisos').put(registro); await idbFimSw(tx); } finally { d.close(); }
+  } catch (e) { /* segue tentando avisar o serviço mesmo assim */ }
+  if (cfgSw && cfgSw.url && cfgSw.id && cfgSw.segredo && cfgSw.endpoint) {
+    try {
+      const futuros = avisos.filter(a => a.quando > Date.now()).map(a => Math.floor(a.quando / 60000));
+      const quandos = Array.from(new Set(futuros.concat(Math.floor(novoQuando / 60000))));
+      await fetch(cfgSw.url.replace(/\/$/, '') + '/v1/inscricao/' + cfgSw.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ segredo: cfgSw.segredo, endpoint: cfgSw.endpoint, quandos }) });
+    } catch (e) { /* sem internet agora: o adiamento local fica guardado, a página resolve quando abrir */ }
+  }
+}
+
 // Notificação "Visita em andamento" (lote B, B15). Tocar no corpo abre a visita; os botões
 // abrem a nota de voz ou o encerramento — nada grava sem um toque dentro do app.
 self.addEventListener('notificationclick', event => {
   // Lembrete da agenda (rodada 36): Adiar 10 min ou Abrir. Com o app aberto em alguma aba, ele
-  // resolve; sem aba, abre o app no item (ou já adiando).
+  // resolve; "Adiar" sem nenhuma aba é o próprio worker que reagenda (lote C3).
   const tag = event.notification.tag || '';
   if (tag.startsWith('lemb:')) {
     event.notification.close();
@@ -152,8 +231,9 @@ self.addEventListener('notificationclick', event => {
     event.waitUntil((async () => {
       const abas = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
       const aba = abas.find(a => new URL(a.url).pathname === new URL(destinoL, self.location.origin).pathname) || abas[0];
-      if (aba) { if (!adiar) await aba.focus(); aba.postMessage({ tipo: 'lembrete', acao: adiar ? 'adiar' : confirmar ? 'confirmar' : 'abrir', item: d.item, chave: d.chave }); }
-      else await self.clients.openWindow(destinoL + '?acao=agenda-item&item=' + encodeURIComponent(d.item || '') + (adiar ? '&adiar=' + encodeURIComponent(d.chave || '1') : '') + (confirmar ? '&confirmar=1' : ''));
+      if (aba) { if (!adiar) await aba.focus(); aba.postMessage({ tipo: 'lembrete', acao: adiar ? 'adiar' : confirmar ? 'confirmar' : 'abrir', item: d.item, chave: d.chave }); return; }
+      if (adiar) return adiarSemAba(d);
+      await self.clients.openWindow(destinoL + '?acao=agenda-item&item=' + encodeURIComponent(d.item || '') + (confirmar ? '&confirmar=1' : ''));
     })());
     return;
   }
