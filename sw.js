@@ -18,7 +18,8 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v17';  // v17: agenda C3 — aviso com o app fechado (push por um serviço mínimo, camada 3)
+const CACHE = 'ohubimob-campo-v18';  // v18: agenda C4 — arrastar pra remarcar, primeiro uso, transição de tela, ações em lote, ficha em imagem, o que levar
+// v17 anterior: agenda C3 — aviso com o app fechado (push por um serviço mínimo, camada 3)
 // v16 anterior: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)
 // v15 anterior: agenda nova (compromissos, pessoas, favorito, visões, lembretes, .ics), imóvel com CEP e posição conferida, busca em tudo
 // v14 anterior: design system DS 3 (visual Leve: tinta + rosa-ipê, Atkinson Hyperlegible Next), Perto como alternativa em Mais

@@ -929,6 +929,26 @@ a { color: inherit; text-decoration: none; }
   .tarefa__check { width: var(--tap); height: var(--tap); flex: none; border: 0; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
   .tarefa.is-feita .chk__box { background: var(--ok); border-color: var(--ok); color: var(--on-ok); }
   .tarefa.is-feita .row__t { text-decoration: line-through; color: var(--text-3); }
+
+  /* ======================= rodada 36 — agenda (lote C4) ======================= */
+  /* R4: arrastar pra remarcar — o toque simples continua abrindo; só o arrasto de verdade
+     eleva o bloco. touch-action:none deixa o dedo controlar o arrasto em vez do navegador
+     tentar rolar a tela quando o toque começa em cima de um compromisso. */
+  .ag-bloco__main { touch-action: none; }
+  .ag-bloco.is-arrastando { z-index: 5; box-shadow: var(--shadow-2, 0 6px 20px rgba(0,0,0,0.35)); opacity: 0.97; }
+  .ag-drag-rotulo { position: absolute; left: 4px; background: var(--toast-bg); color: var(--toast-text); font-size: var(--t-xs);
+    font-weight: 600; padding: 2px 8px; border-radius: var(--r-xs); z-index: 6; pointer-events: none; font-variant-numeric: tabular-nums; }
+  .ag-bloco__remarcar { width: 32px; height: 32px; flex: none; align-self: center; }
+  /* R6: a troca de tela usa View Transitions quando o navegador tem; sem isso, corte seco de
+     sempre. A curta duração é o "curta" do plano — reduzir movimento nem chega a pedir isto,
+     porque o JS (reducedMotion()) já não liga a transição nesse caso. */
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 120ms; }
+  /* R7: barra fixa de ações em lote, acima da barra de abas — o mesmo lugar onde o toast some
+     quando alguém está selecionando, pra nunca disputar espaço com ele. */
+  .selecao-bar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(66px + env(safe-area-inset-bottom));
+    width: 100%; max-width: 560px; min-height: 56px; padding: var(--s2) var(--s4); box-sizing: border-box;
+    background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; gap: var(--s3); z-index: var(--z-bar); }
+  body.selecionando .fab { display: none; }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -1046,6 +1066,7 @@ a { color: inherit; text-decoration: none; }
       <div class="greet" id="hj-hello"></div>
       <span class="muted" id="hj-sum"></span>
       <div id="hj-backup"></div>
+      <div id="hj-onboarding"></div>
       <div id="hj-amanha"></div>
 
       <h2 class="blk-title">Próxima ação</h2>
@@ -1060,7 +1081,7 @@ a { color: inherit; text-decoration: none; }
 
       <div id="hj-tarefas"></div>
 
-      <h2 class="blk-title">Pendências <button class="jump" onclick="go('cr')">ver leads</button></h2>
+      <h2 class="blk-title" id="hj-pend-title">Pendências</h2>
       <div id="hj-followup"></div>
     </section>
 
@@ -1228,7 +1249,7 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
-      <h2 class="blk-title">Notas recentes</h2>
+      <h2 class="blk-title" id="nt-titulo">Notas recentes</h2>
       <div id="nt-list"></div>
     </section>
 
@@ -1688,7 +1709,9 @@ const SCHEMA_MIGRATIONS = [
   // Rodada 36 (lote C2) — compromissos que se repetem (ligados pela série), tarefas sem hora e mensagens prontas
   `ALTER TABLE compromisso ADD COLUMN serie_id INTEGER`,
   `CREATE TABLE IF NOT EXISTS tarefa (id INTEGER PRIMARY KEY AUTOINCREMENT, texto TEXT, data TEXT, feito_em TEXT, pessoa_tipo TEXT, pessoa_id INTEGER, imovel_id INTEGER, destaque INTEGER DEFAULT 0, criado_em TEXT)`,
-  `CREATE TABLE IF NOT EXISTS mensagem_pronta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, contexto TEXT, ordem INTEGER, padrao INTEGER DEFAULT 0)`
+  `CREATE TABLE IF NOT EXISTS mensagem_pronta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, contexto TEXT, ordem INTEGER, padrao INTEGER DEFAULT 0)`,
+  // Rodada 36 (lote C4) — modelo "o que levar" da vistoria, guardado por compromisso
+  `ALTER TABLE compromisso ADD COLUMN checklist TEXT`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -2132,13 +2155,24 @@ function go(v) {
   }
   if (v !== 'visita') { soltarTelaAcesa(); clearInterval(visitaTimer); visitaTimer = null; }
   viewAtual = v;
-  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + v));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === (cfg.tab || v)));
-  document.getElementById('top-title').textContent = cfg.t;
-  document.getElementById('top-back').hidden = !cfg.back;
-  document.getElementById('top-mark').hidden = !!cfg.back;
-  if (cfg.render) cfg.render();
-  document.getElementById('screen-body').scrollTop = 0;
+  const trocarTela = () => {
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('on', p.id === 'panel-' + v));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === (cfg.tab || v)));
+    document.getElementById('top-title').textContent = cfg.t;
+    document.getElementById('top-back').hidden = !cfg.back;
+    document.getElementById('top-mark').hidden = !!cfg.back;
+    if (cfg.render) cfg.render();
+    document.getElementById('screen-body').scrollTop = 0;
+  };
+  // R6: troca de tela curta em vez de corte seco — só quando o navegador suporta e a pessoa
+  // não pediu pra reduzir movimento; a duração fica curta no CSS (::view-transition-*).
+  // Trocar de tela de novo antes da transição acabar aborta a anterior — o Chrome rejeita
+  // a promise dela (InvalidStateError), sem isso virava erro solto no console.
+  if (typeof document.startViewTransition === 'function' && !reducedMotion()) {
+    const vt = document.startViewTransition(trocarTela);
+    if (vt && vt.ready && vt.ready.catch) vt.ready.catch(() => { /* abortada por uma troca mais nova */ });
+    if (vt && vt.finished && vt.finished.catch) vt.finished.catch(() => { /* idem */ });
+  } else trocarTela();
 }
 // a seta da barra usa o histórico: volta pra onde a pessoa estava, não pra um "pai" fixo
 function voltar() {
@@ -2565,7 +2599,7 @@ function limparRascunho() {
   rascunhoAtual = null;
 }
 function descartarRascunho() { limparRascunho(); closeSheet(); showToast('Rascunho descartado.'); }
-function cancelarForm() { if (guardarRascunho()) limparRascunho(); closeSheet(); }
+function cancelarForm() { window.__onboardingProximo = null; if (guardarRascunho()) limparRascunho(); closeSheet(); }
 ['input', 'change'].forEach(tipo => document.addEventListener(tipo, e => {
   if (rascunhoAtual && rascunhoAtual.raiz.contains(e.target)) guardarRascunho();
 }, true));
@@ -2634,6 +2668,7 @@ function salvarImovel(id) {
   closeSheet();
   renderVI(); renderCalcImovelSelect();
   showToast('Imóvel salvo.', { label: 'Abrir', fn: () => openDetail('imovel', novo) });
+  avancarOnboarding();
 }
 function salvarCliente() {
   const nome = val('fcli-nome');
@@ -2662,6 +2697,7 @@ function salvarVisita() {
   atualizarAgenda();
   showToast('Visita agendada.', { label: 'Abrir', fn: () => abrirVisita(id) });
   pedirAvisosUmaVez(lemb);
+  avancarOnboarding();
 }
 // posição do imóvel pela ficha: agora passa pela folha de posição (rodada 36)
 function capturarPosicaoImovel(id) { posicaoImovelSheet(id); }
@@ -3236,6 +3272,7 @@ function detailImovelHTML(id) {
         <button class="btn btn--ok btn--grow" onclick="compartilharImovel(${im.id})">${ico('compartilhar')}Compartilhar</button>
         <button class="btn btn--grow" onclick="compartilharImovel(${im.id}, 'copy')">${ico('copiar')}Copiar</button>
       </div>
+      <button class="btn btn--block" style="margin-top:var(--s2)" onclick="fichaImagemImovel(${im.id})">${ico('camera')}Mandar ficha (imagem)</button>
       <div class="btn-row" style="margin-top:var(--s2)">
         <button class="btn btn--grow" onclick="abrirMapaId(${im.id})">${ico('mapa')}Abrir no mapa</button>
         <button class="btn btn--grow" onclick="posicaoImovelSheet(${im.id})">${ico('rota')}${im.lat != null ? 'Trocar posição' : 'Marcar posição'}</button>
@@ -3674,6 +3711,7 @@ function pendenciasDoDia(leadsComVisita) {
   return out;
 }
 function renderHJ() {
+  renderOnboarding();
   document.getElementById('hj-hello').textContent = saudacao() + ', ' + nomeCorretor();
   const hoje = todayISO(0);
   // rodada 36: o Hoje lê a agenda inteira — visitas e compromissos
@@ -3729,13 +3767,25 @@ function renderHJ() {
 
   // prazo e canal descem pro subtítulo: à direita, o FAB cobria esse texto
   const MAX = 6;
+  document.getElementById('hj-pend-title').innerHTML = 'Pendências' + (restoPend.length
+    ? ` <button class="jump" onclick="go('cr')">ver leads</button> <button class="jump" onclick="toggleSelecaoPend()">${selecaoPend ? 'Cancelar' : 'Selecionar'}</button>`
+    : '');
+  if (selecaoPend) atualizarBarraPend();
   document.getElementById('hj-followup').innerHTML = restoPend.length
-    ? restoPend.slice(0, MAX).map(r => `<button class="card card--tap row" onclick="openDetail('lead', ${r._leadId})">
-        <span class="row__ico">${ico(r._tipo === 'seq' ? (canalAcao(r.canal) === 'ligar' ? 'telefone' : 'conversa') : 'pessoa')}</span>
-        <span class="row__main"><span class="row__t">${esc(r.lead_nome || r.nome)}</span>
-          <span class="row__s">${esc([r.proximo_passo || r.imovel_nome, r._quando].filter(Boolean).join(' · '))}</span></span>
-        ${ico('chevron', 'row__chev')}</button>`).join('') +
-      (restoPend.length > MAX ? `<button class="btn btn--ghost btn--block" onclick="pessoasTipo='lead';go('cr');renderCR()">Mais ${restoPend.length - MAX} em Pessoas</button>` : '')
+    ? restoPend.slice(0, MAX).map(r => {
+        const chave = r._tipo + ':' + (r._tipo === 'seq' ? r.id : r._leadId), marcado = selecaoPend && selecaoPend.has(chave);
+        return selecaoPend
+          ? `<button class="card card--tap row" onclick="alternarSelPend('${chave}')">
+              <span class="chk__box ${marcado ? 'is-feito' : ''}" style="margin-right:var(--s2)">${marcado ? ico('check', 'ic-sm') : ''}</span>
+              <span class="row__main"><span class="row__t">${esc(r.lead_nome || r.nome)}</span>
+                <span class="row__s">${esc([r.proximo_passo || r.imovel_nome, r._quando].filter(Boolean).join(' · '))}</span></span></button>`
+          : `<button class="card card--tap row" onclick="openDetail('lead', ${r._leadId})">
+              <span class="row__ico">${ico(r._tipo === 'seq' ? (canalAcao(r.canal) === 'ligar' ? 'telefone' : 'conversa') : 'pessoa')}</span>
+              <span class="row__main"><span class="row__t">${esc(r.lead_nome || r.nome)}</span>
+                <span class="row__s">${esc([r.proximo_passo || r.imovel_nome, r._quando].filter(Boolean).join(' · '))}</span></span>
+              ${ico('chevron', 'row__chev')}</button>`;
+      }).join('') +
+      (!selecaoPend && restoPend.length > MAX ? `<button class="btn btn--ghost btn--block" onclick="pessoasTipo='lead';go('cr');renderCR()">Mais ${restoPend.length - MAX} em Pessoas</button>` : '')
     : `<div class="empty">${ico('check')}<p>Nada vencendo agora.</p></div>`;
 }
 
@@ -3889,8 +3939,19 @@ function notaCardHTML(n) {
 }
 function renderNT() {
   const rows = q(`SELECT * FROM nota ORDER BY criado_em DESC, id DESC LIMIT 20`);
-  document.getElementById('nt-list').innerHTML = rows.length ? rows.map(notaCardHTML).join('')
+  const titulo = document.getElementById('nt-titulo');
+  if (titulo) titulo.innerHTML = 'Notas recentes' + (rows.length ? ` <button class="jump" onclick="toggleSelecaoNotas()">${selecaoNotas ? 'Cancelar' : 'Selecionar'}</button>` : '');
+  if (selecaoNotas) atualizarBarraNotas();
+  document.getElementById('nt-list').innerHTML = rows.length
+    ? rows.map(n => selecaoNotas ? notaCardSelecaoHTML(n) : notaCardHTML(n)).join('')
     : `<div class="empty">${ico('mic')}<p>Nenhuma nota ainda.</p></div>`;
+}
+function notaCardSelecaoHTML(n) {
+  const marcado = selecaoNotas.has(n.id), ic = { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo';
+  return `<button class="card card--tap row" onclick="alternarSelNota(${n.id})">
+    <span class="chk__box ${marcado ? 'is-feito' : ''}" style="margin-right:var(--s2)">${marcado ? ico('check', 'ic-sm') : ''}</span>
+    <span class="row__main"><span class="row__t">${ico(ic, 'ic-sm')} ${esc(n.referencia || n.contexto || 'Nota')}</span>
+      <span class="row__s">${esc(n.texto || '')}</span></span></button>`;
 }
 
 // ---------- render: ARQUIVOS ----------
@@ -4715,7 +4776,8 @@ function avisoAnuncio(im, mode) {
 function registrarAutorizacao(id, continuar) {
   run('UPDATE imovel SET autorizacao_em=? WHERE id=?', [todayISO(0), id]);
   renderVI();
-  if (continuar) { closeSheet(); compartilharImovel(id, continuar === 'share' ? undefined : continuar); }
+  if (continuar === 'ficha') { closeSheet(); fichaImagemImovel(id); }
+  else if (continuar) { closeSheet(); compartilharImovel(id, continuar === 'share' ? undefined : continuar); }
   else openDetail('imovel', id);
   showToast('Autorização registrada.', { label: 'Desfazer', fn: () => { run('UPDATE imovel SET autorizacao_em=NULL WHERE id=?', [id]); renderVI(); } });
 }
@@ -5653,11 +5715,14 @@ function checklistDe(id) {
   const itens = CHECKLIST_VENDA.map(item => ({ item, r: por[item] }));
   return { itens, feitos: itens.filter(x => x.r && x.r.feito_em).length, total: itens.length };
 }
-function checklistHTML(id, c) {
+// ctx: quando a checklist é embutida em outra tela (rodada 36, C4: "o que levar" do
+// compromisso de cartório), 'comp:<id>' redesenha essa tela em vez de reabrir o imóvel.
+function checklistHTML(id, c, ctx) {
+  const ctxAttr = ctx ? ", '" + ctx + "'" : '';
   return `<div class="card">${c.itens.map((x, i) => {
     const feito = !!(x.r && x.r.feito_em);
     return `<div class="chk ${feito ? 'is-feito' : ''}">
-      <button class="chk__main" aria-pressed="${feito}" onclick="marcarChecklist(${id}, ${i})"><span class="chk__box">${feito ? ico('check', 'ic-sm') : ''}</span><span class="chk__t">${esc(x.item)}</span></button>
+      <button class="chk__main" aria-pressed="${feito}" onclick="marcarChecklist(${id}, ${i}${ctxAttr})"><span class="chk__box">${feito ? ico('check', 'ic-sm') : ''}</span><span class="chk__t">${esc(x.item)}</span></button>
       ${x.r && x.r.documento_id
         ? `<button class="btn btn--sm btn--icon btn--ghost" onclick="openDetail('arquivo', ${x.r.documento_id})" aria-label="Ver a foto: ${esc(x.item)}">${ico('arquivo')}</button>`
         : `<button class="btn btn--sm btn--icon btn--ghost" onclick="document.getElementById('chk-cam-${id}-${i}').click()" aria-label="Fotografar: ${esc(x.item)}">${ico('camera')}</button>
@@ -5665,12 +5730,13 @@ function checklistHTML(id, c) {
     </div>`;
   }).join('')}</div>`;
 }
-function marcarChecklist(imovelId, i) {
+function marcarChecklist(imovelId, i, ctx) {
   const item = CHECKLIST_VENDA[i];
   const r = q('SELECT * FROM checklist_item WHERE imovel_id=? AND item=?', [imovelId, item])[0];
   if (r) run('UPDATE checklist_item SET feito_em=? WHERE id=?', [r.feito_em ? null : agoraISO(), r.id]);
   else run('INSERT INTO checklist_item (imovel_id, item, feito_em) VALUES (?,?,?)', [imovelId, item, agoraISO()]);
-  renderCART(); reabrirDetalhe('imovel', imovelId);
+  renderCART();
+  if (ctx && ctx.indexOf('comp:') === 0) redesenharCompromisso(+ctx.slice(5)); else reabrirDetalhe('imovel', imovelId);
 }
 async function fotografarChecklist(imovelId, i, input) {
   const f = input.files && input.files[0]; if (!f) return;
@@ -6217,16 +6283,17 @@ function agDiaHTML(ymd) {
   const blocos = ordem.map(it => {
     const s = minDe(it.hora), alt = Math.max(44, it.dur * PX - 3);
     const quem = it.pessoas.map(p => p.nome.split(' ')[0]).join(', ');
-    return `<div class="ag-bloco ${it.cancelado ? 'is-cancelado' : ''} ${!it.aberto ? 'is-fechado' : ''}" data-cor="${it.destaque}"
+    return `<div class="ag-bloco ${it.cancelado ? 'is-cancelado' : ''} ${!it.aberto ? 'is-fechado' : ''}" data-cor="${it.destaque}" data-k="${it.k}" data-id="${it.id}"
         style="top:${(s - H0) * PX + 1}px;height:${alt}px;left:calc(52px + (100% - 52px) * ${it._raia} / ${it._n});width:calc((100% - 52px) / ${it._n} - 4px)">
-      <button class="ag-bloco__main" onclick="abrirItemAgenda('${it.k}', ${it.id})"><b>${esc(it.hora)}</b> ${esc(it.titulo)}${quem || it.local ? `<span>${esc([quem, it.k === 'compromisso' ? it.local : it.bairro].filter(Boolean).join(' · '))}</span>` : ''}</button>
+      <button class="ag-bloco__main" onpointerdown="agBlocoPointerDown(event, '${it.k}', ${it.id})" onclick="abrirItemAgenda('${it.k}', ${it.id})"><b>${esc(it.hora)}</b> ${esc(it.titulo)}${quem || it.local ? `<span>${esc([quem, it.k === 'compromisso' ? it.local : it.bairro].filter(Boolean).join(' · '))}</span>` : ''}</button>
+      ${it.aberto ? `<button class="btn btn--icon btn--ghost ag-bloco__remarcar" onclick="${it.k === 'visita' ? 'remarcarVisitaSheet' : 'remarcarCompromissoSheet'}(${it.id})" aria-label="Remarcar">${ico('agenda', 'ic-sm')}</button>` : ''}
       ${estrelaHTML(it.k, it.id, it.destaque)}</div>`;
   }).join('');
   const n = new Date(), agoraMin = n.getHours() * 60 + n.getMinutes();
   const agora = ymd === hoje && agoraMin >= H0 && agoraMin <= H1 ? `<div class="ag-agora" style="top:${(agoraMin - H0) * PX}px" aria-hidden="true"></div>` : '';
   return (semHora.length || follow.length || tarefas.length ? `<h2 class="blk-title">Sem hora</h2>` + semHora.map(it => cartaoItemAgenda(it)).join('') + tarefas.map(tarefaHTML).join('') + follow.map(linhaFollowUpHTML).join('') : '')
     + (comHora.length ? '' : `<p class="muted" style="margin:var(--s2) 0">${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Dia livre. Toque num horário pra marcar.'}</p>`)
-    + `<div class="ag-dia" style="height:${(H1 - H0) * PX}px">${horas}${blocos}${agora}</div>`;
+    + `<div class="ag-dia" style="height:${(H1 - H0) * PX}px" data-h0="${H0}" data-px="${PX}">${horas}${blocos}${agora}</div>`;
 }
 function agSemanaHTML(ymd) {
   const hoje = todayISO(0), ini = inicioSemana(ymd), fim = somarDias(ini, 6);
@@ -6521,6 +6588,7 @@ function compromissoHTML(id) {
       ${it.aberto ? linhaCampo('Lembretes', `${esc(textoLembretes(it.lembretes))} <button class="link" onclick="lembreteItemSheet('compromisso', ${id})">trocar</button>`) : ''}
       ${c.resultado ? linhaCampo('Como foi', esc(c.resultado)) : ''}
     </div>
+    ${it.aberto ? modeloOQueLevarHTML(it) : ''}
     ${it.aberto ? `
       <button class="btn btn--primary btn--block" onclick="concluirCompromissoSheet(${id})">${ico('check')}${passou ? 'Como foi?' : 'Concluir'}</button>
       <div class="acoes-3" style="margin-top:var(--s2)">
@@ -8268,6 +8336,316 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && e && Date.now() - (e.sincronizadoEm || 0) > 3 * 3600000) agendarSyncPush(1500);
 });
 setInterval(() => { if (estadoPush()) agendarSyncPush(0); }, 6 * 3600000);
+
+
+// ============================================================================================
+// AGENDA — lote C4 (rodada 36, plano-agenda-campo.md §6 e §4.F): R4 a R8 e modelos por tipo
+// ============================================================================================
+
+// ---------- R6: transição curta entre telas, respeitando "reduzir movimento" ----------
+function reducedMotion() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+
+// ---------- R4: arrastar pra remarcar na visão Dia, sempre com o botão Remarcar ao lado ----------
+// O toque simples continua abrindo o item (onclick do .ag-bloco__main); só quando o dedo se
+// move mais que um tranco é que vira arrasto — assim ninguém remarca sem querer só tocando.
+let arrastoAg = null;
+function agBlocoPointerDown(ev, k, id) {
+  if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+  const bloco = ev.currentTarget.closest('.ag-bloco'), painel = document.querySelector('.ag-dia');
+  if (!bloco || !painel) return;
+  const it = itemAgenda(k, id); if (!it || it.diaInteiro || !it.aberto) return;
+  arrastoAg = { k, id, pid: ev.pointerId, y0: ev.clientY, top0: bloco.offsetTop,
+    H0: +painel.dataset.h0, PX: +painel.dataset.px, dur: it.dur, horaOrig: it.hora, bloco, painel, arrastando: false, novaHora: it.hora };
+}
+function agBlocoPointerMove(ev) {
+  if (!arrastoAg || ev.pointerId !== arrastoAg.pid) return;
+  const a = arrastoAg, dy = ev.clientY - a.y0;
+  if (!a.arrastando) {
+    if (Math.abs(dy) < 8) return;
+    a.arrastando = true; a.bloco.classList.add('is-arrastando');
+    try { a.bloco.setPointerCapture(a.pid); } catch (e) { /* ok */ }
+  }
+  ev.preventDefault();
+  const minRaw = a.H0 + (a.top0 + dy) / a.PX, snap = Math.round(minRaw / 15) * 15;
+  a.novaHora = hhmm(Math.max(0, Math.min(1439 - a.dur, snap)));
+  const novoTop = (minDe(a.novaHora) - a.H0) * a.PX;
+  a.bloco.style.top = novoTop + 'px';
+  let rot = a.painel.querySelector('.ag-drag-rotulo');
+  if (!rot) { rot = document.createElement('div'); rot.className = 'ag-drag-rotulo'; a.painel.appendChild(rot); }
+  rot.textContent = a.novaHora; rot.style.top = Math.max(0, novoTop - 30) + 'px';
+}
+function agBlocoPointerUp(ev) {
+  if (!arrastoAg || ev.pointerId !== arrastoAg.pid) return;
+  const a = arrastoAg; arrastoAg = null;
+  a.bloco.classList.remove('is-arrastando');
+  const rot = a.painel.querySelector('.ag-drag-rotulo'); if (rot) rot.remove();
+  if (!a.arrastando) return; // toque simples: o onclick do próprio botão cuida de abrir
+  if (a.novaHora !== a.horaOrig) arrastarRemarcar(a.k, a.id, a.novaHora);
+  else renderAGSemRolar();
+}
+function arrastarRemarcar(k, id, novaHora) {
+  const it = itemAgenda(k, id); if (!it) return;
+  const avisos = conflitosDe({ data: it.data, hora: novaHora, dur: it.dur, lat: it.lat, lng: it.lng }, { k, id });
+  const antes = it.hora;
+  const gravar = h => { if (k === 'visita') run(`UPDATE visita SET hora=? WHERE id=?`, [h, id]); else run(`UPDATE compromisso SET hora=? WHERE id=?`, [h, id]); };
+  const efetivar = () => {
+    gravar(novaHora); vibrar(); atualizarAgenda();
+    showToast('Remarcado pra ' + novaHora + '.', { label: 'Desfazer', fn: () => { gravar(antes); atualizarAgenda(); } });
+  };
+  if (avisos.length) showToast(avisos[0] + ' Remarcar mesmo assim?', { label: 'Remarcar', fn: efetivar }, true);
+  else efetivar();
+}
+// o pointerdown começa no botão (onpointerdown inline); capturado, o próprio arrasto pode
+// sair da área do bloco, então move/up ficam num ouvinte só, sempre vivo, quase de graça
+// (retornam na hora quando não há arrasto em curso).
+window.addEventListener('pointermove', agBlocoPointerMove);
+window.addEventListener('pointerup', agBlocoPointerUp);
+window.addEventListener('pointercancel', agBlocoPointerUp);
+
+// ---------- R5: primeiro uso em 3 passos + apagar os dados de exemplo ----------
+// "dados:alterado" só existe depois da primeira gravação de verdade (marcarAlteracao, fora
+// da semente) — enquanto não existir, o banco ainda é 100% o exemplo.
+function precisaOnboarding() {
+  try { return !localStorage.getItem('dados:alterado') && !localStorage.getItem('onboarding:dispensado') && !localStorage.getItem('onboarding:feito'); }
+  catch (e) { return false; }
+}
+function renderOnboarding() {
+  const box = document.getElementById('hj-onboarding'); if (!box) return;
+  box.innerHTML = precisaOnboarding() ? `<div class="card card--accent" role="status" style="margin-top:var(--s2)">
+      <b>Isto é um exemplo.</b>
+      <p class="muted" style="margin:var(--s1) 0 var(--s2)">Portfólio, pessoas e agenda de mentira, só pra você conhecer o app. Quando estiver pronto, comece com os seus dados.</p>
+      <div class="btn-row">
+        <button class="btn btn--sm btn--primary btn--grow" onclick="iniciarOnboarding()">${ico('somar')}Começar com meus dados</button>
+        <button class="btn btn--sm btn--grow" onclick="dispensarOnboarding()">Agora não</button>
+      </div></div>` : '';
+}
+function dispensarOnboarding() { try { localStorage.setItem('onboarding:dispensado', '1'); } catch (e) { /* ok */ } renderOnboarding(); }
+function iniciarOnboarding() {
+  confirmar('Apagar os dados de exemplo?',
+    'Troca o portfólio, as pessoas, a agenda e as notas de exemplo pelos seus dados reais. Seu perfil e as mensagens prontas continuam do jeito que estão. Não dá pra desfazer — exporte antes se quiser guardar os exemplos.',
+    'Começar do zero', zerarExemplos, { exportar: true });
+}
+const TABELAS_EXEMPLO = ['visita', 'compromisso', 'agenda_pessoa', 'tarefa', 'nota', 'lead', 'captacao_lp', 'cliente',
+  'imovel', 'imovel_foto', 'checklist_item', 'interacao', 'qualificacao_resposta', 'sequencia_contato', 'documento_carteira', 'lixeira'];
+function zerarExemplos() {
+  try {
+    db.run('BEGIN');
+    TABELAS_EXEMPLO.forEach(t => db.run(`DELETE FROM ${t}`));
+    db.run('COMMIT');
+  } catch (e) {
+    try { db.run('ROLLBACK'); } catch (_) { /* ok */ }
+    return showToastErr('Não consegui limpar: ' + (e.message || e));
+  }
+  persist();
+  try {
+    localStorage.setItem('onboarding:feito', '1');
+    Object.keys(localStorage).filter(k => /^(confirmado|lembrete:(disparados|adiados)):/.test(k)).forEach(k => localStorage.removeItem(k));
+  } catch (e) { /* ok */ }
+  agendarSyncPush(1000);
+  renderAll();
+  onboardingSheet(1);
+}
+function onboardingSheet(passo) {
+  if (passo === 1) {
+    openSheet(`<h2 class="sheet__title" id="sheet-title">Vamos começar</h2>
+      <p class="muted" style="margin:0 0 var(--s3)">Passo 1 de 3 · seu nome e CRECI aparecem nas mensagens e nos anúncios.</p>
+      <div class="field"><label for="ob-nome">Seu nome</label><input id="ob-nome" autocomplete="off" autocapitalize="words" value="${esc(nomeCompletoCorretor())}"></div>
+      <div class="field"><label for="ob-creci">Número do CRECI</label><input id="ob-creci" autocomplete="off" placeholder="Ex.: 00000-F" value="${esc(cfg('creci'))}"></div>
+      <button class="btn btn--primary btn--block" onclick="onboardingPasso1()">${ico('chevron')}Continuar</button>
+      <button class="btn btn--block sheet__close" onclick="closeSheet()">Fazer depois</button>`, { foco: false, chave: 'onboarding:1' });
+    return;
+  }
+  if (passo === 2) {
+    openSheet(`<h2 class="sheet__title" id="sheet-title">Seu primeiro imóvel</h2>
+      <p class="muted" style="margin:0 0 var(--s3)">Passo 2 de 3 · o CEP preenche o endereço sozinho.</p>
+      <button class="btn btn--primary btn--block" onclick="onboardingIrPara('imovel')">${ico('somar')}Cadastrar imóvel</button>
+      <button class="btn btn--block sheet__close" onclick="onboardingSheet(3)">Pular esta etapa</button>`, { foco: false, chave: 'onboarding:2' });
+    return;
+  }
+  if (passo === 3) {
+    openSheet(`<h2 class="sheet__title" id="sheet-title">Sua primeira visita</h2>
+      <p class="muted" style="margin:0 0 var(--s3)">Passo 3 de 3 · marque uma visita de verdade e pronto.</p>
+      <button class="btn btn--primary btn--block" onclick="onboardingIrPara('visita')">${ico('somar')}Marcar visita</button>
+      <button class="btn btn--block sheet__close" onclick="onboardingConcluir()">Terminar depois</button>`, { foco: false, chave: 'onboarding:3' });
+  }
+}
+function onboardingPasso1() {
+  const nome = val('ob-nome'); if (!nome) return erroCampo('ob-nome', 'Escreva seu nome.');
+  setCfg('corretor_nome', nome); setCfg('creci', val('ob-creci'));
+  renderPerfil(); renderHJ();
+  closeSheet();
+  onboardingSheet(2);
+}
+function onboardingIrPara(tipo) {
+  closeSheet();
+  window.__onboardingProximo = tipo === 'imovel' ? 3 : 'fim';
+  setTimeout(() => openForm(tipo), 250);
+}
+function onboardingConcluir() {
+  try { localStorage.setItem('onboarding:feito', '1'); } catch (e) { /* ok */ }
+  renderOnboarding();
+  showToast('Pronto. "Criar" continua com você quando precisar.');
+}
+// chamado no fim de salvarImovel (inserção nova) e salvarVisita
+function avancarOnboarding() {
+  const alvo = window.__onboardingProximo; if (!alvo) return;
+  window.__onboardingProximo = null;
+  setTimeout(() => { if (alvo === 'fim') onboardingConcluir(); else onboardingSheet(alvo); }, 300);
+}
+
+// ---------- R7: ações em lote — marcar vários follow-ups como feitos, apagar várias notas ----------
+function renderBarraSelecao() {
+  const cfgSel = window.__selecaoAtiva;
+  let bar = document.getElementById('selecao-bar');
+  if (!cfgSel) { if (bar) bar.remove(); document.body.classList.remove('selecionando'); return; }
+  document.body.classList.add('selecionando');
+  if (!bar) { bar = document.createElement('div'); bar.id = 'selecao-bar'; bar.className = 'selecao-bar'; document.body.appendChild(bar); }
+  bar.innerHTML = `<span class="num">${plural(cfgSel.n, 'selecionado', 'selecionados')}</span>
+    <div class="btn-row" style="margin-left:auto">
+      <button class="btn btn--sm" onclick="${cfgSel.onCancelar}">Cancelar</button>
+      <button class="btn btn--sm btn--primary" ${cfgSel.n ? '' : 'disabled'} onclick="${cfgSel.onConfirmar}">${cfgSel.rotulo}</button>
+    </div>`;
+}
+// -- Hoje: pendências (follow-up) --
+let selecaoPend = null;
+function toggleSelecaoPend() { selecaoPend = selecaoPend ? null : new Set(); atualizarBarraPend(); renderHJ(); }
+function atualizarBarraPend() {
+  window.__selecaoAtiva = selecaoPend ? { n: selecaoPend.size, rotulo: 'Marcar feitos', onConfirmar: 'marcarSelecionadosFeitos()', onCancelar: 'toggleSelecaoPend()' } : null;
+  renderBarraSelecao();
+}
+function alternarSelPend(chave) { if (!selecaoPend) return; if (selecaoPend.has(chave)) selecaoPend.delete(chave); else selecaoPend.add(chave); atualizarBarraPend(); renderHJ(); }
+function marcarSelecionadosFeitos() {
+  if (!selecaoPend || !selecaoPend.size) return;
+  const desfazeres = [...selecaoPend].map(chave => {
+    const [tipo, idTxt] = chave.split(':'), id = +idTxt;
+    if (tipo === 'seq') { run(`UPDATE sequencia_contato SET status='feito' WHERE id=?`, [id]); return () => run(`UPDATE sequencia_contato SET status='agendado' WHERE id=?`, [id]); }
+    const novo = insertAndGetId(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,'agendado',?)`, [id, 2, 'WhatsApp', 'Retomar contato', todayISO(2)]);
+    return () => run(`DELETE FROM sequencia_contato WHERE id=?`, [novo]);
+  });
+  const n = desfazeres.length;
+  selecaoPend = null; atualizarBarraPend();
+  vibrar(); renderHJ();
+  showToast(plural(n, 'follow-up feito', 'follow-ups feitos') + '.', { label: 'Desfazer', fn: () => { desfazeres.forEach(f => f()); renderHJ(); } });
+}
+// -- Notas: apagar várias --
+let selecaoNotas = null;
+function toggleSelecaoNotas() { selecaoNotas = selecaoNotas ? null : new Set(); atualizarBarraNotas(); renderNT(); }
+function atualizarBarraNotas() {
+  window.__selecaoAtiva = selecaoNotas ? { n: selecaoNotas.size, rotulo: 'Apagar', onConfirmar: 'apagarNotasSelecionadas()', onCancelar: 'toggleSelecaoNotas()' } : null;
+  renderBarraSelecao();
+}
+function alternarSelNota(id) { if (!selecaoNotas) return; if (selecaoNotas.has(id)) selecaoNotas.delete(id); else selecaoNotas.add(id); atualizarBarraNotas(); renderNT(); }
+function apagarNotaParaLixeira(id) {
+  const row = q('SELECT * FROM nota WHERE id=?', [id])[0]; if (!row) return null;
+  let lid;
+  try {
+    db.run('BEGIN');
+    db.run('INSERT INTO lixeira (tabela, rotulo, dados, apagado_em) VALUES (?,?,?,?)', ['nota', row.referencia || 'Nota', JSON.stringify({ tipo: 'nota', row, filhos: [] }), agoraISO()]);
+    lid = q('SELECT MAX(id) m FROM lixeira')[0].m;
+    db.run('DELETE FROM nota WHERE id=?', [id]);
+    db.run('COMMIT');
+  } catch (e) { try { db.run('ROLLBACK'); } catch (_) { /* ok */ } return null; }
+  return lid;
+}
+function apagarNotasSelecionadas() {
+  if (!selecaoNotas || !selecaoNotas.size) return;
+  const lids = [...selecaoNotas].map(apagarNotaParaLixeira).filter(x => x != null);
+  if (!lids.length) return showToastErr('Não consegui apagar as notas selecionadas.');
+  persist();
+  const n = lids.length;
+  selecaoNotas = null; atualizarBarraNotas();
+  renderNT();
+  showToast(plural(n, 'nota apagada', 'notas apagadas') + ' · fica 30 dias na lixeira.', { label: 'Desfazer', fn: () => { lids.forEach(restaurar); renderNT(); } });
+}
+
+// ---------- R8: ficha do imóvel em imagem, pra mandar no WhatsApp ----------
+// Não existe biblioteca de PDF no arquivo único (o app não carrega nada externo), então a
+// ficha sai como imagem — o mesmo caminho de compartilhamento de arquivo que o app já usa.
+// A mesma trava de anúncio do texto (autorização + CRECI) vale aqui, porque uma foto com
+// preço é anúncio de verdade, não uma conversa.
+function carregarImagemFicha(src) {
+  return new Promise((ok, rej) => { const img = new Image(); img.onload = () => ok(img); img.onerror = rej; img.src = src; });
+}
+async function desenharFichaImovel(im) {
+  const W = 1080, H = 1350, altoFoto = 720;
+  const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const cs = getComputedStyle(document.documentElement);
+  const tok = (v, fb) => { const x = (cs.getPropertyValue(v) || '').trim(); return x || fb; };
+  const tinta = tok('--text', '#14161B'), fundo = tok('--bg', '#FFFFFF'), acento = tok('--brand-fill', '#BD2F86'), cinza = tok('--text-3', '#6B7280');
+  const fonte = tok('--font-display', 'sans-serif').split(',')[0].replace(/^"|"$/g, '');
+  try { await document.fonts.ready; } catch (e) { /* segue com a fonte do sistema */ }
+  ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
+  const fotoSrc = im.imagem_base64 || (q('SELECT imagem_base64 FROM imovel_foto WHERE imovel_id=? ORDER BY id LIMIT 1', [im.id])[0] || {}).imagem_base64;
+  if (fotoSrc) {
+    try {
+      const img = await carregarImagemFicha(fotoSrc);
+      const escala = Math.max(W / img.width, altoFoto / img.height), w = img.width * escala, h = img.height * escala;
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, altoFoto); ctx.clip();
+      ctx.drawImage(img, (W - w) / 2, (altoFoto - h) / 2, w, h);
+      ctx.restore();
+    } catch (e) { ctx.fillStyle = '#D9DCE1'; ctx.fillRect(0, 0, W, altoFoto); }
+  } else { ctx.fillStyle = '#D9DCE1'; ctx.fillRect(0, 0, W, altoFoto); }
+  let y = altoFoto + 76;
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = tinta; ctx.font = `700 52px "${fonte}", Arial, sans-serif`;
+  ctx.fillText(nomeImovel(im).slice(0, 36), 56, y); y += 48;
+  ctx.fillStyle = cinza; ctx.font = `400 32px "${fonte}", Arial, sans-serif`;
+  ctx.fillText([im.tipo, im.bairro].filter(Boolean).join(' · '), 56, y); y += 68;
+  ctx.fillStyle = acento; ctx.font = `700 60px "${fonte}", Arial, sans-serif`;
+  ctx.fillText(fmtBRL(im.valor), 56, y); y += 48;
+  ctx.strokeStyle = '#E3E5E9'; ctx.beginPath(); ctx.moveTo(56, y); ctx.lineTo(W - 56, y); ctx.stroke(); y += 56;
+  const fatos = FATOS.map(f => [f[1], valorFato(im, f)]).filter(x => x[1]).slice(0, 6);
+  const colW = (W - 112) / 3;
+  fatos.forEach((f, i) => {
+    const cx = 56 + (i % 3) * colW, cy = y + Math.floor(i / 3) * 100;
+    ctx.fillStyle = cinza; ctx.font = `400 26px "${fonte}", Arial, sans-serif`; ctx.fillText(String(f[0]), cx, cy);
+    ctx.fillStyle = tinta; ctx.font = `600 36px "${fonte}", Arial, sans-serif`; ctx.fillText(String(f[1]).slice(0, 14), cx, cy + 40);
+  });
+  ctx.fillStyle = cinza; ctx.font = `400 28px "${fonte}", Arial, sans-serif`;
+  ctx.fillText(assinatura(), 56, H - 56);
+  return canvas.toDataURL('image/jpeg', 0.9);
+}
+async function fichaImagemImovel(id) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [id])[0]; if (!im) return;
+  if (!im.autorizacao_em || !cfg('creci')) return avisoAnuncio(im, 'ficha');
+  showToast('Gerando a ficha…');
+  let dataUrl;
+  try { dataUrl = await desenharFichaImovel(im); } catch (e) { return showToastErr('Não consegui gerar a imagem.'); }
+  try {
+    const arquivo = await dataUrlToFile(dataUrl, 'ficha-' + (im.codigo || im.id) + '.jpg');
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) { await navigator.share({ files: [arquivo], title: nomeImovel(im) }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const a = document.createElement('a'); a.href = dataUrl; a.download = 'ficha-' + (im.codigo || im.id) + '.jpg'; a.click();
+  showToast('Este navegador não anexa imagem: a ficha foi baixada. Envie pelo WhatsApp manualmente.');
+}
+
+// ---------- modelos por tipo (§4.F): o que levar ----------
+const MODELO_VISTORIA = ['Chaves', 'Fotos tiradas'];
+function checklistVistoriaDe(c) {
+  let arr = []; try { arr = JSON.parse(c.checklist || '[]'); } catch (e) { /* vazio */ }
+  return MODELO_VISTORIA.map((item, i) => ({ item, feito: !!(arr[i] && arr[i].feito) }));
+}
+function marcarOQueLevar(compId, i) {
+  const c = q('SELECT checklist FROM compromisso WHERE id=?', [compId])[0]; if (!c) return;
+  let arr = []; try { arr = JSON.parse(c.checklist || '[]'); } catch (e) { /* vazio */ }
+  arr[i] = { feito: !(arr[i] && arr[i].feito) };
+  run('UPDATE compromisso SET checklist=? WHERE id=?', [JSON.stringify(arr), compId]);
+  redesenharCompromisso(compId);
+}
+function modeloOQueLevarHTML(it) {
+  if (it.tipo === 'cartorio' && it.imovel_id) {
+    const chk = checklistDe(it.imovel_id); if (!chk.total) return '';
+    return `<h3 class="blk-title">O que levar · ${chk.feitos} de ${chk.total}</h3>${checklistHTML(it.imovel_id, chk, 'comp:' + it.id)}`;
+  }
+  if (it.tipo === 'vistoria') {
+    const itens = checklistVistoriaDe(it.bruto);
+    return `<h3 class="blk-title">O que levar</h3><div class="card">${itens.map((x, i) => `<div class="chk ${x.feito ? 'is-feito' : ''}">
+      <button class="chk__main" aria-pressed="${x.feito}" onclick="marcarOQueLevar(${it.id}, ${i})"><span class="chk__box">${x.feito ? ico('check', 'ic-sm') : ''}</span><span class="chk__t">${esc(x.item)}</span></button>
+    </div>`).join('')}</div>`;
+  }
+  return '';
+}
 
 
 function renderAll() {
