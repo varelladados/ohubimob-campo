@@ -810,6 +810,91 @@ a { color: inherit; text-decoration: none; }
   .chk.is-feito .chk__t { color: var(--text-3); }
   .lembrar { display: flex; align-items: center; gap: var(--s2); min-height: 44px; margin: var(--s2) 0; font-size: var(--t-sm); }
   .lembrar input { width: 22px; height: 22px; flex: none; }
+
+  /* ======================= rodada 36 — agenda (lote C1) ======================= */
+  .chip-row--wrap { flex-wrap: wrap; overflow: visible; }
+  .ag-topo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-bottom: var(--s3); }
+  .ag-visoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-bottom: var(--s2); }
+  .ag-visoes .chip { justify-content: center; }
+  .ag-nav { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s2); }
+  .ag-nav[hidden] { display: none; }
+  .ag-nav__t { flex: 1; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ic-esq { transform: rotate(180deg); }
+  .ag-filtro { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; margin-bottom: var(--s1); }
+  .ag-item { display: flex; align-items: center; gap: var(--s1); padding-right: var(--s1); }
+  .ag-item > .row { flex: 1; min-width: 0; }
+  .ag-item__pill { display: block; margin-top: 4px; }
+  .ag-item.is-fechado .row__t { color: var(--text-2); }
+  .ag-item.is-cancelado .row__t { text-decoration: line-through; color: var(--text-3); }
+  /* favorito: a estrela é o botão; a cor vem das variáveis que o traço lê */
+  .estrela { width: var(--tap); height: var(--tap); flex: none; display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: none; border-radius: 50%; cursor: pointer; color: var(--text-3); padding: 0;
+    --estrela-fill: none; --estrela-edge: currentColor; transition: transform var(--dur-1) var(--ease); }
+  .estrela .ic { width: 22px; height: 22px; }
+  .estrela:active { transform: scale(0.88); }
+  .estrela[data-cor="1"], .ag-bloco[data-cor="1"] { --estrela-fill: var(--star-1); --estrela-edge: var(--star-1-edge); }
+  .estrela[data-cor="2"], .ag-bloco[data-cor="2"] { --estrela-fill: var(--star-2); --estrela-edge: var(--star-2-edge); }
+  .estrela[data-cor="3"], .ag-bloco[data-cor="3"] { --estrela-fill: var(--star-3); --estrela-edge: var(--star-3-edge); }
+  .estrela[data-cor="4"], .ag-bloco[data-cor="4"] { --estrela-fill: var(--star-4); --estrela-edge: var(--star-4-edge); }
+  .estrela[data-cor="5"], .ag-bloco[data-cor="5"] { --estrela-fill: var(--star-5); --estrela-edge: var(--star-5-edge); }
+  .ag-bloco[data-cor="0"] .estrela { --estrela-fill: none; --estrela-edge: currentColor; }
+  .hero__when .estrela { margin-left: auto; margin-right: calc(var(--s2) * -1); }
+  .hero__when .pill + .estrela { margin-left: 0; }
+  .live { position: relative; }
+  .live .estrela { color: inherit; }
+  .estrela--live { position: absolute; top: var(--s1); right: var(--s1); }
+  /* visão Dia */
+  .ag-dia { position: relative; margin: var(--s2) 0 var(--s4); }
+  .ag-hora { position: absolute; left: 0; right: 0; height: 66px; border: 0; border-top: 1px solid var(--border); background: none;
+    text-align: left; padding: 3px 0 0; color: var(--text-3); font: inherit; font-size: var(--t-xs); cursor: pointer; }
+  .ag-hora span { display: inline-block; width: 48px; font-variant-numeric: tabular-nums; }
+  .ag-bloco { position: absolute; display: flex; align-items: flex-start; overflow: hidden; z-index: 1;
+    background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: var(--r-xs);
+    border-left: 4px solid var(--estrela-fill, var(--border-2)); }
+  .ag-bloco[data-cor="0"] { border-left-color: var(--border-2); }
+  .ag-bloco__main { flex: 1; min-width: 0; align-self: stretch; border: 0; background: none; text-align: left; padding: 4px var(--s2);
+    font: inherit; font-size: var(--t-sm); line-height: 1.25; color: inherit; cursor: pointer; overflow: hidden; }
+  .ag-bloco__main b { font-variant-numeric: tabular-nums; }
+  .ag-bloco__main span { display: block; color: var(--text-3); font-size: var(--t-xs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ag-bloco .estrela { width: 40px; height: 40px; }
+  .ag-bloco.is-fechado { opacity: 0.7; }
+  .ag-bloco.is-cancelado b { text-decoration: line-through; }
+  .ag-agora { position: absolute; left: 48px; right: 0; height: 2px; background: var(--brand); z-index: 2; pointer-events: none; }
+  .ag-agora::before { content: ""; position: absolute; left: -4px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+  /* visão Semana */
+  .ag-semana { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: var(--s2) 0 var(--s1); }
+  .ag-sd { border: 0; background: var(--chip-bg); border-radius: var(--r-sm); padding: 6px 0 5px; min-height: 66px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text-2); font: inherit; }
+  .ag-sd__d { font-size: var(--t-xs); }
+  .ag-sd__n { font-weight: 700; font-size: var(--t-lg); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .ag-sd.is-hoje .ag-sd__n { color: var(--brand-text); }
+  .ag-sd.on { background: var(--chip-on-bg); color: var(--chip-on-text); }
+  .ag-sd.on .ag-sd__n { color: inherit; }
+  .ag-dots { display: flex; gap: 3px; min-height: 7px; align-items: center; }
+  .ag-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.45; display: inline-block; }
+  .ag-dot[data-cor="1"] { background: var(--star-1); opacity: 1; } .ag-dot[data-cor="2"] { background: var(--star-2); opacity: 1; }
+  .ag-dot[data-cor="3"] { background: var(--star-3); opacity: 1; } .ag-dot[data-cor="4"] { background: var(--star-4); opacity: 1; }
+  .ag-dot[data-cor="5"] { background: var(--star-5); opacity: 1; }
+  /* pessoas marcadas */
+  .pessoa-sel { display: flex; align-items: center; gap: var(--s2); padding: 2px 0; }
+  .pessoa-sel__n { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .field .pessoa-sel select { width: auto; max-width: 48%; min-height: 40px; padding: 0 var(--s2); }
+  .field input[data-busca], .field [data-nova-nome], .field [data-nova-tel] { width: 100%; }
+  .pessoas-res .card { margin: var(--s1) 0; }
+  .field-inline { display: flex; gap: var(--s2); align-items: center; }
+  .field-inline input { flex: 1; min-width: 0; min-height: var(--tap); padding: var(--s2) var(--s3); border: 1px solid var(--border-2);
+    border-radius: var(--r-sm); background: var(--surface); color: var(--text); }
+  .card--sunken input { width: 100%; min-height: var(--tap); padding: var(--s2) var(--s3); border: 1px solid var(--border-2);
+    border-radius: var(--r-sm); background: var(--surface); color: var(--text); }
+  .aviso-conflito { background: var(--warn-bg); color: var(--warn); border-radius: var(--r-sm); padding: var(--s3); margin: var(--s2) 0; font-size: var(--t-sm); }
+  .aviso-conflito p { margin: 0 0 var(--s1); }
+  /* imóvel: CEP e posição */
+  .cep-linha { display: flex; gap: var(--s2); align-items: center; }
+  .cep-linha input { flex: 1; min-width: 0; }
+  .cep-linha .btn { flex: none; }
+  .geo-acoes .btn { flex-direction: column; gap: 2px; min-height: 58px; padding: var(--s1); font-size: var(--t-xs); }
+  .croqui { width: 100%; height: auto; display: block; background: var(--surface-2); border-radius: var(--r-sm); margin: var(--s1) 0 var(--s2); }
+  .agcfg-row { min-height: var(--tap); padding: var(--s1) 0; border-bottom: 1px solid var(--border); }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -866,6 +951,8 @@ a { color: inherit; text-decoration: none; }
 
   <!-- controle -->
   <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m4.8 12.6 4.8 4.8L19.2 7.4"/></symbol>
+  <!-- rodada 36: favorito. O traço e o preenchimento leem --estrela-edge e --estrela-fill, então a mesma estrela vira cada cor pelo CSS -->
+  <symbol id="i-estrela" viewBox="0 0 24 24"><path style="fill:var(--estrela-fill, none);stroke:var(--estrela-edge, currentColor);stroke-width:1.75;stroke-linejoin:round" d="M12 3.4l2.65 5.37 5.93.86-4.29 4.18 1.01 5.9L12 16.92l-5.3 2.79 1.01-5.9-4.29-4.18 5.93-.86z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 18 18M18 6 6 18"/></symbol>
   <symbol id="i-somar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-voltar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 12H4.6M10.6 5.8 4.4 12l6.2 6.2"/></symbol>
@@ -910,6 +997,9 @@ a { color: inherit; text-decoration: none; }
     <svg class="topbar__mark" id="top-mark" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-marca"/></svg>
     <h1 class="topbar__title" id="top-title">Hoje</h1>
     <span class="topbar__state" id="top-state" title="estado da gravação local"><span class="dot"></span><span id="top-state-txt">salvo</span></span>
+    <button class="btn btn--ghost btn--icon" id="top-busca" onclick="abrirBusca()" aria-label="Buscar em tudo">
+      <svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
+    </button>
     <button class="btn btn--ghost btn--icon bell" id="bell" onclick="abrirNotificacoes()" aria-label="Notificações">
       <svg class="ic" aria-hidden="true"><use href="#i-sino"/></svg><span class="dot"></span>
     </button>
@@ -931,20 +1021,25 @@ a { color: inherit; text-decoration: none; }
       <h2 class="blk-title">Mais tarde hoje</h2>
       <div id="hj-today"></div>
 
+      <div id="hj-registrar"></div>
+
       <h2 class="blk-title">Pendências <button class="jump" onclick="go('cr')">ver leads</button></h2>
       <div id="hj-followup"></div>
     </section>
 
     <!-- ============================ AGENDA ============================ -->
     <section class="panel" id="panel-ag">
-      <div class="btn-row" style="margin-bottom:var(--s3)">
-        <button class="btn btn--primary btn--grow" onclick="openForm('visita')">
-          <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Nova visita
+      <div class="ag-topo">
+        <button class="btn btn--primary" onclick="novoAgendaSheet()">
+          <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Marcar
         </button>
-        <button class="btn btn--grow" onclick="go('rota')">
+        <button class="btn" onclick="go('rota')">
           <svg class="ic" aria-hidden="true"><use href="#i-rota"/></svg>Rota do dia
         </button>
       </div>
+      <div class="ag-visoes" id="ag-visoes" role="group" aria-label="Visão da agenda"></div>
+      <div class="ag-nav" id="ag-nav"></div>
+      <div class="ag-filtro" id="ag-filtro"></div>
       <div id="ag-list"></div>
     </section>
 
@@ -1013,6 +1108,7 @@ a { color: inherit; text-decoration: none; }
         </div>
       </div>
 
+      <div class="data-box" id="agenda-cfg"></div>
       <div class="data-box" id="perfil-box"></div>
       <div class="data-box" id="trava-box"></div>
 
@@ -1526,7 +1622,23 @@ const SCHEMA_MIGRATIONS = [
   `ALTER TABLE interacao ADD COLUMN impressao TEXT`,
   `ALTER TABLE interacao ADD COLUMN imovel_id INTEGER`,
   `ALTER TABLE interacao ADD COLUMN visita_id INTEGER`,
-  `CREATE TABLE IF NOT EXISTS qualificacao_resposta (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER, captacao_id INTEGER, chave TEXT, valor TEXT, interacao_id INTEGER, criado_em TEXT)`
+  `CREATE TABLE IF NOT EXISTS qualificacao_resposta (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER, captacao_id INTEGER, chave TEXT, valor TEXT, interacao_id INTEGER, criado_em TEXT)`,
+  // Rodada 36 (lote C1 da agenda) — compromisso genérico ao lado da visita, pessoas marcadas
+  // em qualquer item da agenda, favorito, duração e lembretes; e o endereço do imóvel com CEP,
+  // de onde veio a posição e com que precisão.
+  `CREATE TABLE IF NOT EXISTS compromisso (id INTEGER PRIMARY KEY AUTOINCREMENT, tipo TEXT, titulo TEXT, data TEXT, hora TEXT, dia_inteiro INTEGER DEFAULT 0, duracao_min INTEGER, local TEXT, lat REAL, lng REAL, imovel_id INTEGER, notas TEXT, status TEXT DEFAULT 'marcado', destaque INTEGER DEFAULT 0, lembretes TEXT, recorrencia TEXT, recorrencia_ate TEXT, resultado TEXT, criado_em TEXT, concluido_em TEXT)`,
+  `CREATE TABLE IF NOT EXISTS agenda_pessoa (id INTEGER PRIMARY KEY AUTOINCREMENT, item_tipo TEXT, item_id INTEGER, pessoa_tipo TEXT, pessoa_id INTEGER, papel TEXT)`,
+  `ALTER TABLE visita ADD COLUMN duracao_min INTEGER`,
+  `ALTER TABLE visita ADD COLUMN destaque INTEGER DEFAULT 0`,
+  `ALTER TABLE visita ADD COLUMN lembretes TEXT`,
+  `ALTER TABLE imovel ADD COLUMN cep TEXT`,
+  `ALTER TABLE imovel ADD COLUMN numero TEXT`,
+  `ALTER TABLE imovel ADD COLUMN complemento TEXT`,
+  `ALTER TABLE imovel ADD COLUMN cidade TEXT`,
+  `ALTER TABLE imovel ADD COLUMN uf TEXT`,
+  `ALTER TABLE imovel ADD COLUMN geo_origem TEXT`,
+  `ALTER TABLE imovel ADD COLUMN geo_precisao_m REAL`,
+  `ALTER TABLE captacao_lp ADD COLUMN cep TEXT`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1916,7 +2028,7 @@ function confirmar(titulo, texto, labelOk, fn, opts = {}) {
 // disparar render por tela — e "voltar" era um link "← mais" dentro do corpo.
 const VIEWS = {
   hj:     { t: 'Hoje' },
-  ag:     { t: 'Agenda' },
+  ag:     { t: 'Agenda', render: () => renderAG() },
   cr:     { t: 'Pessoas' },
   vi:     { t: 'Portfólio' },
   mais:   { t: 'Mais' },
@@ -2029,7 +2141,8 @@ const CRIAR_OPCOES = [
   { k: 'nota-voz',      ic: 'mic',       t: 'Nota de voz',      s: 'fala e transcreve' },
   { k: 'nota-texto',    ic: 'teclado',   t: 'Nota de texto',    s: 'digita rápido' },
   { k: 'foto',          ic: 'camera',    t: 'Foto ou documento', s: 'câmera do aparelho' },
-  { k: 'visita',        ic: 'agenda',    t: 'Visita',           s: 'agendar no calendário' },
+  { k: 'visita',        ic: 'visita',    t: 'Visita',           s: 'imóvel, check-in e roteiro' },
+  { k: 'compromisso',   ic: 'agenda',    t: 'Compromisso',      s: 'reunião, cartório, plantão, ligação' },
   { k: 'lead-venda',    ic: 'leads',     t: 'Lead comprador',   s: 'quem quer comprar' },
   { k: 'lead-captacao', ic: 'casa',      t: 'Lead captação',    s: 'quem quer vender' },
   { k: 'cliente',       ic: 'pessoa',    t: 'Cliente',          s: 'contato geral' },
@@ -2073,6 +2186,7 @@ function criarEscolha(k) {
     return escolherPessoaSheet();
   }
   closeSheet();
+  if (k === 'compromisso') return abrirFormCompromisso(ctxParaCompromisso(criarCtx));
   if (k === 'nota-voz' || k === 'nota-texto' || k === 'foto') {
     aplicarCtxNaNota();
     go('nt');
@@ -2209,27 +2323,51 @@ const FORMS = {
     titulo: 'Novo lead — captação', salvar: 'salvarLeadCaptacao()',
     html: campo('fc-nome', 'Nome do proprietário', inp('fc-nome', 'Nome', '', 'autocapitalize="words"')) +
           campo('fc-telefone', 'Telefone / WhatsApp', inp('fc-telefone', '(61) 90000-0000', 'tel')) + botaoContatos('fc-nome', 'fc-telefone') +
+          blocoCepHTML('fc') +
           campo('fc-endereco', 'Endereço do imóvel', inp('fc-endereco', 'Rua, número, bairro')) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fc-tipo', 'Tipo', sel('fc-tipo', ['Casa', 'Apartamento', 'Galpão', 'Terreno'])) +
           campo('fc-motivo', 'Motivo', sel('fc-motivo', ['Quer vender', 'Quer alugar'])) +
           `</details>`
   }),
-  'imovel': () => ({
-    titulo: 'Novo imóvel', salvar: 'salvarImovel()',
-    html: campo('fi-nome', 'Endereço / nome', inp('fi-nome', 'Ex.: Casa Vista Verde')) +
+  // Rodada 36: CEP primeiro (rua, bairro e cidade vêm sozinhos), apelido opcional, e a
+  // localização com três caminhos e croqui de conferência. O mesmo formulário edita.
+  'imovel': (ctx) => {
+    const e = ctx && ctx.editar ? q('SELECT * FROM imovel WHERE id=?', [ctx.editar])[0] : null;
+    const v = c => e && e[c] != null ? esc(e[c]) : '';
+    return {
+      titulo: e ? 'Editar imóvel' : 'Novo imóvel', salvar: e ? `salvarImovel(${e.id})` : 'salvarImovel()',
+      html: (e ? `<input type="hidden" id="fi-id" value="${e.id}">` : '') +
+          blocoCepHTML('fi', e && e.cep) +
+          campo('fi-endereco', 'Endereço', inp('fi-endereco', 'Rua, quadra ou SQS', '', `value="${v('endereco')}"`)) +
+          `<div class="field-grid">` +
+            campo('fi-numero', 'Número ou lote', inp('fi-numero', 'Ex.: 12', '', `value="${v('numero')}"`)) +
+            campo('fi-complemento', 'Bloco, apto', inp('fi-complemento', 'Ex.: Bl C 504', '', `value="${v('complemento')}"`)) +
+          `</div>` +
+          campo('fi-bairro', 'Bairro', inp('fi-bairro', 'Ex.: Bela Vista', '', `list="dl-bairros" value="${v('bairro')}"`)) +
           campo('fi-valor', 'Valor', campoPreco('fi-valor')) +
-          campo('fi-bairro', 'Bairro', inp('fi-bairro', 'Ex.: Bela Vista', '', 'list="dl-bairros"')) +
+          campo('fi-nome', 'Apelido (opcional)', inp('fi-nome', 'Ex.: Casa Vista Verde', '', `value="${v('nome')}"`)) +
+          blocoGeoHTML('fi', e) +
           `<details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>` +
           campo('fi-tipo', 'Tipo', sel('fi-tipo', ['Casa', 'Apartamento', 'Galpão', 'Terreno'])) +
-          campo('fi-endereco', 'Endereço completo', inp('fi-endereco', 'Rua, número')) +
-          campo('fi-estrategia', 'Estratégia', inp('fi-estrategia', 'Ex.: anúncios de entrada, volume rápido')) +
-          campo('fi-prioridade', 'Prioridade de ataque', `<select id="fi-prioridade"><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select>`) +
-          `<div class="field"><label>Localização</label>
-             <button type="button" class="btn btn--block" id="fi-geo-btn" onclick="capturarPosicaoForm()">${ico('mapa')}Usar minha posição agora</button>
-             <div class="help" id="fi-geo-msg">grava a coordenada deste imóvel e liga ele à Rota do dia</div></div>` +
-          `</details>`
-  }),
+          `<div class="field-grid">` +
+            campo('fi-cidade', 'Cidade', inp('fi-cidade', 'Brasília', '', `value="${v('cidade')}"`)) +
+            campo('fi-uf', 'UF', inp('fi-uf', 'DF', '', `maxlength="2" autocapitalize="characters" value="${v('uf')}"`)) +
+          `</div>` +
+          campo('fi-estrategia', 'Estratégia', inp('fi-estrategia', 'Ex.: anúncios de entrada, volume rápido', '', `value="${v('estrategia')}"`)) +
+          (e ? '' : campo('fi-prioridade', 'Prioridade de ataque', `<select id="fi-prioridade"><option value="alta">Alta</option><option value="media">Média</option><option value="baixa">Baixa</option></select>`)) +
+          `</details>`,
+      depois: () => {
+        if (e) {
+          const t = document.getElementById('fi-tipo'); if (t && e.tipo) t.value = e.tipo;
+          const pr = document.getElementById('fi-valor'); if (pr && e.valor != null) { pr.value = Number(e.valor).toLocaleString('pt-BR'); mostrarPrecoLido(pr); }
+          if (e.cep) cepConsultado.fi = String(e.cep).replace(/\D/g, '');
+        }
+        renderGeoStatus('fi');
+      },
+      aoRestaurar: () => renderGeoStatus('fi')
+    };
+  },
   'cliente': () => ({
     titulo: 'Novo cliente', salvar: 'salvarCliente()',
     html: campo('fcli-nome', 'Nome', inp('fcli-nome', 'Nome completo', '', 'autocapitalize="words"')) +
@@ -2259,7 +2397,18 @@ const FORMS = {
              </div>
              <div class="chip-row" style="flex-wrap:wrap;overflow:visible">
                ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="document.getElementById('fvi-hora').value='${h}'">${h.slice(0, 2)}h</button>`).join('')}
-             </div>`
+             </div>` +
+            // rodada 36: outras pessoas, duração, lembretes e favorito
+            `<details class="fold"><summary>${ico('chevron', 'ic-sm')}pessoas, duração e lembretes</summary>
+               <input type="hidden" id="fvi-destaque" value="0">
+               <input type="hidden" id="fvi-dur" value="${duracaoPadrao('visita')}"><input type="hidden" id="fvi-lemb" value="${esc(JSON.stringify(lembretesPadrao('visita')))}">
+               <div class="between" style="margin-bottom:var(--s2)"><span class="muted">Favorito</span>${estrelaFormHTML('fvi-destaque', 0)}</div>
+               ${pickerPessoasHTML('fvi', [])}
+               <div class="field"><label>Duração</label>${chipsHTML('fvi-dur', DURACOES, false)}</div>
+               <div class="field"><label>Lembretes</label>${chipsHTML('fvi-lemb', OPCOES_LEMBRETE, true)}</div>
+             </details>`,
+      depois: () => { ['fvi-dur', 'fvi-lemb'].forEach(marcarChips); renderPessoasSel('fvi'); },
+      aoRestaurar: () => { ['fvi-dur', 'fvi-lemb'].forEach(marcarChips); renderPessoasSel('fvi'); sincronizarEstrelaForm('fvi-destaque'); }
     };
   }
 };
@@ -2270,15 +2419,16 @@ function dataRapida(qual, alvo) {
 }
 function openForm(tipo, ctx) {
   const f = FORMS[tipo]; if (!f) return;
-  const cfg = f();
+  const cfg = f(ctx);
   const bairros = q(`SELECT DISTINCT bairro b FROM imovel WHERE bairro IS NOT NULL AND bairro!='' UNION SELECT DISTINCT bairro_interesse FROM lead WHERE bairro_interesse IS NOT NULL AND bairro_interesse!=''`);
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">${cfg.titulo}</h2>
     <form id="form-sheet" onsubmit="event.preventDefault();${cfg.salvar}" novalidate>
       ${cfg.html}
       <datalist id="dl-bairros">${bairros.map(r => `<option value="${esc(r.b)}">`).join('')}</datalist>
+      <div id="form-conflito"></div>
       <div class="btn-row sheet__acts">
-        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="submit" class="btn btn--primary btn--grow" id="form-salvar">${ico('check')}Salvar</button>
         <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
       </div>
     </form>`);
@@ -2291,6 +2441,7 @@ function openForm(tipo, ctx) {
       if (ctx.tipo === 'imovel') setV('fvi-imovel', ctx.id);
       if (ctx.tipo === 'lead') { setV('fvi-lead', ctx.id); const l = q('SELECT imovel_id FROM lead WHERE id=?', [ctx.id])[0]; if (l) setV('fvi-imovel', l.imovel_id); }
       if (ctx.tipo === 'visita') { const v = q('SELECT imovel_id, lead_id FROM visita WHERE id=?', [ctx.id])[0]; if (v) { setV('fvi-imovel', v.imovel_id); setV('fvi-lead', v.lead_id); } }
+      if (ctx.preset) { if (ctx.preset.data) setV('fvi-data', ctx.preset.data); if (ctx.preset.hora) setV('fvi-hora', ctx.preset.hora); }
     }
     if (tipo === 'lead-venda' && ctx.tipo === 'imovel') setV('fv-imovel', ctx.id);
   }
@@ -2298,9 +2449,10 @@ function openForm(tipo, ctx) {
   // o usuário sobrescreve com o número real
   const tel = document.querySelector('#sheet-body input[type="tel"]');
   if (tel && !tel.value) tel.value = nextTestPhone();
-  if (tipo === 'imovel') window.__geo = null;
+  window.__confOk = null;
+  if (cfg.depois) cfg.depois();
   // o rascunho compara com o formulário já com os padrões, o contexto e o telefone de teste
-  ligarRascunho(tipo + ':' + (ctx ? ctx.tipo + '-' + ctx.id : '-'), document.getElementById('form-sheet'));
+  ligarRascunho(tipo + ':' + (ctx ? ctx.tipo + '-' + ctx.id : '-'), document.getElementById('form-sheet'), cfg.aoRestaurar);
 }
 
 // ---------- rascunho (rodada 33, A2) ----------
@@ -2384,30 +2536,43 @@ function salvarLeadVenda() {
 function salvarLeadCaptacao() {
   const nome = val('fc-nome');
   if (!nome) return erroCampo('fc-nome', 'Precisa do nome do proprietário.');
-  run(`INSERT INTO captacao_lp (nome,telefone,endereco,tipo_imovel,motivo) VALUES (?,?,?,?,?)`,
-    [nome, val('fc-telefone'), val('fc-endereco'), val('fc-tipo'), val('fc-motivo')]);
+  run(`INSERT INTO captacao_lp (nome,telefone,endereco,tipo_imovel,motivo,cep) VALUES (?,?,?,?,?,?)`,
+    [nome, val('fc-telefone'), val('fc-endereco'), val('fc-tipo'), val('fc-motivo'), val('fc-cep') || null]);
   limparRascunho();
   closeSheet();
   renderCR();
   showToast('Captação salva.', { label: 'Ver', fn: () => { pessoasTipo = 'captacao'; go('cr'); renderCR(); } });
 }
-function salvarImovel() {
-  const nome = val('fi-nome');
-  if (!nome) return erroCampo('fi-nome', 'Precisa do endereço ou nome.');
+function salvarImovel(id) {
+  const endereco = val('fi-endereco'), apelido = val('fi-nome');
+  if (!apelido && !endereco) return erroCampo('fi-endereco', 'Precisa do endereço ou de um apelido.');
   const valor = precoBR(val('fi-valor'));
   if (valor == null) return erroCampo('fi-valor', 'Escreva o valor do imóvel.');
   if (isNaN(valor)) return erroCampo('fi-valor', 'Não entendi o valor. Ex.: 1.050.000 ou 1,05 mi.');
+  const nome = apelido || [endereco, val('fi-numero'), val('fi-complemento')].filter(Boolean).join(', ');
+  const lat = val('fi-lat') !== '' ? +val('fi-lat') : null, lng = val('fi-lng') !== '' ? +val('fi-lng') : null;
+  const dados = { nome, tipo: val('fi-tipo') || null, valor, estrategia: val('fi-estrategia') || null, bairro: val('fi-bairro') || null,
+    endereco: endereco || null, cep: val('fi-cep') || null, numero: val('fi-numero') || null, complemento: val('fi-complemento') || null,
+    cidade: val('fi-cidade') || null, uf: val('fi-uf').toUpperCase() || null, lat, lng,
+    geo_origem: lat != null ? (val('fi-geo-origem') || null) : null, geo_precisao_m: lat != null && val('fi-geo-precisao') !== '' ? +val('fi-geo-precisao') : null };
+  const cols = Object.keys(dados), sets = cols.map(c => c + '=?').join(', ');
+  if (id) {
+    const antes = q(`SELECT ${cols.join(', ')} FROM imovel WHERE id=?`, [id])[0];
+    run(`UPDATE imovel SET ${sets} WHERE id=?`, cols.map(c => dados[c]).concat(id));
+    limparRascunho(); vibrar(); closeSheet(); renderVI(); renderCalcImovelSelect(); renderAGSemRolar(); if (viewAtual === 'rota') renderRota();
+    return showToast('Imóvel atualizado.', { label: 'Desfazer', fn: () => {
+      run(`UPDATE imovel SET ${sets} WHERE id=?`, cols.map(c => antes[c]).concat(id));
+      renderVI(); if (folhaAtual && folhaAtual.chave === 'imovel:' + id) openDetail('imovel', id); } });
+  }
   const probMap = { alta: 70, media: 45, baixa: 20 };
   const prio = val('fi-prioridade') || 'media';
   const maxPrio = q('SELECT COALESCE(MAX(prioridade),0) m FROM imovel')[0].m;
-  const g = window.__geo || {};
-  const id = insertAndGetId(`INSERT INTO imovel (nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro,endereco,lat,lng) VALUES (?,?,?,?,?,?,'ativo',?,?,?,?)`,
-    [nome, val('fi-tipo'), valor, maxPrio + 1, probMap[prio], val('fi-estrategia'), val('fi-bairro'), val('fi-endereco'), g.lat || null, g.lng || null]);
-  window.__geo = null;
+  const novo = insertAndGetId(`INSERT INTO imovel (${cols.join(',')},prioridade,probabilidade,status) VALUES (${cols.map(() => '?').join(',')},?,?,'ativo')`,
+    cols.map(c => dados[c]).concat([maxPrio + 1, probMap[prio]]));
   limparRascunho();
   closeSheet();
   renderVI(); renderCalcImovelSelect();
-  showToast('Imóvel salvo.', { label: 'Abrir', fn: () => openDetail('imovel', id) });
+  showToast('Imóvel salvo.', { label: 'Abrir', fn: () => openDetail('imovel', novo) });
 }
 function salvarCliente() {
   const nome = val('fcli-nome');
@@ -2424,41 +2589,21 @@ function salvarVisita() {
   if (!imovelId) return erroCampo('fvi-imovel', 'Escolha o imóvel da visita.');
   const data = val('fvi-data'); if (!data) return erroCampo('fvi-data', 'Escolha a data.');
   const hora = val('fvi-hora'); if (!hora) return erroCampo('fvi-hora', 'Escolha a hora.');
-  const id = insertAndGetId(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,'pendente')`,
-    [imovelId, val('fvi-lead') || null, data, hora]);
+  const dur = +val('fvi-dur') || duracaoPadrao('visita');
+  const geo = q('SELECT lat, lng FROM imovel WHERE id=?', [imovelId])[0] || {};
+  if (avisarConflito(conflitosDe({ data, hora, dur, lat: geo.lat, lng: geo.lng }, { k: 'visita', id: 0 }), [imovelId, data, hora, dur].join('|'))) return;
+  let lemb = []; try { lemb = JSON.parse(val('fvi-lemb') || '[]'); } catch (e) { /* sem lembrete */ }
+  const id = insertAndGetId(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,duracao_min,destaque,lembretes) VALUES (?,?,?,?,'pendente',?,?,?)`,
+    [imovelId, val('fvi-lead') || null, data, hora, dur, +val('fvi-destaque') || 0, lembretesParaGravar(lemb, 'visita')]);
+  gravarPessoasItem('visita', id, pessoasSel('fvi'));
   limparRascunho();
   closeSheet();
-  renderAG(); renderHJ();
+  atualizarAgenda();
   showToast('Visita agendada.', { label: 'Abrir', fn: () => abrirVisita(id) });
+  pedirAvisosUmaVez(lemb);
 }
-// "usar minha posição" no formulário de imóvel — é o que alimenta a Rota do dia.
-// Sem API paga: a coordenada é gravada uma vez, pelo próprio aparelho, em campo.
-function capturarPosicaoForm() {
-  const msg = document.getElementById('fi-geo-msg');
-  if (!navigator.geolocation) { msg.textContent = 'Este navegador não dá a localização.'; return; }
-  msg.textContent = 'Buscando sua posição...';
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      window.__geo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-      msg.textContent = 'Posição gravada (' + window.__geo.lat.toFixed(5) + ', ' + window.__geo.lng.toFixed(5) + ').';
-    },
-    err => { msg.textContent = 'Não consegui a posição (' + (err && err.message ? err.message : 'erro') + '). Dá pra salvar sem ela.'; },
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-}
-function capturarPosicaoImovel(id) {
-  if (!navigator.geolocation) return showToastErr('Este navegador não dá a localização.');
-  showToast('Buscando sua posição...');
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      run('UPDATE imovel SET lat=?, lng=? WHERE id=?', [pos.coords.latitude, pos.coords.longitude, id]);
-      showToast('Posição do imóvel gravada.');
-      openDetail('imovel', id);
-    },
-    err => showToastErr('Não consegui a posição: ' + (err && err.message ? err.message : 'erro')),
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-}
+// posição do imóvel pela ficha: agora passa pela folha de posição (rodada 36)
+function capturarPosicaoImovel(id) { posicaoImovelSheet(id); }
 
 // ---------- seed ----------
 function seedDatabase() {
@@ -2531,6 +2676,21 @@ function seedDatabase() {
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Dias', TEST_PHONES[1 % 3], 'Comprador', 'Parceiro da Renata Kunz no fechamento', todayISO(-12)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['João Vitor', TEST_PHONES[2 % 3], 'Contato geral', 'Também cadastrado como lead de venda', todayISO(0)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Otto Ferraz', TEST_PHONES[3 % 3], 'Contato geral', 'Indicação antiga, sem interesse ativo no momento', todayISO(-40)]);
+
+  // rodada 36 — agenda: compromissos, pessoas marcadas e favoritos
+  const clienteBy = nome => q('SELECT id FROM cliente WHERE nome=?', [nome])[0].id;
+  const novoComp = (tipo, titulo, data, hora, dur, local, imovelId, destaque) => {
+    db.run(`INSERT INTO compromisso (tipo,titulo,data,hora,dia_inteiro,duracao_min,local,imovel_id,destaque,status,criado_em) VALUES (?,?,?,?,?,?,?,?,?,'marcado',?)`,
+      [tipo, titulo, data, hora, hora ? 0 : 1, dur, local, imovelId, destaque, todayISO(-1)]);
+    return q('SELECT MAX(id) m FROM compromisso')[0].m;
+  };
+  const reuniao = novoComp('reuniao', null, todayISO(1), '15:00', 60, 'Escritório', null, 2);
+  db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'lead',?,NULL)`, [reuniao, rodrigo]);
+  const escritura = novoComp('cartorio', 'Assinatura da escritura', todayISO(3), '10:00', 60, 'Cartório', b2, 4);
+  db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cliente')`, [escritura, clienteBy('Renata Kunz')]);
+  db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cônjuge')`, [escritura, clienteBy('Marcelo Dias')]);
+  novoComp('plantao', null, todayISO(2), '09:00', 240, null, c1, 0);
+  db.run(`UPDATE visita SET destaque=1 WHERE lead_id=?`, [marina]);
 
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
     ['audio', 'visita', 'R2 · Recanto das Águas', 'ela gostou muito da cozinha, achou o quintal pequeno mas disse que dava pra churrasco, perguntou se dá pra negociar o condomínio, falei que ia checar e volto até sexta', '14:32', todayISO(0), marina, b3]);
@@ -2944,6 +3104,7 @@ function detailClienteHTML(id) {
       ${acoesContato(c.telefone, 'cliente:' + id)}
     </div>
     <button class="btn btn--block" onclick="abrirCriar('cliente', ${id})">${ico('somar')}Criar algo ligado a este cliente</button>
+    ${proximosDaPessoaHTML('cliente', id)}
     ${blocoLinhaDoTempo('cliente', id)}
     ${botaoApagar('cliente', id, 'Apagar cliente')}`;
 }
@@ -2960,6 +3121,7 @@ function detailCaptacaoHTML(id) {
     </div>
     ${blocoQualificacaoHTML('captacao', id)}
     <button class="btn btn--block" onclick="captacaoVirarImovel(${id})">${ico('portfolio')}Virar imóvel do portfólio</button>
+    ${proximosDaPessoaHTML('captacao', id)}
     ${blocoLinhaDoTempo('captacao', id)}
     ${botaoApagar('captacao', id, 'Apagar captação')}`;
 }
@@ -2968,7 +3130,9 @@ function captacaoVirarImovel(id) {
   closeSheet();
   openForm('imovel');
   const set = (i, v) => { const e = document.getElementById(i); if (e && v) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); } };
-  set('fi-nome', c.endereco || c.nome); set('fi-endereco', c.endereco); set('fi-tipo', c.tipo_imovel);
+  set('fi-endereco', c.endereco); set('fi-tipo', c.tipo_imovel);
+  // o CEP da captação vem junto, sem refazer a busca (que trocaria o endereço já escrito)
+  if (c.cep) { cepConsultado.fi = String(c.cep).replace(/\D/g, ''); set('fi-cep', c.cep); }
   const fold = document.querySelector('#form-sheet details'); if (fold) fold.open = true;
 }
 function detailImovelHTML(id) {
@@ -2983,7 +3147,8 @@ function detailImovelHTML(id) {
     <div class="card">
       <div class="between"><span class="price">${fmtBRL(im.valor)}</span><span class="pill ${im.status === 'vendido' ? '' : 'ok'}">${esc(im.status)}</span></div>
       <p class="muted" style="margin:var(--s2) 0 0">${esc(im.estrategia || '')}</p>
-      ${im.bairro || im.endereco ? linhaCampo('Onde fica', esc([im.endereco, im.bairro].filter(Boolean).join(' · '))) : ''}
+      ${linhaCampo('Onde fica', esc(enderecoCompleto(im) || 'endereço não cadastrado') + ` <button class="link" onclick="editarImovel(${id})">editar</button>`)}
+      ${linhaCampo('Posição', im.lat != null ? esc(rotuloGeo(im.geo_origem, im.geo_precisao_m)) : 'sem posição — a Rota busca pelo endereço')}
       ${linhaCampo('Autorização de venda', im.autorizacao_em
         ? `registrada ${esc(fmtRelDate(im.autorizacao_em))} <button class="link" onclick="tirarAutorizacao(${id})">tirar</button>`
         : `não registrada <button class="link" onclick="registrarAutorizacao(${id})">registrar</button>`)}
@@ -2993,8 +3158,9 @@ function detailImovelHTML(id) {
       </div>
       <div class="btn-row" style="margin-top:var(--s2)">
         <button class="btn btn--grow" onclick="abrirMapaId(${im.id})">${ico('mapa')}Abrir no mapa</button>
-        <button class="btn btn--grow" onclick="capturarPosicaoImovel(${im.id})">${ico('rota')}${im.lat ? 'Atualizar posição' : 'Marcar posição'}</button>
+        <button class="btn btn--grow" onclick="posicaoImovelSheet(${im.id})">${ico('rota')}${im.lat != null ? 'Trocar posição' : 'Marcar posição'}</button>
       </div>
+      <button class="btn btn--block" style="margin-top:var(--s2)" onclick="editarImovel(${im.id})">${ico('editar')}Editar endereço e valor</button>
     </div>
 
     <h3 class="blk-title">Fatos</h3>
@@ -3020,6 +3186,7 @@ function detailImovelHTML(id) {
     ${checklistHTML(id, chk)}
 
     <button class="btn btn--block" style="margin-top:var(--s3)" onclick="abrirCriar('imovel', ${id})">${ico('somar')}Criar algo ligado a este imóvel</button>
+    ${agendaDoImovelHTML(id)}
     <h3 class="blk-title">Leads interessados</h3>
     ${leads.length ? leads.map(l => `<div class="card between"><span>${objLink('lead', l.id, l.nome)}</span><span class="pill brand">${esc(l.classificacao || '—')}</span></div>`).join('')
                    : `<div class="empty">${ico('leads')}<p>Nenhum lead vinculado a este imóvel.</p></div>`}
@@ -3042,6 +3209,7 @@ function detailLeadHTML(id) {
     </div>
     ${blocoQualificacaoHTML('lead', id)}
     <button class="btn btn--block" onclick="abrirCriar('lead', ${id})">${ico('somar')}Criar algo ligado a este lead</button>
+    ${proximosDaPessoaHTML('lead', id)}
     ${blocoLinhaDoTempo('lead', id)}
     ${botaoApagar('lead', id, 'Apagar lead')}`;
 }
@@ -3303,7 +3471,7 @@ function heroVisitaHTML(v) {
   // ícone em cima do rótulo, pra caber em 360px.
   return `<div class="hero">
     <div class="hero__when">${ico('relogio')}<span class="num">${esc(v.hora)}</span>
-      <span class="pill ${v.status === 'confirmada' ? 'ok' : 'warn'}" style="margin-left:auto">${esc(v.status)}</span></div>
+      <span class="pill ${v.status === 'confirmada' ? 'ok' : 'warn'}" style="margin-left:auto">${esc(v.status)}</span>${estrelaHTML('visita', v.id, v.destaque)}</div>
     <div class="hero__what">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
     <div class="hero__who">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome || '') : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
     <button class="btn btn--primary btn--block" style="margin-bottom:var(--s2)" onclick="iniciarVisita(${v.id})">${ico(v.inicio ? 'visita' : 'check')}${v.inicio ? 'Continuar visita' : 'Check-in e começar'}</button>
@@ -3426,44 +3594,49 @@ function pendenciasDoDia(leadsComVisita) {
 }
 function renderHJ() {
   document.getElementById('hj-hello').textContent = saudacao() + ', ' + nomeCorretor();
-  const abertas = visitasDe(todayISO(0)).filter(v => !v.fim);
-  const aTempo = abertas.filter(v => !horaPassou(v));
-  const vencidas = abertas.filter(horaPassou);
+  const hoje = todayISO(0);
+  // rodada 36: o Hoje lê a agenda inteira — visitas e compromissos
+  const doDia = itensDaAgenda(hoje, hoje).filter(it => it.aberto && !it.cancelado);
+  const abertas = doDia.filter(it => it.k === 'visita').map(it => it.bruto);
+  const comps = doDia.filter(it => it.k === 'compromisso');
   const pendencias = pendenciasDoDia(abertas.map(v => v.lead_id).filter(Boolean));
+  const registrar = praRegistrar(14).filter(it => !(it.k === 'visita' && it.data === hoje));
 
-  document.getElementById('hj-sum').textContent =
-    (abertas.length ? plural(abertas.length, 'visita hoje', 'visitas hoje') : 'Nenhuma visita hoje') +
+  const partes = [abertas.length ? plural(abertas.length, 'visita hoje', 'visitas hoje') : '',
+    comps.length ? plural(comps.length, 'compromisso', 'compromissos') + (abertas.length ? '' : ' hoje') : ''].filter(Boolean);
+  document.getElementById('hj-sum').textContent = (partes.length ? partes.join(' · ') : 'Nada marcado hoje') +
     (pendencias.length ? ' · ' + plural(pendencias.length, 'pendência', 'pendências') : '');
 
-  // "Próxima ação": a visita no horário; sem ela, a pendência mais antiga; sem nada,
-  // um estado vazio que oferece o que fazer. O que vira destaque sai da lista de baixo.
+  // "Próxima ação": o próximo item com hora que ainda não passou (visita em andamento
+  // primeiro); sem ele, a pendência mais antiga; por último, o que é de dia inteiro.
+  const vivos = doDia.filter(it => it.emAndamento || !jaTerminou(it));
+  const heroIt = vivos.find(it => it.emAndamento) || vivos.find(it => !it.diaInteiro) || (pendencias.length ? null : vivos[0]);
   const next = document.getElementById('hj-next');
-  let restoPend = pendencias;
-  if (aTempo.length) next.innerHTML = heroVisitaHTML(aTempo[0]);
+  let restoPend = pendencias, heroKey = '';
+  if (heroIt) { next.innerHTML = heroIt.k === 'visita' ? heroVisitaHTML(heroIt.bruto) : heroCompromissoHTML(heroIt); heroKey = heroIt.k + heroIt.id; }
   else if (pendencias.length) { next.innerHTML = heroPendenciaHTML(pendencias[0]); restoPend = pendencias.slice(1); }
   else next.innerHTML = `<div class="empty">${ico('check')}<p>Nada marcado pra agora.</p>
-    <button class="btn btn--sm" onclick="openForm('visita')">Agendar uma visita</button></div>`;
+    <button class="btn btn--sm" onclick="novoAgendaSheet()">Marcar</button></div>`;
 
-  document.getElementById('hj-rota').innerHTML = abertas.length > 1 ? `
+  const paradas = paradasDoDia();
+  document.getElementById('hj-rota').innerHTML = paradas.length > 1 ? `
     <h2 class="blk-title">Rota do dia</h2>
     <button class="card card--tap row" onclick="go('rota')">
       <span class="row__ico">${ico('rota')}</span>
-      <span class="row__main"><span class="row__t">${plural(abertas.length, 'parada hoje', 'paradas hoje')}</span>
-        <span class="row__s">${esc(abertas.map(v => v.bairro || v.imovel_nome).filter(Boolean).join(' → ').slice(0, 60))}</span></span>
+      <span class="row__main"><span class="row__t">${plural(paradas.length, 'parada hoje', 'paradas hoje')}</span>
+        <span class="row__s">${esc(paradas.map(p => p.bairro || p.imovel_nome).filter(Boolean).join(' → ').slice(0, 60))}</span></span>
       ${ico('chevron', 'row__chev')}
     </button>` : '';
 
-  const resto = (aTempo.length ? aTempo.slice(1) : aTempo).concat(vencidas);
+  const resto = doDia.filter(it => it.k + it.id !== heroKey && !(it.k === 'compromisso' && jaTerminou(it)));
   document.getElementById('hj-today').innerHTML = resto.length
-    ? resto.map(v => {
-        const passou = horaPassou(v);
-        return `<button class="card card--tap row" onclick="abrirVisita(${v.id})">
-        <span class="row__ico">${ico(passou ? 'alerta' : 'agenda')}</span>
-        <span class="row__main"><span class="row__t num">${esc(v.hora)} · ${esc(v.imovel_nome)}</span>
-          <span class="row__s">${esc(v.lead_nome || 'sem lead')}</span></span>
-        <span class="pill ${passou ? 'warn' : v.status === 'confirmada' ? 'ok' : ''}">${passou ? 'horário passou' : esc(v.status)}</span></button>`;
-      }).join('')
-    : `<div class="empty">${ico('agenda')}<p>${abertas.length ? 'Só a visita acima.' : 'Sem visitas hoje.'}</p></div>`;
+    ? resto.map(it => cartaoItemAgenda(it)).join('')
+    : `<div class="empty">${ico('agenda')}<p>${heroIt ? 'Só o que está acima.' : 'Nada mais hoje.'}</p></div>`;
+
+  document.getElementById('hj-registrar').innerHTML = registrar.length
+    ? `<h2 class="blk-title">Pra registrar <button class="jump" onclick="setAgVisao('lista');go('ag')">ver na agenda</button></h2>` +
+      registrar.slice(-3).reverse().map(it => cartaoItemAgenda(it, { comData: true })).join('')
+    : '';
 
   // prazo e canal descem pro subtítulo: à direita, o FAB cobria esse texto
   const MAX = 6;
@@ -3477,30 +3650,7 @@ function renderHJ() {
     : `<div class="empty">${ico('check')}<p>Nada vencendo agora.</p></div>`;
 }
 
-// ---------- render: AGENDA ----------
-function renderAG() {
-  const hoje = todayISO(0), amanha = todayISO(1);
-  const rows = q(`SELECT v.*, i.nome as imovel_nome, i.codigo, i.bairro, l.nome as lead_nome, l.telefone
-                  FROM visita v JOIN imovel i ON i.id=v.imovel_id LEFT JOIN lead l ON l.id=v.lead_id
-                  WHERE v.data>=? ORDER BY v.data, v.hora`, [hoje]);
-  const groups = {};
-  rows.forEach(v => { (groups[v.data] = groups[v.data] || []).push(v); });
-  let html = '';
-  Object.keys(groups).sort().forEach(data => {
-    const label = data === hoje ? 'Hoje' : data === amanha ? 'Amanhã' : fmtDataCurta(data);
-    html += `<h2 class="blk-title">${esc(label)}</h2>`;
-    groups[data].forEach(v => {
-      html += `<button class="card card--tap row" onclick="abrirVisita(${v.id})">
-        <span class="row__ico">${ico(v.fim ? 'check' : 'agenda')}</span>
-        <span class="row__main"><span class="row__t num">${esc(v.hora)} · ${esc(v.imovel_nome)}</span>
-          <span class="row__s">${esc(v.lead_nome || 'sem lead')}${v.bairro ? ' · ' + esc(v.bairro) : ''}</span></span>
-        <span class="pill ${v.fim ? '' : v.status === 'confirmada' ? 'ok' : 'warn'}">${v.fim ? esc(v.desfecho || 'encerrada') : esc(v.status)}</span></button>`;
-    });
-  });
-  document.getElementById('ag-list').innerHTML = html ||
-    `<div class="empty">${ico('agenda')}<p>Nenhuma visita agendada.</p>
-     <button class="btn btn--sm" onclick="openForm('visita')">Agendar a primeira</button></div>`;
-}
+// a agenda (renderAG e as visões) mora no bloco "AGENDA — lote C1", perto do fim do arquivo
 
 // ---------- render: LEADS ----------
 function setCrFilter(st) { crFilter = st; renderCR(); }
@@ -3773,6 +3923,13 @@ function alertasDoSino() {
     out.push({ id: 'amanha:' + v.id + ':' + v.data, ic: 'conversa', t: 'Confirmar a visita de amanhã · ' + v.hora,
       s: [v.lead_nome, v.imovel_nome].filter(Boolean).join(' · '), go: `abrirAvisar(${v.id})` });
   });
+  // rodada 36: compromisso em até 1 hora
+  itensDaAgenda(todayISO(0), todayISO(0)).filter(it => it.k === 'compromisso' && it.aberto && !it.diaInteiro).forEach(it => {
+    const falta = minDe(it.hora) - agoraMin, tp = TIPOS_AGENDA[it.tipo];
+    if (falta < -15 || falta > 60) return;
+    out.push({ id: 'comp:' + it.id + ':' + it.data + ':' + it.hora, ic: tp.ic, t: tp.curto + (falta > 0 ? ' em ' + falta + ' min' : ' agora') + ' · ' + it.hora,
+      s: it.titulo, go: `abrirCompromisso(${it.id})` });
+  });
   return out;
 }
 function sinoVistos() { try { return JSON.parse(localStorage.getItem('sino:vistos:v1') || '[]'); } catch (e) { return []; } }
@@ -3786,7 +3943,7 @@ function abrirNotificacoes() {
         <span class="row__main"><span class="row__t">${esc(it.t)}</span><span class="row__s">${esc(it.s)}</span></span>
         ${ico('chevron', 'row__chev')}</button>`).join('')
       : `<div class="empty">${ico('sino')}<p>Nada pedindo ação agora.</p></div>
-         <p class="muted" style="margin:0">O sino acende com visita em até 1 hora ainda sem check-in e com visita de amanhã ainda não confirmada.</p>`}
+         <p class="muted" style="margin:0">O sino acende com visita ou compromisso em até 1 hora e com visita de amanhã ainda não confirmada.</p>`}
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { top: true, foco: false });
   atualizarSino();
 }
@@ -3838,13 +3995,13 @@ const ACOES_ATALHO = {
 };
 let atalhoPendente = null, ultimoAtalho = { acao: null, t: 0 };
 function executarAtalho(url) {
-  let acao = null;
-  try { acao = new URL(url, location.href).searchParams.get('acao'); } catch (e) { /* ok */ }
+  let acao = null, params = null;
+  try { params = new URL(url, location.href).searchParams; acao = params.get('acao'); } catch (e) { /* ok */ }
   if (!acao || !ACOES_ATALHO[acao]) return;
   // launchQueue e o endereço da página podem entregar o mesmo atalho duas vezes
   if (ultimoAtalho.acao === acao && Date.now() - ultimoAtalho.t < 2000) return;
   ultimoAtalho = { acao, t: Date.now() };
-  ACOES_ATALHO[acao]();
+  ACOES_ATALHO[acao](params);
 }
 // com launch_handler "focus-existing", o app já aberto recebe o atalho aqui, sem recarregar
 if ('launchQueue' in window) {
@@ -3974,10 +4131,12 @@ function renderVisita() {
 
   body.innerHTML = `
     <div class="live">
+      ${estrelaHTML('visita', v.id, v.destaque, 'estrela--live')}
       <div class="live__l">${v.inicio ? 'em andamento' : jaPassou(v) ? 'horário passou · dá pra registrar agora' : 'ainda não começou'}</div>
       <div class="live__t" id="visita-cron">${v.inicio ? tempoDecorrido(v.inicio) : esc(v.hora)}</div>
       <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
       <div style="opacity:.85;font-size:var(--t-sm)">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
+      ${(() => { const ex = pessoasDoItem('visita', v.id); return ex.length ? `<div style="opacity:.85;font-size:var(--t-sm)">com ${ex.map(pp => objLink(pp.tipo, pp.id, pp.nome) + (pp.papel ? ' (' + esc(pp.papel) + ')' : '')).join(', ')}</div>` : ''; })()}
     </div>
 
     ${!v.inicio ? `<button class="btn btn--primary btn--block" style="margin-bottom:var(--s3)" onclick="iniciarVisita(${v.id})">${ico('check')}Fazer check-in e começar</button>` : ''}
@@ -3995,7 +4154,7 @@ function renderVisita() {
 
     ${!v.inicio ? `<div class="acoes-2">
       <button class="btn" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>
-      <button class="btn" onclick="lembreteVisita(${v.id})">${ico('sino')}Lembrete</button>
+      <button class="btn" onclick="lembreteItemSheet('visita', ${v.id})">${ico('sino')}Lembrete</button>
       <button class="btn" onclick="naoCompareceu(${v.id})">${ico('alerta')}Não veio</button>
       <button class="btn" onclick="cancelarVisita(${v.id})">${ico('x')}Cancelar</button>
     </div>` : `<div class="acoes-3" style="margin-bottom:var(--s3)">
@@ -4003,6 +4162,8 @@ function renderVisita() {
       <button class="btn" onclick="naoCompareceu(${v.id})">${ico('alerta')}Não veio</button>
       <button class="btn" onclick="cancelarVisita(${v.id})">${ico('x')}Cancelar</button>
     </div>`}
+
+    <button class="btn btn--block" style="margin-bottom:var(--s3)" onclick="editarDetalhesVisita(${v.id})">${ico('pessoa')}Pessoas, duração e lembretes</button>
 
     <h2 class="blk-title">Roteiro</h2>
     <div class="card">
@@ -4326,10 +4487,10 @@ let rotaModo = 'agenda';
 function setRotaModo(m) { rotaModo = m; renderRota(); }
 function renderRota() {
   const body = document.getElementById('rota-body');
-  const paradas = visitasDe(todayISO(0)).filter(v => !v.fim);
+  const paradas = paradasDoDia();
   if (!paradas.length) {
-    body.innerHTML = `<div class="empty">${ico('rota')}<p>Nenhuma visita aberta hoje.</p>
-      <button class="btn btn--sm" onclick="openForm('visita')">Agendar uma visita</button></div>`;
+    body.innerHTML = `<div class="empty">${ico('rota')}<p>Nada com lugar marcado hoje.</p>
+      <button class="btn btn--sm" onclick="novoAgendaSheet()">Marcar</button></div>`;
     return;
   }
   const comGeo = paradas.filter(p => p.lat != null && p.lng != null);
@@ -4387,18 +4548,20 @@ function renderRota() {
         <div class="rota-step">
           <span class="rota-n">${i + 1}</span>
           <span style="flex:1;min-width:0">
-            <div class="between"><span class="num" style="font-weight:700">${esc(p.hora)}</span>
-              ${p._km != null ? `<span class="row__meta">${fmtKm(p._km)}</span>` : ''}</div>
-            <div style="font-weight:600">${objLink('imovel', p.imovel_id, nomeImovel({ codigo: p.codigo, nome: p.imovel_nome }))}</div>
+            <div class="between"><span class="num" style="font-weight:700">${esc(p.hora || 'dia inteiro')}</span>
+              ${p._km != null ? `<span class="row__meta">${p._aprox ? '≈ ' : ''}${fmtKm(p._km)}</span>` : ''}</div>
+            <div style="font-weight:600">${p._k === 'compromisso' ? `<button class="link" onclick="abrirCompromisso(${p.id})">${esc(p._titulo)}</button>` : objLink('imovel', p.imovel_id, nomeImovel({ codigo: p.codigo, nome: p.imovel_nome }))}</div>
             <div class="row__s">${esc([p.endereco, p.bairro].filter(Boolean).join(' · ') || 'sem endereço cadastrado')}</div>
-            <div class="row__s">${p.lead_id ? objLink('lead', p.lead_id, p.lead_nome) : 'sem lead'}</div>
+            ${p._k === 'compromisso' ? '' : `<div class="row__s">${p.lead_id ? objLink('lead', p.lead_id, p.lead_nome) : 'sem lead'}</div>`}
           </span>
         </div>
         ${p._perto ? `<p class="muted" style="margin:var(--s2) 0 0;color:var(--ok)">Você está a menos de 150 m daqui.</p>` : ''}
         <div class="btn-row" style="margin-top:var(--s3)">
-          <button class="btn btn--sm btn--grow" onclick="abrirMapaId(${p.imovel_id})">${ico('mapa')}Ir</button>
-          ${p.telefone ? `<button class="btn btn--sm btn--grow btn--ok" onclick="abrirAvisar(${p.id})">${ico('conversa')}Avisar</button>` : ''}
-          <button class="btn btn--sm btn--grow ${p._perto ? 'btn--primary' : ''}" onclick="iniciarVisita(${p.id})">${ico('check')}Check-in</button>
+          <button class="btn btn--sm btn--grow" onclick="irItemAgenda('${p._k}', ${p.id})">${ico('mapa')}Ir</button>
+          ${p.telefone ? `<button class="btn btn--sm btn--grow btn--ok" onclick="${p._k === 'visita' ? `abrirAvisar(${p.id})` : `avisarPessoasComp(${p.id})`}">${ico('conversa')}Avisar</button>` : ''}
+          ${p._k === 'visita'
+            ? `<button class="btn btn--sm btn--grow ${p._perto ? 'btn--primary' : ''}" onclick="iniciarVisita(${p.id})">${ico('check')}Check-in</button>`
+            : `<button class="btn btn--sm btn--grow" onclick="abrirCompromisso(${p.id})">${ico('agenda')}Abrir</button>`}
         </div>
       </div>`).join('')}`;
 }
@@ -4483,7 +4646,9 @@ const APAGAVEIS = {
   imovel:   { tabela: 'imovel', nome: 'Imóvel', rot: r => nomeImovel(r), filhos: [['imovel_foto', 'imovel_id'], ['checklist_item', 'imovel_id'], ['visita', 'imovel_id']] },
   nota:     { tabela: 'nota', nome: 'Nota', rot: r => r.referencia || 'Nota', filhos: [] },
   arquivo:  { tabela: 'documento_carteira', nome: 'Arquivo', rot: r => r.nome, filhos: [] },
-  foto:     { tabela: 'imovel_foto', nome: 'Foto', rot: () => 'Foto de imóvel', filhos: [], depois: r => openDetail('imovel', r.imovel_id) }
+  foto:     { tabela: 'imovel_foto', nome: 'Foto', rot: () => 'Foto de imóvel', filhos: [], depois: r => openDetail('imovel', r.imovel_id) },
+  // rodada 36: o terceiro elemento do filho é um filtro a mais (agenda_pessoa serve visita e compromisso)
+  compromisso: { tabela: 'compromisso', nome: 'Compromisso', rot: r => r.titulo || (TIPOS_AGENDA[r.tipo] || { t: 'Compromisso' }).t, filhos: [['agenda_pessoa', 'item_id', "item_tipo='compromisso'"]] }
 };
 function botaoApagar(tipo, id, rotulo) {
   return `<button class="btn btn--ghost btn--block" style="color:var(--danger);margin-top:var(--s4)" onclick="apagar('${tipo}', ${id})">${ico('lixeira')}${rotulo}</button>`;
@@ -4495,13 +4660,13 @@ function inserirLinha(tabela, row) {
 function apagar(tipo, id) {
   const c = APAGAVEIS[tipo]; if (!c) return;
   const row = q(`SELECT * FROM ${c.tabela} WHERE id=?`, [id])[0]; if (!row) return;
-  const pacote = { tipo, row, filhos: c.filhos.map(([t, col]) => [t, q(`SELECT * FROM ${t} WHERE ${col}=?`, [id])]) };
+  const pacote = { tipo, row, filhos: c.filhos.map(([t, col, extra]) => [t, q(`SELECT * FROM ${t} WHERE ${col}=?${extra ? ' AND ' + extra : ''}`, [id])]) };
   let lid;
   try {
     db.run('BEGIN');
     db.run('INSERT INTO lixeira (tabela, rotulo, dados, apagado_em) VALUES (?,?,?,?)', [tipo, c.rot(row), JSON.stringify(pacote), agoraISO()]);
     lid = q('SELECT MAX(id) m FROM lixeira')[0].m;
-    c.filhos.forEach(([t, col]) => db.run(`DELETE FROM ${t} WHERE ${col}=?`, [id]));
+    c.filhos.forEach(([t, col, extra]) => db.run(`DELETE FROM ${t} WHERE ${col}=?${extra ? ' AND ' + extra : ''}`, [id]));
     db.run(`DELETE FROM ${c.tabela} WHERE id=?`, [id]);
     db.run('COMMIT');
   } catch (e) {
@@ -4542,7 +4707,7 @@ function restaurar(lid) {
 // Depois de 30 dias o item sai de vez. O que apontava pra ele (nota, arquivo, lead, visita)
 // fica, mas sem o vínculo: um id que não existe mais não pode sobrar solto no banco.
 const SOLTAR_AO_ESVAZIAR = {
-  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id']],
+  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id'], ['compromisso', 'imovel_id']],
   lead: [['visita', 'lead_id'], ['nota', 'lead_id'], ['documento_carteira', 'lead_id']],
   cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']]
 };
@@ -4554,7 +4719,9 @@ function esvaziarLixeiraVencida() {
       const p = JSON.parse(v.dados);
       (SOLTAR_AO_ESVAZIAR[v.tabela] || []).forEach(([t, col]) => db.run(`UPDATE ${t} SET ${col}=NULL WHERE ${col}=?`, [p.row.id]));
       (p.filhos || []).filter(([t]) => t === 'visita').forEach(([, rows]) =>
-        rows.forEach(r => db.run('UPDATE nota SET visita_id=NULL WHERE visita_id=?', [r.id])));
+        rows.forEach(r => { db.run('UPDATE nota SET visita_id=NULL WHERE visita_id=?', [r.id]); db.run("DELETE FROM agenda_pessoa WHERE item_tipo='visita' AND item_id=?", [r.id]); }));
+      // pessoa que sai de vez deixa de estar marcada nos compromissos
+      if (TABELA_PESSOA[v.tabela]) db.run('DELETE FROM agenda_pessoa WHERE pessoa_tipo=? AND pessoa_id=?', [v.tabela, p.row.id]);
     } catch (e) { /* item ilegível: sai mesmo assim */ }
     db.run('DELETE FROM lixeira WHERE id=?', [v.id]);
   });
@@ -5109,13 +5276,21 @@ function quandoTL(v) {
 }
 function linhaDoTempoHTML(tipo, id) {
   const col = COLUNA_PESSOA[tipo], it = [];
-  const IC = { ligacao: 'telefone', whatsapp: 'conversa', pessoalmente: 'pessoa' };
-  const NOME = { ligacao: 'Ligação', whatsapp: 'WhatsApp', pessoalmente: 'Conversa', visita: 'Visita' };
+  const IC = { ligacao: 'telefone', whatsapp: 'conversa', pessoalmente: 'pessoa', compromisso: 'agenda' };
+  const NOME = { ligacao: 'Ligação', whatsapp: 'WhatsApp', pessoalmente: 'Conversa', visita: 'Visita', compromisso: 'Compromisso' };
   q(`SELECT * FROM interacao WHERE ${col}=?`, [id]).forEach(r => {
     const h = HUMORES.find(x => x.v === r.humor), sg = lerSinais(r.sinais).map(rotuloSinal).filter(Boolean);
     it.push({ q: r.criado_em, ic: IC[r.tipo] || 'conversa',
       t: (NOME[r.tipo] || 'Contato') + (r.resultado ? ' · ' + r.resultado : '') + (h ? ' · ' + h.t.toLowerCase() : ''),
       s: [r.texto, r.impressao, sg.length ? 'Sinais: ' + sg.join(', ') : ''].filter(Boolean).join(' — ') });
+  });
+  // rodada 36: compromissos e visitas em que a pessoa foi marcada
+  q(`SELECT item_tipo, item_id FROM agenda_pessoa WHERE pessoa_tipo=? AND pessoa_id=?`, [tipo, id]).forEach(r => {
+    const ag = itemAgenda(r.item_tipo, r.item_id); if (!ag) return;
+    if (ag.k === 'visita' && tipo === 'lead' && ag.bruto.lead_id === id) return;
+    it.push({ q: ag.data + ' ' + (ag.hora || '00:00'), ic: TIPOS_AGENDA[ag.tipo].ic, t: (ag.k === 'visita' ? 'Visita · ' + ag.imovel_nome : 'Compromisso · ' + TIPOS_AGENDA[ag.tipo].curto),
+      s: [ag.k === 'visita' ? '' : ag.titulo, ag.aberto ? '' : ag.statusTxt, ag.bruto.resultado].filter(Boolean).join(' — '),
+      go: ag.k === 'visita' ? `abrirVisita(${ag.id})` : `abrirCompromisso(${ag.id})`, futuro: ag.aberto && ag.data >= todayISO(0) });
   });
   if (tipo !== 'cliente') q(`SELECT * FROM qualificacao_resposta WHERE ${col}=? AND interacao_id IS NULL`, [id]).forEach(r => {
     const pg = perguntaPor(tipo, r.chave); if (!pg) return;
@@ -5545,10 +5720,1366 @@ function salvarAudio() {
 }
 
 // ---------- boot geral ----------
+// =============================================================================
+// AGENDA — lote C1 (rodada 36, plano-agenda-campo.md)
+// A agenda era uma lista de visitas. Agora: compromissos genéricos ao lado da visita
+// (que continua com o Modo Visita), pessoas marcadas com papel, favorito com estrela,
+// visões Dia/Semana/Lista, conflito ao salvar, lembretes com antecedência escolhida
+// (dentro do app e na agenda do celular por .ics), "pra registrar" e busca em tudo.
+// =============================================================================
+const TIPOS_AGENDA = {
+  visita:   { t: 'Visita',                curto: 'Visita',   ic: 'visita',    dur: 45,  lemb: [1440, 60, 15], s: 'imóvel, check-in e roteiro',            aviso: 'nossa visita' },
+  captacao: { t: 'Captação / avaliação',  curto: 'Captação', ic: 'casa',      dur: 60,  lemb: [60],           s: 'avaliar um imóvel pra vender',           aviso: 'a avaliação do imóvel' },
+  reuniao:  { t: 'Reunião',               curto: 'Reunião',  ic: 'pessoa',    dur: 60,  lemb: [30],           s: 'com cliente, parceiro ou equipe',        aviso: 'nossa reunião' },
+  ligacao:  { t: 'Ligação marcada',       curto: 'Ligação',  ic: 'telefone',  dur: 15,  lemb: [5],            s: 'ligar num horário combinado',            aviso: 'nossa ligação' },
+  cartorio: { t: 'Assinatura / cartório', curto: 'Cartório', ic: 'arquivo',   dur: 60,  lemb: [1440, 60],     s: 'escritura, contrato, firma',             aviso: 'a assinatura' },
+  vistoria: { t: 'Vistoria / chaves',     curto: 'Vistoria', ic: 'check',     dur: 30,  lemb: [60],           s: 'entrega ou retirada de chaves',          aviso: 'a vistoria' },
+  plantao:  { t: 'Plantão',               curto: 'Plantão',  ic: 'portfolio', dur: 240, lemb: [60],           s: 'plantão num imóvel ou stand',            aviso: 'o plantão' },
+  pessoal:  { t: 'Pessoal / bloqueio',    curto: 'Pessoal',  ic: 'relogio',   dur: 60,  lemb: [],             s: 'bloquear um horário',                    aviso: '' }
+};
+const STATUS_COMP = { marcado: 'marcado', concluido: 'concluído', cancelado: 'cancelado', nao_aconteceu: 'não aconteceu' };
+const OPCOES_LEMBRETE = [[0, 'Na hora'], [5, '5 min'], [15, '15 min'], [30, '30 min'], [60, '1 h'], [120, '2 h'], [1440, '1 dia']];
+const DURACOES = [[15, '15 min'], [30, '30 min'], [45, '45 min'], [60, '1 h'], [120, '2 h'], [240, '4 h']];
+const CORES_ESTRELA = ['', 'verde', 'amarelo', 'laranja', 'vermelho', 'azul'];
+const PAPEIS = ['', 'cliente', 'cônjuge', 'proprietário', 'corretor parceiro', 'advogado', 'outro'];
+const VELOCIDADE_KMH = 30;   // deslocamento urbano médio, sem trânsito real (config fica pro lote C2)
+
+// ---------- datas e horas ----------
+function minDe(hora) { const [h, m] = String(hora || '').split(':').map(Number); return isNaN(h) ? null : h * 60 + (m || 0); }
+function hhmm(min) { min = ((Math.round(min) % 1440) + 1440) % 1440; return String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'); }
+function dataHora(ymd, hora) { const d = dataLocal(ymd); const m = minDe(hora); if (m != null) d.setHours(Math.floor(m / 60), m % 60, 0, 0); return d; }
+function somarDias(ymd, n) { const d = dataLocal(ymd); d.setDate(d.getDate() + n); return localYMD(d); }
+function inicioSemana(ymd) { const d = dataLocal(ymd); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return localYMD(d); }
+function rotuloDia(ymd) { return ymd === todayISO(0) ? 'Hoje' : ymd === todayISO(1) ? 'Amanhã' : ymd === todayISO(-1) ? 'Ontem' : fmtDataCurta(ymd); }
+
+// ---------- padrões por tipo ----------
+function duracaoPadrao(tipo) { return (TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao).dur; }
+function lembretesPadrao(tipo) {
+  const c = cfg('agenda:lembretes:' + tipo);
+  if (c) { try { const a = JSON.parse(c); if (Array.isArray(a)) return a; } catch (e) { /* padrão do tipo */ } }
+  return (TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao).lemb.slice();
+}
+function lerLembretes(json, tipo) {
+  if (json == null || json === '') return lembretesPadrao(tipo);
+  try { const a = JSON.parse(json); return Array.isArray(a) ? a : lembretesPadrao(tipo); } catch (e) { return lembretesPadrao(tipo); }
+}
+// guarda NULL quando é igual ao padrão do tipo: assim mudar o padrão em Mais vale pra ele
+function lembretesParaGravar(lista, tipo) {
+  const a = lista.slice().sort((x, y) => y - x), p = lembretesPadrao(tipo).slice().sort((x, y) => y - x);
+  return JSON.stringify(a) === JSON.stringify(p) ? null : JSON.stringify(a);
+}
+function fmtAntecedencia(m) {
+  if (m < 60) return m + ' min';
+  if (m < 1440) return String(Math.round(m / 6) / 10).replace('.', ',') + ' h';
+  return plural(Math.round(m / 1440), 'dia', 'dias');
+}
+function textoLembretes(lista) {
+  if (!lista || !lista.length) return 'sem lembrete';
+  const antes = lista.filter(m => m > 0).sort((a, b) => b - a).map(fmtAntecedencia);
+  const partes = antes.length ? [(antes.length > 1 ? antes.slice(0, -1).join(', ') + ' e ' + antes[antes.length - 1] : antes[0]) + ' antes'] : [];
+  if (lista.includes(0)) partes.push('na hora');
+  return partes.join(' e ');
+}
+function tituloPadrao(tipo, pessoas, imovelNome) {
+  const tp = TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao;
+  const nomes = (pessoas || []).map(p => String(p.nome || '').split(' ')[0]).filter(Boolean);
+  if (nomes.length) return tp.curto + ' com ' + nomes[0] + (nomes.length > 1 ? ' e mais ' + (nomes.length - 1) : '');
+  return tp.curto + (imovelNome ? ' · ' + imovelNome : '');
+}
+
+// ---------- itens da agenda ----------
+function pessoasDoItem(itemTipo, itemId) {
+  return q(`SELECT * FROM agenda_pessoa WHERE item_tipo=? AND item_id=? ORDER BY id`, [itemTipo, itemId]).map(r => {
+    if (!TABELA_PESSOA[r.pessoa_tipo]) return null;
+    const p = q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[r.pessoa_tipo]} WHERE id=?`, [r.pessoa_id])[0];
+    return p ? { tipo: r.pessoa_tipo, id: p.id, nome: p.nome, telefone: p.telefone, papel: r.papel || '' } : null;
+  }).filter(Boolean);
+}
+function gravarPessoasItem(itemTipo, itemId, lista) {
+  run(`DELETE FROM agenda_pessoa WHERE item_tipo=? AND item_id=?`, [itemTipo, itemId]);
+  (lista || []).forEach(p => { if (TABELA_PESSOA[p.tipo]) run(`INSERT INTO agenda_pessoa (item_tipo, item_id, pessoa_tipo, pessoa_id, papel) VALUES (?,?,?,?,?)`, [itemTipo, itemId, p.tipo, p.id, p.papel || null]); });
+}
+function itemDeVisita(v) {
+  const principal = v.lead_id && v.lead_nome ? [{ tipo: 'lead', id: v.lead_id, nome: v.lead_nome, telefone: v.telefone, papel: '', principal: true }] : [];
+  const imovel = nomeImovel({ codigo: v.codigo, nome: v.imovel_nome });
+  return { k: 'visita', id: v.id, tipo: 'visita', titulo: 'Visita · ' + imovel, data: v.data, hora: v.hora, diaInteiro: false,
+    dur: v.duracao_min || duracaoPadrao('visita'), local: [v.endereco, v.bairro].filter(Boolean).join(' · '),
+    lat: v.lat, lng: v.lng, aprox: ['endereco', 'bairro'].includes(v.geo_origem), imovel_id: v.imovel_id, imovel_nome: imovel,
+    bairro: v.bairro, endereco: v.endereco, aberto: !v.fim, emAndamento: !!(v.inicio && !v.fim),
+    cancelado: ['Cancelada', 'Não compareceu'].includes(v.desfecho), statusTxt: v.fim ? (v.desfecho || 'encerrada') : v.status,
+    destaque: v.destaque || 0, lembretes: lerLembretes(v.lembretes, 'visita'), pessoas: principal.concat(pessoasDoItem('visita', v.id)),
+    telefone: v.telefone, bruto: v };
+}
+function itemDeCompromisso(c) {
+  const pessoas = pessoasDoItem('compromisso', c.id);
+  const imovel = c.imovel_id && c.imovel_nome ? nomeImovel({ codigo: c.codigo, nome: c.imovel_nome }) : '';
+  const temGeoProprio = c.lat != null && c.lng != null;
+  return { k: 'compromisso', id: c.id, tipo: TIPOS_AGENDA[c.tipo] ? c.tipo : 'reuniao', titulo: c.titulo || tituloPadrao(c.tipo, pessoas, imovel),
+    data: c.data, hora: c.dia_inteiro ? '' : (c.hora || ''), diaInteiro: !!c.dia_inteiro || !c.hora, dur: c.duracao_min || duracaoPadrao(c.tipo),
+    local: c.local || [c.endereco, c.bairro].filter(Boolean).join(' · '),
+    lat: temGeoProprio ? c.lat : c.ilat, lng: temGeoProprio ? c.lng : c.ilng, aprox: !temGeoProprio && ['endereco', 'bairro'].includes(c.geo_origem),
+    imovel_id: c.imovel_id, imovel_nome: imovel, bairro: c.bairro, endereco: c.local || c.endereco,
+    aberto: c.status === 'marcado', emAndamento: false, cancelado: c.status === 'cancelado' || c.status === 'nao_aconteceu',
+    statusTxt: STATUS_COMP[c.status] || c.status, destaque: c.destaque || 0, lembretes: lerLembretes(c.lembretes, c.tipo), pessoas,
+    telefone: (pessoas.find(p => p.telefone) || {}).telefone || '', bruto: c };
+}
+const SQL_VISITA_AG = `SELECT v.*, i.nome as imovel_nome, i.codigo, i.bairro, i.endereco, i.lat, i.lng, i.geo_origem, l.nome as lead_nome, l.telefone
+  FROM visita v JOIN imovel i ON i.id=v.imovel_id LEFT JOIN lead l ON l.id=v.lead_id`;
+const SQL_COMP_AG = `SELECT c.*, i.nome as imovel_nome, i.codigo, i.bairro, i.endereco, i.lat as ilat, i.lng as ilng, i.geo_origem
+  FROM compromisso c LEFT JOIN imovel i ON i.id=c.imovel_id`;
+function ordemItem(it) { return it.data + (it.diaInteiro ? '00:00' : (it.hora || '99:99')); }
+function itensDaAgenda(de, ate) {
+  const out = q(SQL_VISITA_AG + ` WHERE v.data>=? AND v.data<=?`, [de, ate]).map(itemDeVisita)
+    .concat(q(SQL_COMP_AG + ` WHERE c.data>=? AND c.data<=?`, [de, ate]).map(itemDeCompromisso));
+  return out.sort((a, b) => ordemItem(a).localeCompare(ordemItem(b)));
+}
+function itemAgenda(k, id) {
+  if (k === 'visita') { const v = q(SQL_VISITA_AG + ` WHERE v.id=?`, [id])[0]; return v ? itemDeVisita(v) : null; }
+  const c = q(SQL_COMP_AG + ` WHERE c.id=?`, [id])[0]; return c ? itemDeCompromisso(c) : null;
+}
+function fimDoItem(it) {
+  if (it.diaInteiro) return dataLocal(somarDias(it.data, 1)).getTime();
+  return dataHora(it.data, it.hora).getTime() + it.dur * 60000;
+}
+// passou sem registro: visita segue a regra de sempre (30 min depois do horário, sem
+// check-in); compromisso, quando termina
+function jaTerminou(it) {
+  if (!it.aberto || it.cancelado) return false;
+  if (it.k === 'visita') return !it.emAndamento && (it.data < todayISO(0) || (it.data === todayISO(0) && horaPassou(it.bruto)));
+  return fimDoItem(it) < Date.now();
+}
+function praRegistrar(dias) { return itensDaAgenda(todayISO(-dias), todayISO(0)).filter(jaTerminou); }
+function quandoItem(it) { return rotuloDia(it.data) + (it.diaInteiro ? ' · dia inteiro' : ', ' + it.hora + '–' + hhmm(minDe(it.hora) + it.dur)); }
+
+// ---------- conflito ----------
+function conflitosDe(novo, excluir) {
+  if (novo.diaInteiro || minDe(novo.hora) == null) return [];
+  const ini = minDe(novo.hora), fim = ini + (novo.dur || 60), avisos = [];
+  itensDaAgenda(novo.data, novo.data).forEach(it => {
+    if ((it.k === excluir.k && it.id === excluir.id) || !it.aberto || it.diaInteiro || minDe(it.hora) == null) return;
+    const a = minDe(it.hora), b = a + it.dur;
+    if (ini < b && a < fim) { avisos.push(`Já tem ${it.titulo} das ${it.hora} às ${hhmm(b)}.`); return; }
+    if (novo.lat == null || novo.lng == null || it.lat == null || it.lng == null) return;
+    const km = haversineKm(novo, it) * 1.3, precisa = Math.round(km / VELOCIDADE_KMH * 60) + 10;
+    if (b <= ini && ini - b < precisa) avisos.push(`Saindo de ${it.titulo} às ${hhmm(b)}, são ${fmtKm(km)} até aqui: uns ${precisa} min, e o intervalo é de ${ini - b} min.`);
+    if (fim <= a && a - fim < precisa) avisos.push(`Daqui até ${it.titulo} (${it.hora}) são ${fmtKm(km)}: uns ${precisa} min, e o intervalo é de ${a - fim} min.`);
+  });
+  return avisos;
+}
+// o primeiro Salvar mostra o aviso dentro do formulário; o segundo grava
+function avisarConflito(avisos, chave) {
+  if (!avisos.length || window.__confOk === chave) { window.__confOk = null; return false; }
+  window.__confOk = chave;
+  const box = document.getElementById('form-conflito');
+  if (box) {
+    box.innerHTML = `<div class="aviso-conflito" role="alert">${avisos.map(a => `<p>${ico('alerta', 'ic-sm')} ${esc(a)}</p>`).join('')}<p style="margin:0">Toque de novo pra salvar mesmo assim.</p></div>`;
+    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+  const b = document.getElementById('form-salvar'); if (b) b.lastChild.textContent = 'Salvar mesmo assim';
+  return true;
+}
+
+// ---------- favorito (estrela) ----------
+// Uma estrela só, sem significado fixo: cada toque avança verde → amarelo → laranja →
+// vermelho → azul → apagada. Quem usa decide o que cada cor quer dizer.
+function rotuloEstrela(cor) {
+  const prox = CORES_ESTRELA[(cor + 1) % 6];
+  return (cor ? 'Favorito ' + CORES_ESTRELA[cor] : 'Favoritar') + '. Tocar ' + (prox ? 'marca ' + prox : 'tira a estrela');
+}
+function estrelaHTML(k, id, cor, cls) {
+  cor = cor || 0;
+  return `<button type="button" class="estrela ${cls || ''}" data-item="${k}:${id}" data-cor="${cor}" onclick="event.stopPropagation();alternarEstrela('${k}', ${id})" aria-label="${rotuloEstrela(cor)}">${ico('estrela')}</button>`;
+}
+let estrelaTimer = null;
+function alternarEstrela(k, id) {
+  const tabela = k === 'visita' ? 'visita' : 'compromisso';
+  const atual = (q(`SELECT destaque FROM ${tabela} WHERE id=?`, [id])[0] || {}).destaque || 0;
+  const nova = (atual + 1) % 6;
+  run(`UPDATE ${tabela} SET destaque=? WHERE id=?`, [nova, id]);
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) { /* ok */ }
+  document.querySelectorAll(`.estrela[data-item="${k}:${id}"]`).forEach(b => { b.dataset.cor = nova; b.setAttribute('aria-label', rotuloEstrela(nova)); });
+  // quem toca várias vezes seguidas não quer a tela redesenhando a cada toque
+  clearTimeout(estrelaTimer);
+  estrelaTimer = setTimeout(() => { renderAGSemRolar(); renderHJ(); }, 700);
+}
+function estrelaFormHTML(hiddenId, cor) {
+  cor = cor || 0;
+  return `<button type="button" class="estrela" id="${hiddenId}-btn" data-cor="${cor}" onclick="alternarEstrelaForm('${hiddenId}')" aria-label="${rotuloEstrela(cor)}">${ico('estrela')}</button>`;
+}
+function alternarEstrelaForm(hiddenId) {
+  const h = document.getElementById(hiddenId), b = document.getElementById(hiddenId + '-btn'); if (!h || !b) return;
+  const nova = ((+h.value || 0) + 1) % 6;
+  h.value = String(nova); h.dispatchEvent(new Event('input', { bubbles: true }));
+  b.dataset.cor = nova; b.setAttribute('aria-label', rotuloEstrela(nova));
+}
+function sincronizarEstrelaForm(hiddenId) {
+  const h = document.getElementById(hiddenId), b = document.getElementById(hiddenId + '-btn'); if (!h || !b) return;
+  b.dataset.cor = +h.value || 0; b.setAttribute('aria-label', rotuloEstrela(+h.value || 0));
+}
+
+// ---------- chips de escolha (duração, lembretes, tipo) ----------
+function chipsHTML(hiddenId, opcoes, multi) {
+  return `<div class="chip-row chip-row--wrap" data-chips="${hiddenId}" data-multi="${multi ? 1 : 0}">${opcoes.map(([v, t]) =>
+    `<button type="button" class="chip" data-v="${v}" aria-pressed="false" onclick="escolherChip('${hiddenId}', this)">${t}</button>`).join('')}</div>`;
+}
+function escolherChip(hiddenId, el) {
+  const h = document.getElementById(hiddenId); if (!h) return;
+  const box = el.closest('[data-chips]'), multi = box && box.dataset.multi === '1';
+  if (multi) {
+    let a = []; try { a = JSON.parse(h.value || '[]'); } catch (e) { /* vazio */ }
+    const v = +el.dataset.v;
+    a = a.includes(v) ? a.filter(x => x !== v) : a.concat(v);
+    h.value = JSON.stringify(a.sort((x, y) => y - x));
+  } else h.value = el.dataset.v;
+  const mod = document.getElementById(hiddenId + 'mod'); if (mod) mod.value = '1';
+  h.dispatchEvent(new Event('input', { bubbles: true }));
+  marcarChips(hiddenId);
+}
+function marcarChips(hiddenId) {
+  const h = document.getElementById(hiddenId); if (!h) return;
+  document.querySelectorAll(`[data-chips="${hiddenId}"]`).forEach(box => {
+    let a = null; if (box.dataset.multi === '1') { try { a = JSON.parse(h.value || '[]'); } catch (e) { a = []; } }
+    box.querySelectorAll('.chip').forEach(c => { const on = a ? a.includes(+c.dataset.v) : c.dataset.v === h.value; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+  });
+}
+
+// ---------- pessoas marcadas ----------
+// Seletor dentro do próprio formulário: abrir outra folha por cima apagaria o que já
+// foi digitado. A lista escolhida mora num campo escondido, então entra no rascunho.
+function pickerPessoasHTML(pfx, lista) {
+  return `<div class="field" id="f-${pfx}-busca"><label>Pessoas</label>
+    <input type="hidden" id="${pfx}-pessoas" value="${esc(JSON.stringify(lista || []))}">
+    <div id="${pfx}-sel"></div>
+    <input data-busca="${pfx}" placeholder="Buscar nome ou telefone" autocomplete="off" oninput="buscarPessoaAgenda('${pfx}')" aria-label="Buscar pessoa pra marcar">
+    <div id="${pfx}-res" class="pessoas-res"></div>
+    <button type="button" class="btn btn--sm btn--ghost" onclick="novaPessoaInline('${pfx}')">${ico('somar')}Pessoa nova</button>
+    <div id="${pfx}-nova" class="card card--sunken" hidden>
+      <input data-nova-nome placeholder="Nome" autocomplete="off" autocapitalize="words" aria-label="Nome da pessoa nova" style="margin-bottom:var(--s2)">
+      <input data-nova-tel placeholder="Telefone (opcional)" type="tel" inputmode="tel" autocomplete="off" aria-label="Telefone da pessoa nova" style="margin-bottom:var(--s2)">
+      <button type="button" class="btn btn--sm btn--block" onclick="criarPessoaInline('${pfx}')">${ico('check')}Criar e marcar</button>
+    </div></div>`;
+}
+function pessoasSel(pfx) { try { return JSON.parse((document.getElementById(pfx + '-pessoas') || {}).value || '[]'); } catch (e) { return []; } }
+function setPessoasSel(pfx, lista) {
+  const h = document.getElementById(pfx + '-pessoas'); if (!h) return;
+  h.value = JSON.stringify(lista); h.dispatchEvent(new Event('input', { bubbles: true }));
+  renderPessoasSel(pfx);
+}
+function nomePessoa(p) { const r = TABELA_PESSOA[p.tipo] && q(`SELECT nome FROM ${TABELA_PESSOA[p.tipo]} WHERE id=?`, [p.id])[0]; return r ? r.nome : ''; }
+function renderPessoasSel(pfx) {
+  const box = document.getElementById(pfx + '-sel'); if (!box) return;
+  box.innerHTML = pessoasSel(pfx).map((p, i) => {
+    const nome = nomePessoa(p); if (!nome) return '';
+    return `<div class="pessoa-sel"><span class="pessoa-sel__n">${esc(nome)}</span>
+      <select aria-label="Papel de ${esc(nome)}" onchange="papelPessoaSel('${pfx}', ${i}, this.value)">${PAPEIS.map(pp => `<option value="${pp}" ${pp === (p.papel || '') ? 'selected' : ''}>${pp || 'papel…'}</option>`).join('')}</select>
+      <button type="button" class="btn btn--icon btn--ghost" onclick="tirarPessoaSel('${pfx}', ${i})" aria-label="Tirar ${esc(nome)}">${ico('x')}</button></div>`;
+  }).join('');
+}
+function papelPessoaSel(pfx, i, papel) { const l = pessoasSel(pfx); if (l[i]) { l[i].papel = papel; setPessoasSel(pfx, l); } }
+function tirarPessoaSel(pfx, i) { const l = pessoasSel(pfx); l.splice(i, 1); setPessoasSel(pfx, l); }
+function buscarPessoaAgenda(pfx) {
+  const campoBusca = document.querySelector(`[data-busca="${pfx}"]`), res = document.getElementById(pfx + '-res'); if (!campoBusca || !res) return;
+  const termo = campoBusca.value.trim().toLowerCase();
+  if (termo.length < 2) { res.innerHTML = ''; return; }
+  const dig = termo.replace(/\D/g, ''), ja = pessoasSel(pfx).map(p => p.tipo + ':' + p.id), achados = [];
+  [['lead', 'comprador'], ['captacao', 'captação'], ['cliente', 'cliente']].forEach(([t, rot]) =>
+    q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[t]} ORDER BY nome`).forEach(r => {
+      if (ja.includes(t + ':' + r.id)) return;
+      if (String(r.nome || '').toLowerCase().includes(termo) || (dig.length >= 3 && String(r.telefone || '').replace(/\D/g, '').includes(dig))) achados.push({ t, rot, r });
+    }));
+  res.innerHTML = achados.slice(0, 6).map(a => `<button type="button" class="card card--tap row" onclick="addPessoaSel('${pfx}', '${a.t}', ${a.r.id})">
+      <span class="row__ico">${ico(a.t === 'captacao' ? 'casa' : 'pessoa')}</span>
+      <span class="row__main"><span class="row__t">${esc(a.r.nome)}</span><span class="row__s">${a.rot}</span></span>${ico('somar', 'row__chev')}</button>`).join('')
+    || `<p class="muted" style="margin:var(--s1) 0">Ninguém com esse nome. Use "Pessoa nova".</p>`;
+}
+function addPessoaSel(pfx, tipo, id) {
+  const l = pessoasSel(pfx); if (!l.some(p => p.tipo === tipo && p.id === id)) l.push({ tipo, id, papel: '' });
+  const campoBusca = document.querySelector(`[data-busca="${pfx}"]`); if (campoBusca) campoBusca.value = '';
+  const res = document.getElementById(pfx + '-res'); if (res) res.innerHTML = '';
+  setPessoasSel(pfx, l);
+}
+function novaPessoaInline(pfx) {
+  const b = document.getElementById(pfx + '-nova'); if (!b) return;
+  b.hidden = !b.hidden;
+  if (!b.hidden) { const n = b.querySelector('[data-nova-nome]'), s = document.querySelector(`[data-busca="${pfx}"]`); if (s && s.value.trim()) n.value = s.value.trim(); n.focus(); }
+}
+function criarPessoaInline(pfx) {
+  const b = document.getElementById(pfx + '-nova'); if (!b) return;
+  const nome = b.querySelector('[data-nova-nome]').value.trim(), tel = b.querySelector('[data-nova-tel]').value.trim();
+  if (!nome) return showToastErr('Escreva o nome da pessoa.');
+  const id = insertAndGetId(`INSERT INTO cliente (nome, telefone, tipo, observacoes, criado_em) VALUES (?,?,?,?,?)`, [nome, tel || null, 'Contato geral', 'Cadastrada ao marcar um compromisso', agoraISO()]);
+  b.querySelector('[data-nova-nome]').value = ''; b.querySelector('[data-nova-tel]').value = ''; b.hidden = true;
+  addPessoaSel(pfx, 'cliente', id);
+  renderCR();
+  showToast(nome + ' entrou em Pessoas, como cliente.');
+}
+
+// ---------- visões da agenda ----------
+let agVisao = 'semana', agData = null, agListaDias = 30;
+const agFiltro = { tipos: [], cores: [], pessoa: '' };
+try { const v = localStorage.getItem('agenda:visao'); if (['dia', 'semana', 'lista'].includes(v)) agVisao = v; } catch (e) { /* ok */ }
+function setAgVisao(v) { agVisao = v; try { localStorage.setItem('agenda:visao', v); } catch (e) { /* ok */ } renderAG(); }
+function moverAg(n) { agData = somarDias(agData || todayISO(0), agVisao === 'semana' ? 7 * n : n); renderAG(); }
+function agHoje() { agData = todayISO(0); renderAG(); }
+function escolherDiaSemana(ymd) { agData = ymd; renderAGSemRolar(); }
+function renderAGSemRolar() { const sb = document.getElementById('screen-body'), y = sb ? sb.scrollTop : 0; renderAG(); if (sb) sb.scrollTop = y; }
+function filtroAtivo() { return agFiltro.tipos.length + agFiltro.cores.length + (agFiltro.pessoa ? 1 : 0); }
+function filtrarAg(itens) {
+  return itens.filter(it => (!agFiltro.tipos.length || agFiltro.tipos.includes(it.tipo))
+    && (!agFiltro.cores.length || agFiltro.cores.includes(it.destaque))
+    && (!agFiltro.pessoa || it.pessoas.some(p => p.tipo + ':' + p.id === agFiltro.pessoa)));
+}
+function followUpsDe(ymd) {
+  const hoje = todayISO(0);
+  return q(`SELECT sc.id, sc.descricao, sc.canal, sc.vence_em, l.id as lead_id, l.nome FROM sequencia_contato sc JOIN lead l ON l.id=sc.lead_id
+     WHERE sc.status='agendado' AND ${ymd === hoje ? '(sc.vence_em IS NULL OR sc.vence_em<=?)' : 'sc.vence_em=?'} ORDER BY sc.vence_em`, [ymd]);
+}
+function cartaoItemAgenda(it, opts) {
+  opts = opts || {};
+  const tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
+  const quando = it.diaInteiro ? 'dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur);
+  const sub = [it.pessoas.map(p => p.nome).join(', '), it.k === 'compromisso' ? (it.imovel_nome || it.local) : it.bairro].filter(Boolean).join(' · ');
+  const passou = jaTerminou(it);
+  const pill = !it.aberto ? `<span class="pill">${esc(it.statusTxt)}</span>`
+    : it.emAndamento ? `<span class="pill ok">em andamento</span>`
+    : passou ? `<span class="pill warn">pra registrar</span>`
+    : it.k === 'visita' ? `<span class="pill ${it.bruto.status === 'confirmada' ? 'ok' : ''}">${esc(it.statusTxt)}</span>` : '';
+  return `<div class="card ag-item ${it.cancelado ? 'is-cancelado' : ''} ${!it.aberto ? 'is-fechado' : ''}">
+    <button class="row" onclick="abrirItemAgenda('${it.k}', ${it.id})">
+      <span class="row__ico">${ico(tp.ic)}</span>
+      <span class="row__main"><span class="row__t"><span class="num">${opts.comData ? esc(rotuloDia(it.data)) + ', ' : ''}${esc(quando)}</span> · ${esc(it.titulo)}</span>
+        <span class="row__s">${esc(sub || tp.t)}</span>${pill ? `<span class="ag-item__pill">${pill}</span>` : ''}</span>
+    </button>
+    ${estrelaHTML(it.k, it.id, it.destaque)}
+  </div>`;
+}
+function linhaFollowUpHTML(f) {
+  return `<button class="card card--tap row" onclick="openDetail('lead', ${f.lead_id})">
+    <span class="row__ico">${ico(canalAcao(f.canal) === 'ligar' ? 'telefone' : 'conversa')}</span>
+    <span class="row__main"><span class="row__t">Follow-up · ${esc(f.nome)}</span><span class="row__s">${esc([f.descricao, quandoVence(f.vence_em), canalRotulo(f.canal)].filter(Boolean).join(' · '))}</span></span>
+    ${ico('chevron', 'row__chev')}</button>`;
+}
+function renderAG() {
+  const lista = document.getElementById('ag-list'); if (!lista || !db) return;
+  const hoje = todayISO(0);
+  if (!agData) agData = hoje;
+  document.getElementById('ag-visoes').innerHTML = [['dia', 'Dia'], ['semana', 'Semana'], ['lista', 'Lista']].map(([k, t]) =>
+    `<button class="chip ${agVisao === k ? 'on' : ''}" aria-pressed="${agVisao === k}" onclick="setAgVisao('${k}')">${t}</button>`).join('');
+  const nav = document.getElementById('ag-nav');
+  nav.hidden = agVisao === 'lista';
+  if (agVisao !== 'lista') {
+    const ini = inicioSemana(agData), fim = somarDias(ini, 6);
+    const rot = agVisao === 'dia' ? rotuloDia(agData) + (agData === hoje || agData === todayISO(1) || agData === todayISO(-1) ? ' · ' + fmtDataCurta(agData).split(', ')[1] : '')
+      : dataLocal(ini).getDate() + (ini.slice(5, 7) !== fim.slice(5, 7) ? ' ' + MESES[dataLocal(ini).getMonth()] : '') + '–' + dataLocal(fim).getDate() + ' ' + MESES[dataLocal(fim).getMonth()];
+    const naHoje = agVisao === 'dia' ? agData === hoje : ini === inicioSemana(hoje);
+    nav.innerHTML = `<button class="btn btn--icon" onclick="moverAg(-1)" aria-label="${agVisao === 'dia' ? 'Dia anterior' : 'Semana anterior'}">${ico('chevron', 'ic-esq')}</button>
+      <span class="ag-nav__t" aria-live="polite">${esc(rot)}</span>
+      <button class="btn btn--sm" onclick="agHoje()" ${naHoje ? 'disabled' : ''}>Hoje</button>
+      <button class="btn btn--icon" onclick="moverAg(1)" aria-label="${agVisao === 'dia' ? 'Próximo dia' : 'Próxima semana'}">${ico('chevron')}</button>`;
+  }
+  const n = filtroAtivo();
+  document.getElementById('ag-filtro').innerHTML = `<button class="chip ${n ? 'on' : ''}" onclick="filtroAgendaSheet()">Filtrar${n ? ' · ' + n : ''}</button>
+    ${n ? `<button class="btn btn--sm btn--ghost" onclick="limparFiltroAg()">Limpar filtro</button>` : ''}
+    <button class="btn btn--sm btn--ghost" style="margin-left:auto" onclick="exportarAgendaIcs()">${ico('download', 'ic-sm')}Agenda do celular</button>`;
+  lista.innerHTML = agVisao === 'dia' ? agDiaHTML(agData) : agVisao === 'semana' ? agSemanaHTML(agData) : agListaHTML();
+}
+function agDiaHTML(ymd) {
+  const hoje = todayISO(0);
+  const itens = filtrarAg(itensDaAgenda(ymd, ymd));
+  const semHora = itens.filter(it => it.diaInteiro), comHora = itens.filter(it => !it.diaInteiro);
+  const follow = filtroAtivo() ? [] : followUpsDe(ymd);
+  const PX = 1.1, inicios = comHora.map(it => minDe(it.hora)), fins = comHora.map(it => minDe(it.hora) + it.dur);
+  const H0 = Math.floor(Math.min(7 * 60, ...inicios) / 60) * 60, H1 = Math.ceil(Math.max(21 * 60, ...fins) / 60) * 60;
+  // raias: item que se sobrepõe a outro divide a largura com ele
+  const ordem = comHora.slice().sort((a, b) => minDe(a.hora) - minDe(b.hora)), raias = [];
+  ordem.forEach(it => {
+    const s = minDe(it.hora); let r = raias.findIndex(fimRaia => fimRaia <= s);
+    if (r < 0) { r = raias.length; raias.push(0); }
+    raias[r] = s + it.dur; it._raia = r;
+  });
+  ordem.forEach(it => {
+    const s = minDe(it.hora), e = s + it.dur;
+    it._n = Math.max(1, ...ordem.filter(o => minDe(o.hora) < e && s < minDe(o.hora) + o.dur).map(o => o._raia + 1));
+  });
+  let horas = '';
+  for (let h = H0; h < H1; h += 60) horas += `<button class="ag-hora" style="top:${(h - H0) * PX}px" onclick="novoAgendaSheet('${ymd}', '${hhmm(h)}')" aria-label="Marcar às ${hhmm(h)}"><span>${hhmm(h)}</span></button>`;
+  const blocos = ordem.map(it => {
+    const s = minDe(it.hora), alt = Math.max(44, it.dur * PX - 3);
+    const quem = it.pessoas.map(p => p.nome.split(' ')[0]).join(', ');
+    return `<div class="ag-bloco ${it.cancelado ? 'is-cancelado' : ''} ${!it.aberto ? 'is-fechado' : ''}" data-cor="${it.destaque}"
+        style="top:${(s - H0) * PX + 1}px;height:${alt}px;left:calc(52px + (100% - 52px) * ${it._raia} / ${it._n});width:calc((100% - 52px) / ${it._n} - 4px)">
+      <button class="ag-bloco__main" onclick="abrirItemAgenda('${it.k}', ${it.id})"><b>${esc(it.hora)}</b> ${esc(it.titulo)}${quem || it.local ? `<span>${esc([quem, it.k === 'compromisso' ? it.local : it.bairro].filter(Boolean).join(' · '))}</span>` : ''}</button>
+      ${estrelaHTML(it.k, it.id, it.destaque)}</div>`;
+  }).join('');
+  const n = new Date(), agoraMin = n.getHours() * 60 + n.getMinutes();
+  const agora = ymd === hoje && agoraMin >= H0 && agoraMin <= H1 ? `<div class="ag-agora" style="top:${(agoraMin - H0) * PX}px" aria-hidden="true"></div>` : '';
+  return (semHora.length || follow.length ? `<h2 class="blk-title">Sem hora</h2>` + semHora.map(it => cartaoItemAgenda(it)).join('') + follow.map(linhaFollowUpHTML).join('') : '')
+    + (comHora.length ? '' : `<p class="muted" style="margin:var(--s2) 0">${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Dia livre. Toque num horário pra marcar.'}</p>`)
+    + `<div class="ag-dia" style="height:${(H1 - H0) * PX}px">${horas}${blocos}${agora}</div>`;
+}
+function agSemanaHTML(ymd) {
+  const hoje = todayISO(0), ini = inicioSemana(ymd), fim = somarDias(ini, 6);
+  const itens = filtrarAg(itensDaAgenda(ini, fim));
+  const faixa = Array.from({ length: 7 }, (_, i) => {
+    const d = somarDias(ini, i), doDia = itens.filter(it => it.data === d), dt = dataLocal(d);
+    const pontos = doDia.slice(0, 4).map(it => `<span class="ag-dot" data-cor="${it.destaque}"></span>`).join('');
+    return `<button class="ag-sd ${d === ymd ? 'on' : ''} ${d === hoje ? 'is-hoje' : ''}" onclick="escolherDiaSemana('${d}')" aria-pressed="${d === ymd}"
+        aria-label="${esc(fmtDataCurta(d))}: ${plural(doDia.length, 'compromisso', 'compromissos')}">
+      <span class="ag-sd__d">${DIAS_SEM[dt.getDay()]}</span><span class="ag-sd__n">${dt.getDate()}</span><span class="ag-dots">${pontos}</span></button>`;
+  }).join('');
+  const doDia = itens.filter(it => it.data === ymd), follow = filtroAtivo() ? [] : followUpsDe(ymd);
+  return `<div class="ag-semana" role="group" aria-label="Dias da semana">${faixa}</div>
+    <h2 class="blk-title">${esc(rotuloDia(ymd))}${ymd === hoje || ymd === todayISO(1) ? ' · ' + esc(fmtDataCurta(ymd).split(', ')[1]) : ''}
+      <button class="jump" onclick="novoAgendaSheet('${ymd}')">+ marcar</button></h2>
+    ${doDia.map(it => cartaoItemAgenda(it)).join('') + follow.map(linhaFollowUpHTML).join('')
+      || `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Nada marcado neste dia.'}</p></div>`}`;
+}
+function agListaHTML() {
+  const hoje = todayISO(0);
+  const registrar = filtrarAg(praRegistrar(14)), chaves = new Set(registrar.map(it => it.k + it.id));
+  const itens = filtrarAg(itensDaAgenda(hoje, somarDias(hoje, agListaDias))).filter(it => !chaves.has(it.k + it.id) && (it.aberto || it.data >= hoje));
+  let html = registrar.length ? `<h2 class="blk-title">Pra registrar</h2>` + registrar.map(it => cartaoItemAgenda(it, { comData: it.data !== hoje })).join('') : '';
+  const grupos = {};
+  itens.forEach(it => { (grupos[it.data] = grupos[it.data] || []).push(it); });
+  Object.keys(grupos).sort().forEach(d => {
+    html += `<h2 class="blk-title">${esc(rotuloDia(d))}${d === hoje || d === todayISO(1) ? ' · ' + esc(fmtDataCurta(d).split(', ')[1]) : ''}</h2>` + grupos[d].map(it => cartaoItemAgenda(it)).join('');
+  });
+  if (!itens.length && !registrar.length) html = `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro.' : 'Nada marcado nos próximos ' + agListaDias + ' dias.'}</p>
+    <button class="btn btn--sm" onclick="novoAgendaSheet()">Marcar</button></div>`;
+  return html + `<button class="btn btn--ghost btn--block" style="margin-top:var(--s2)" onclick="agListaDias += 30; renderAGSemRolar()">Mostrar mais 30 dias</button>`;
+}
+function filtroAgendaSheet() {
+  const html = () => {
+    const pessoas = [];
+    q('SELECT DISTINCT pessoa_tipo t, pessoa_id id FROM agenda_pessoa').forEach(r => { const nome = nomePessoa({ tipo: r.t, id: r.id }); if (nome) pessoas.push({ v: r.t + ':' + r.id, nome }); });
+    q('SELECT DISTINCT l.id, l.nome FROM visita v JOIN lead l ON l.id=v.lead_id').forEach(r => { if (!pessoas.some(p => p.v === 'lead:' + r.id)) pessoas.push({ v: 'lead:' + r.id, nome: r.nome }); });
+    pessoas.sort((a, b) => a.nome.localeCompare(b.nome));
+    return `<h2 class="sheet__title" id="sheet-title">Filtrar agenda</h2>
+      <div class="eyebrow" style="color:var(--text-3)">Tipo</div>
+      <div class="chip-row chip-row--wrap">${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="chip ${agFiltro.tipos.includes(k) ? 'on' : ''}" aria-pressed="${agFiltro.tipos.includes(k)}" onclick="alternarFiltroAg('tipos', '${k}')">${t.curto}</button>`).join('')}</div>
+      <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Favorito</div>
+      <div class="chip-row chip-row--wrap">${[1, 2, 3, 4, 5].map(c => `<button class="chip ${agFiltro.cores.includes(c) ? 'on' : ''}" aria-pressed="${agFiltro.cores.includes(c)}" onclick="alternarFiltroAg('cores', ${c})"><span class="ag-dot" data-cor="${c}" aria-hidden="true"></span>&nbsp;${CORES_ESTRELA[c]}</button>`).join('')}</div>
+      <div class="field" style="margin-top:var(--s3)"><label for="ag-filtro-pessoa">Pessoa</label><select id="ag-filtro-pessoa" onchange="agFiltro.pessoa=this.value;renderAG()">
+        <option value="">(todas)</option>${pessoas.map(p => `<option value="${p.v}" ${agFiltro.pessoa === p.v ? 'selected' : ''}>${esc(p.nome)}</option>`).join('')}</select></div>
+      <div class="btn-row sheet__acts"><button class="btn btn--grow" onclick="limparFiltroAg(true)">Limpar</button><button class="btn btn--primary btn--grow" onclick="closeSheet()">Ver agenda</button></div>`;
+  };
+  openSheet(html(), { foco: false, chave: 'filtro-ag', refazer: html });
+  window.__filtroHTML = html;
+}
+function alternarFiltroAg(campoF, v) {
+  const a = agFiltro[campoF]; const i = a.indexOf(v); if (i >= 0) a.splice(i, 1); else a.push(v);
+  renderAG();
+  if (folhaAtual && folhaAtual.chave === 'filtro-ag' && window.__filtroHTML) openSheet(window.__filtroHTML(), { foco: false, chave: 'filtro-ag', refazer: window.__filtroHTML });
+}
+function limparFiltroAg(naFolha) {
+  agFiltro.tipos = []; agFiltro.cores = []; agFiltro.pessoa = '';
+  renderAG();
+  if (naFolha && folhaAtual && folhaAtual.chave === 'filtro-ag' && window.__filtroHTML) openSheet(window.__filtroHTML(), { foco: false, chave: 'filtro-ag', refazer: window.__filtroHTML });
+}
+function atualizarAgenda() { renderAGSemRolar(); renderHJ(); atualizarSino(); verificarLembretes(); }
+
+// ---------- abrir, marcar ----------
+function abrirItemAgenda(k, id) { if (k === 'visita') abrirVisita(id); else abrirCompromisso(id); }
+function novoAgendaSheet(data, hora) {
+  const d = data || (agVisao === 'lista' || !agData ? todayISO(0) : agData);
+  window.__novoAg = { data: d, hora: hora || '' };
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Marcar ${d === todayISO(0) ? 'hoje' : d === todayISO(1) ? 'amanhã' : esc(fmtDataCurta(d))}${hora ? ' às ' + esc(hora) : ''}</h2>
+    ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="card card--tap row" onclick="novoDoTipo('${k}')">
+      <span class="row__ico">${ico(t.ic)}</span><span class="row__main"><span class="row__t">${t.t}</span><span class="row__s">${t.s}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false });
+}
+function novoDoTipo(k) {
+  const n = window.__novoAg || { data: todayISO(0), hora: '' };
+  closeSheet();
+  if (k === 'visita') openForm('visita', { tipo: 'agenda', id: (n.data + n.hora).replace(/\D/g, ''), preset: n });
+  else abrirFormCompromisso({ tipo: k, data: n.data, hora: n.hora });
+}
+
+// ---------- formulário de compromisso ----------
+function proximaHoraCheia() { const d = new Date(); return hhmm((d.getHours() + 1) * 60); }
+function abrirFormCompromisso(o) {
+  o = Object.assign({ tipo: 'reuniao', data: todayISO(0), hora: '', titulo: '', pessoas: [], imovel_id: null, local: '', lat: null, lng: null, notas: '', destaque: 0, diaInteiro: false }, o || {});
+  if (!TIPOS_AGENDA[o.tipo] || o.tipo === 'visita') o.tipo = 'reuniao';
+  if (!o.hora && !o.diaInteiro) o.hora = o.data === todayISO(0) ? proximaHoraCheia() : '10:00';
+  if (!o.dur) o.dur = duracaoPadrao(o.tipo);
+  if (!o.lembretes) o.lembretes = lembretesPadrao(o.tipo);
+  const imoveis = q(`SELECT id, codigo, nome FROM imovel ORDER BY nome`);
+  window.__confOk = null;
+  openSheet(`
+    <div class="between"><h2 class="sheet__title" id="sheet-title" style="margin:0">${o.id ? 'Editar compromisso' : 'Novo compromisso'}</h2>${estrelaFormHTML('fco-destaque', o.destaque)}</div>
+    <form id="form-comp" onsubmit="event.preventDefault();salvarCompromisso(${o.id || 0})" novalidate>
+      <input type="hidden" id="fco-destaque" value="${o.destaque || 0}">
+      <input type="hidden" id="fco-tipo" value="${o.tipo}">
+      <input type="hidden" id="fco-dur" value="${o.dur}"><input type="hidden" id="fco-durmod" value="${o.id ? 1 : 0}">
+      <input type="hidden" id="fco-lemb" value="${esc(JSON.stringify(o.lembretes))}"><input type="hidden" id="fco-lembmod" value="${o.id ? 1 : 0}">
+      <input type="hidden" id="fco-diaint" value="${o.diaInteiro ? 1 : 0}">
+      <input type="hidden" id="fco-lat" value="${o.lat != null ? o.lat : ''}"><input type="hidden" id="fco-lng" value="${o.lng != null ? o.lng : ''}">
+      <div class="chip-row chip-row--wrap" data-chips="fco-tipo" data-multi="0" style="margin:var(--s3) 0">${Object.entries(TIPOS_AGENDA).filter(([k]) => k !== 'visita').map(([k, t]) =>
+        `<button type="button" class="chip" data-v="${k}" aria-pressed="false" onclick="escolherTipoComp(this)">${t.curto}</button>`).join('')}</div>
+      <div class="field-grid">
+        ${campo('fco-data', 'Data', `<input id="fco-data" type="date" value="${esc(o.data)}">`)}
+        ${campo('fco-hora', 'Hora', `<input id="fco-hora" type="time" value="${esc(o.hora || '')}" ${o.diaInteiro ? 'disabled' : ''}>`)}
+      </div>
+      <div class="chip-row chip-row--wrap" style="margin-top:calc(var(--s2) * -1)">
+        <button type="button" class="chip" onclick="dataRapida(0, 'fco-data')">Hoje</button>
+        <button type="button" class="chip" onclick="dataRapida(1, 'fco-data')">Amanhã</button>
+        <button type="button" class="chip" onclick="dataRapida('sab', 'fco-data')">Sábado</button>
+        ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="horaRapida('fco-hora', '${h}')">${h.slice(0, 2)}h</button>`).join('')}
+      </div>
+      <label class="lembrar"><input type="checkbox" ${o.diaInteiro ? 'checked' : ''} onchange="diaInteiroComp(this.checked)"> Dia inteiro</label>
+      ${pickerPessoasHTML('fco', o.pessoas)}
+      ${campo('fco-imovel', 'Imóvel', selDados('fco-imovel', imoveis, nomeImovel, '(nenhum)'))}
+      <details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>
+        ${campo('fco-titulo', 'Título', inp('fco-titulo', 'Automático: tipo e pessoa', '', `value="${esc(o.titulo || '')}"`))}
+        <div class="field"><label>Duração</label>${chipsHTML('fco-dur', DURACOES, false)}</div>
+        ${campo('fco-local', 'Local', inp('fco-local', 'Ex.: cartório, escritório, endereço', '', `value="${esc(o.local || '')}"`))}
+        <button type="button" class="btn btn--sm btn--ghost" style="margin:calc(var(--s2) * -1) 0 var(--s2)" onclick="localAquiComp()">${ico('mapa')}Usar onde estou</button>
+        <p class="muted" id="fco-geo-msg" style="margin:0 0 var(--s3)">${o.lat != null ? 'Posição do local gravada.' : ''}</p>
+        <div class="field"><label>Lembretes</label>${chipsHTML('fco-lemb', OPCOES_LEMBRETE, true)}
+          <div class="help">Padrão de ${esc((TIPOS_AGENDA[o.tipo] || {}).t || '')}: dá pra mudar em Mais › Agenda e avisos.</div></div>
+        ${campo('fco-notas', 'Notas', `<textarea id="fco-notas" placeholder="O que levar, o que combinar">${esc(o.notas || '')}</textarea>`)}
+      </details>
+      <div id="form-conflito"></div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow" id="form-salvar">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>`, { chave: 'form-comp:' + (o.id || 'novo') });
+  const imovelSel = document.getElementById('fco-imovel'); if (imovelSel && o.imovel_id) imovelSel.value = String(o.imovel_id);
+  ['fco-tipo', 'fco-dur', 'fco-lemb'].forEach(marcarChips);
+  renderPessoasSel('fco');
+  const form = document.getElementById('form-comp');
+  prepararEnter(form);
+  const chaveCtx = o.chaveRascunho || ((o.pessoas[0] ? o.pessoas[0].tipo + o.pessoas[0].id : '') + (o.imovel_id ? 'i' + o.imovel_id : ''));
+  ligarRascunho('comp:' + (o.id || 'novo') + ':' + chaveCtx, form, () => {
+    ['fco-tipo', 'fco-dur', 'fco-lemb'].forEach(marcarChips); renderPessoasSel('fco'); sincronizarEstrelaForm('fco-destaque');
+    const di = val('fco-diaint') === '1', cb = form.querySelector('.lembrar input'); if (cb) cb.checked = di;
+    const h = document.getElementById('fco-hora'); if (h) h.disabled = di;
+  });
+}
+function horaRapida(id, h) { const e = document.getElementById(id); if (!e || e.disabled) return; e.value = h; e.dispatchEvent(new Event('input', { bubbles: true })); }
+function diaInteiroComp(on) {
+  const h = document.getElementById('fco-diaint'); h.value = on ? '1' : '0'; h.dispatchEvent(new Event('input', { bubbles: true }));
+  const hora = document.getElementById('fco-hora'); if (hora) hora.disabled = on;
+}
+function escolherTipoComp(el) {
+  escolherChip('fco-tipo', el);
+  const tipo = val('fco-tipo');
+  if (val('fco-durmod') !== '1') { const d = document.getElementById('fco-dur'); d.value = String(duracaoPadrao(tipo)); marcarChips('fco-dur'); document.getElementById('fco-durmod').value = '0'; }
+  if (val('fco-lembmod') !== '1') { const l = document.getElementById('fco-lemb'); l.value = JSON.stringify(lembretesPadrao(tipo)); marcarChips('fco-lemb'); document.getElementById('fco-lembmod').value = '0'; }
+}
+function localAquiComp() {
+  const msg = document.getElementById('fco-geo-msg');
+  if (!navigator.geolocation) { msg.textContent = 'Este navegador não dá a localização.'; return; }
+  msg.textContent = 'Buscando sua posição...';
+  navigator.geolocation.getCurrentPosition(pos => {
+    if (!document.getElementById('fco-lat')) return;
+    ['lat', 'lng'].forEach(c => { const e = document.getElementById('fco-' + c); e.value = String(pos.coords[c === 'lat' ? 'latitude' : 'longitude']); e.dispatchEvent(new Event('input', { bubbles: true })); });
+    msg.textContent = 'Posição gravada (±' + Math.round(pos.coords.accuracy) + ' m). Serve pra Rota e pro aviso de deslocamento.';
+  }, err => { msg.textContent = 'Não consegui a posição (' + (err && err.message ? err.message : 'erro') + ').'; }, { enableHighAccuracy: true, timeout: 15000 });
+}
+function salvarCompromisso(id) {
+  const tipo = TIPOS_AGENDA[val('fco-tipo')] ? val('fco-tipo') : 'reuniao';
+  const data = val('fco-data'); if (!data) return erroCampo('fco-data', 'Escolha a data.');
+  const diaInt = val('fco-diaint') === '1';
+  const hora = diaInt ? '' : val('fco-hora');
+  if (!diaInt && !hora) return erroCampo('fco-hora', 'Escolha a hora ou marque dia inteiro.');
+  const dur = +val('fco-dur') || duracaoPadrao(tipo);
+  const pessoas = pessoasSel('fco');
+  const imovelId = +val('fco-imovel') || null;
+  const lat = val('fco-lat') !== '' ? +val('fco-lat') : null, lng = val('fco-lng') !== '' ? +val('fco-lng') : null;
+  let lembretes = []; try { lembretes = JSON.parse(val('fco-lemb') || '[]'); } catch (e) { /* sem lembrete */ }
+  const geo = lat != null ? { lat, lng } : imovelId ? (q('SELECT lat, lng FROM imovel WHERE id=?', [imovelId])[0] || {}) : {};
+  if (avisarConflito(conflitosDe({ data, hora, dur, diaInteiro: diaInt, lat: geo.lat, lng: geo.lng }, { k: 'compromisso', id }), [data, hora, dur, geo.lat, geo.lng].join('|'))) return;
+  const valores = [tipo, val('fco-titulo') || null, data, hora || null, diaInt ? 1 : 0, dur, val('fco-local') || null, lat, lng, imovelId,
+    val('fco-notas') || null, +val('fco-destaque') || 0, lembretesParaGravar(lembretes, tipo)];
+  let novoId = id, antes = null;
+  if (id) {
+    antes = { row: q('SELECT * FROM compromisso WHERE id=?', [id])[0], pessoas: pessoasDoItem('compromisso', id) };
+    run(`UPDATE compromisso SET tipo=?, titulo=?, data=?, hora=?, dia_inteiro=?, duracao_min=?, local=?, lat=?, lng=?, imovel_id=?, notas=?, destaque=?, lembretes=? WHERE id=?`, valores.concat(id));
+  } else {
+    novoId = insertAndGetId(`INSERT INTO compromisso (tipo, titulo, data, hora, dia_inteiro, duracao_min, local, lat, lng, imovel_id, notas, destaque, lembretes, status, criado_em)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'marcado',?)`, valores.concat(agoraISO()));
+  }
+  gravarPessoasItem('compromisso', novoId, pessoas);
+  limparRascunho(); vibrar(); closeSheet(); atualizarAgenda();
+  const it = itemAgenda('compromisso', novoId);
+  const desfazer = () => {
+    if (antes) { inserirLinha('compromisso', antes.row); gravarPessoasItem('compromisso', id, antes.pessoas); }
+    else { run('DELETE FROM agenda_pessoa WHERE item_tipo=? AND item_id=?', ['compromisso', novoId]); run('DELETE FROM compromisso WHERE id=?', [novoId]); }
+    persist(); atualizarAgenda();
+    if (folhaAtual && folhaAtual.chave === 'comp:' + (id || novoId)) { if (antes) abrirCompromisso(id); else closeSheet(); }
+  };
+  showToast((id ? 'Compromisso atualizado' : 'Marcado') + ': ' + (it ? quandoItem(it) : ''), { label: 'Desfazer', fn: desfazer });
+  pedirAvisosUmaVez(lembretes);
+}
+function editarCompromisso(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  const c = it.bruto;
+  abrirFormCompromisso({ id, tipo: c.tipo, data: c.data, hora: c.hora || '', diaInteiro: !!c.dia_inteiro, dur: c.duracao_min || duracaoPadrao(c.tipo), titulo: c.titulo || '',
+    pessoas: it.pessoas.map(p => ({ tipo: p.tipo, id: p.id, papel: p.papel })), imovel_id: c.imovel_id, local: c.local || '', lat: c.lat, lng: c.lng,
+    notas: c.notas || '', destaque: c.destaque || 0, lembretes: it.lembretes });
+}
+function duplicarCompromisso(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  const c = it.bruto;
+  abrirFormCompromisso({ tipo: c.tipo, data: todayISO(0) > c.data ? todayISO(0) : c.data, hora: c.hora || '', diaInteiro: !!c.dia_inteiro, dur: c.duracao_min || duracaoPadrao(c.tipo),
+    titulo: c.titulo || '', pessoas: it.pessoas.map(p => ({ tipo: p.tipo, id: p.id, papel: p.papel })), imovel_id: c.imovel_id, local: c.local || '',
+    lat: c.lat, lng: c.lng, notas: c.notas || '', destaque: c.destaque || 0, lembretes: it.lembretes, chaveRascunho: 'dup' + id });
+}
+
+// ---------- ficha do compromisso ----------
+function compromissoHTML(id) {
+  const it = itemAgenda('compromisso', id);
+  if (!it) return `<div class="empty">${ico('alerta')}<p>Compromisso não encontrado.</p></div><button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`;
+  const c = it.bruto, tp = TIPOS_AGENDA[it.tipo];
+  const passou = jaTerminou(it), temTel = it.pessoas.some(p => p.telefone), podeIr = it.lat != null || !!c.local || !!it.imovel_id;
+  return `<div class="between"><div class="eyebrow">${esc(tp.t)}</div>${estrelaHTML('compromisso', id, it.destaque)}</div>
+    <h2 class="sheet__title" id="sheet-title" style="margin-top:2px">${esc(it.titulo)}</h2>
+    <div class="card">
+      ${linhaCampo('Quando', `<span class="num">${esc(quandoItem(it))}</span>${it.aberto ? (passou ? ' <span class="pill warn">pra registrar</span>' : '') : ` <span class="pill">${esc(it.statusTxt)}</span>`}`)}
+      ${it.pessoas.length ? linhaCampo('Com', it.pessoas.map(p => objLink(p.tipo, p.id, p.nome) + (p.papel ? ` <span class="muted">· ${esc(p.papel)}</span>` : '')).join('<br>')) : ''}
+      ${it.imovel_id ? linhaCampo('Imóvel', objLink('imovel', it.imovel_id, it.imovel_nome)) : ''}
+      ${c.local ? linhaCampo('Local', esc(c.local)) : ''}
+      ${c.notas ? linhaCampo('Notas', esc(c.notas)) : ''}
+      ${it.aberto ? linhaCampo('Lembretes', `${esc(textoLembretes(it.lembretes))} <button class="link" onclick="lembreteItemSheet('compromisso', ${id})">trocar</button>`) : ''}
+      ${c.resultado ? linhaCampo('Como foi', esc(c.resultado)) : ''}
+    </div>
+    ${it.aberto ? `
+      <button class="btn btn--primary btn--block" onclick="concluirCompromissoSheet(${id})">${ico('check')}${passou ? 'Como foi?' : 'Concluir'}</button>
+      <div class="acoes-3" style="margin-top:var(--s2)">
+        <button class="btn" onclick="remarcarCompromissoSheet(${id})">${ico('agenda')}Remarcar</button>
+        <button class="btn" onclick="fecharCompromisso(${id}, 'nao_aconteceu')">${ico('alerta')}Não aconteceu</button>
+        <button class="btn" onclick="fecharCompromisso(${id}, 'cancelado')">${ico('x')}Cancelar</button>
+      </div>
+      <div class="btn-row" style="margin-top:var(--s2)">
+        ${temTel && tp.aviso ? `<button class="btn btn--ok btn--grow" onclick="avisarPessoasComp(${id})">${ico('conversa')}Avisar</button>` : ''}
+        ${podeIr ? `<button class="btn btn--grow" onclick="irItemAgenda('compromisso', ${id})">${ico('mapa')}Ir</button>` : ''}
+        <button class="btn btn--grow" onclick="lembreteItemSheet('compromisso', ${id})">${ico('sino')}Lembrete</button>
+      </div>` : `<button class="btn btn--block" onclick="reabrirCompromisso(${id})">${ico('reset')}Voltar pra marcado</button>`}
+    <div class="btn-row" style="margin-top:var(--s2)">
+      <button class="btn btn--grow" onclick="editarCompromisso(${id})">${ico('editar')}Editar</button>
+      <button class="btn btn--grow" onclick="duplicarCompromisso(${id})">${ico('copiar')}Duplicar</button>
+    </div>
+    ${botaoApagar('compromisso', id, 'Apagar compromisso')}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`;
+}
+function abrirCompromisso(id) { openSheet(compromissoHTML(id), { foco: false, chave: 'comp:' + id, refazer: () => compromissoHTML(id) }); }
+function redesenharCompromisso(id) { if (folhaAtual && folhaAtual.chave === 'comp:' + id) abrirCompromisso(id); }
+function fecharCompromisso(id, status) {
+  const c = q('SELECT status, concluido_em FROM compromisso WHERE id=?', [id])[0]; if (!c) return;
+  run(`UPDATE compromisso SET status=?, concluido_em=? WHERE id=?`, [status, agoraISO(), id]);
+  vibrar(); atualizarAgenda(); redesenharCompromisso(id);
+  showToast(status === 'cancelado' ? 'Compromisso cancelado.' : 'Registrado: não aconteceu.', { label: 'Desfazer', fn: () => {
+    run(`UPDATE compromisso SET status=?, concluido_em=? WHERE id=?`, [c.status, c.concluido_em, id]); atualizarAgenda(); redesenharCompromisso(id); } });
+}
+function reabrirCompromisso(id) {
+  const c = q('SELECT status, concluido_em FROM compromisso WHERE id=?', [id])[0]; if (!c) return;
+  run(`UPDATE compromisso SET status='marcado', concluido_em=NULL WHERE id=?`, [id]);
+  atualizarAgenda(); redesenharCompromisso(id);
+  showToast('De volta pra marcado.', { label: 'Desfazer', fn: () => { run(`UPDATE compromisso SET status=?, concluido_em=? WHERE id=?`, [c.status, c.concluido_em, id]); atualizarAgenda(); redesenharCompromisso(id); } });
+}
+function concluirCompromissoSheet(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  window.__ccHumor = null;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Como foi?</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(it.titulo)} · ${esc(quandoItem(it))}</p>
+    <div class="field"><label for="cc-texto">Em uma linha (opcional)</label><textarea id="cc-texto" placeholder="Ex.: assinou; falta a certidão do IPTU"></textarea></div>
+    ${it.pessoas.length ? `<div class="eyebrow" style="color:var(--text-3)">Como ${it.pessoas.length > 1 ? 'as pessoas estavam' : 'a pessoa estava'}</div>
+      <div class="chip-row chip-row--wrap" id="cc-humor">${HUMORES.map(h => `<button type="button" class="chip" data-h="${h.v}" onclick="humorConclusao(${h.v})">${h.t}</button>`).join('')}</div>
+      <p class="muted" style="margin:0 0 var(--s3)">Entra na linha do tempo de ${esc(it.pessoas.map(p => p.nome.split(' ')[0]).join(', '))}.</p>` : ''}
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" onclick="confirmarConclusao(${id})">${ico('check')}Concluir</button>
+      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+    </div>`, { chave: 'concluir:' + id });
+}
+function humorConclusao(v) {
+  window.__ccHumor = window.__ccHumor === v ? null : v;
+  document.querySelectorAll('#cc-humor .chip').forEach(c => { const on = +c.dataset.h === window.__ccHumor; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+}
+function confirmarConclusao(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  const texto = val('cc-texto'), humor = window.__ccHumor, c = it.bruto, tp = TIPOS_AGENDA[it.tipo];
+  run(`UPDATE compromisso SET status='concluido', resultado=?, concluido_em=? WHERE id=?`, [texto || null, agoraISO(), id]);
+  const iids = it.pessoas.map(p => registrarInteracao(p, it.tipo === 'ligacao' ? 'ligacao' : 'compromisso', tp.curto + ' feita', texto || it.titulo,
+    { humor, imovel_id: it.imovel_id }));
+  vibrar(); closeSheet(); atualizarAgenda(); redesenharCompromisso(id);
+  showToast('Concluído' + (iids.length ? ' · na linha do tempo' : '') + '.', { label: 'Desfazer', fn: () => {
+    iids.forEach(i => run('DELETE FROM interacao WHERE id=?', [i]));
+    run(`UPDATE compromisso SET status=?, resultado=?, concluido_em=? WHERE id=?`, [c.status, c.resultado, c.concluido_em, id]);
+    atualizarAgenda(); redesenharCompromisso(id); } });
+}
+function remarcarCompromissoSheet(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  window.__confOk = null;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Remarcar</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(it.titulo)}</p>
+    <form id="form-remcomp" onsubmit="event.preventDefault();confirmarRemarcarComp(${id})" novalidate>
+      <div class="field-grid">
+        ${campo('frc-data', 'Data', `<input id="frc-data" type="date" value="${esc(it.data)}">`)}
+        ${campo('frc-hora', 'Hora', `<input id="frc-hora" type="time" value="${esc(it.hora || '')}" ${it.diaInteiro ? 'disabled' : ''}>`)}
+      </div>
+      <div class="chip-row chip-row--wrap" style="margin-top:calc(var(--s2) * -1)">
+        <button type="button" class="chip" onclick="dataRapida(0, 'frc-data')">Hoje</button>
+        <button type="button" class="chip" onclick="dataRapida(1, 'frc-data')">Amanhã</button>
+        <button type="button" class="chip" onclick="dataRapida('sab', 'frc-data')">Sábado</button>
+      </div>
+      <div id="form-conflito"></div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow" id="form-salvar">${ico('check')}Remarcar</button>
+        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+      </div>
+    </form>`, { chave: 'remcomp:' + id });
+}
+function confirmarRemarcarComp(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  const data = val('frc-data'); if (!data) return erroCampo('frc-data', 'Escolha a data.');
+  const hora = it.diaInteiro ? '' : val('frc-hora'); if (!it.diaInteiro && !hora) return erroCampo('frc-hora', 'Escolha a hora.');
+  if (avisarConflito(conflitosDe({ data, hora, dur: it.dur, diaInteiro: it.diaInteiro, lat: it.lat, lng: it.lng }, { k: 'compromisso', id }), [data, hora].join('|'))) return;
+  const antes = { data: it.bruto.data, hora: it.bruto.hora, status: it.bruto.status };
+  run(`UPDATE compromisso SET data=?, hora=?, status='marcado' WHERE id=?`, [data, hora || null, id]);
+  vibrar(); closeSheet(); atualizarAgenda(); redesenharCompromisso(id);
+  const novo = itemAgenda('compromisso', id);
+  const tel = (it.pessoas.find(p => p.telefone) || {});
+  const primeiro = tel.nome ? ' ' + tel.nome.split(' ')[0] : '';
+  const msg = `Oi${primeiro}! Aqui é ${nomeCorretor()}. Podemos passar ${TIPOS_AGENDA[it.tipo].aviso || 'nosso compromisso'} pra ${novo ? quandoItem(novo).toLowerCase() : data}?`;
+  showToast('Remarcado: ' + (novo ? quandoItem(novo) : data), tel.telefone && TIPOS_AGENDA[it.tipo].aviso
+    ? { label: 'Avisar', fn: () => abrirWhats(tel.telefone, msg, tel.tipo + ':' + tel.id) }
+    : { label: 'Desfazer', fn: () => { run(`UPDATE compromisso SET data=?, hora=?, status=? WHERE id=?`, [antes.data, antes.hora, antes.status, id]); atualizarAgenda(); redesenharCompromisso(id); } });
+}
+function avisarPessoasComp(id) {
+  const it = itemAgenda('compromisso', id); if (!it) return;
+  const comTel = it.pessoas.filter(p => p.telefone), tp = TIPOS_AGENDA[it.tipo];
+  const msg = p => `Oi ${p.nome.split(' ')[0]}! Aqui é ${nomeCorretor()}. Confirmando ${tp.aviso || 'nosso compromisso'} ${rotuloDia(it.data).toLowerCase()}${it.diaInteiro ? '' : ' às ' + it.hora}${it.local ? ' — ' + it.local : ''}. Tudo certo?`;
+  if (!comTel.length) return showToastErr('Ninguém marcado aqui tem telefone.');
+  if (comTel.length === 1) return abrirWhats(comTel[0].telefone, msg(comTel[0]), comTel[0].tipo + ':' + comTel[0].id);
+  window.__avisarComp = { pessoas: comTel, msg };
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Avisar quem?</h2>
+    ${comTel.map((p, i) => `<button class="card card--tap row" onclick="avisarUmaPessoa(${i})"><span class="row__ico">${ico('conversa')}</span>
+      <span class="row__main"><span class="row__t">${esc(p.nome)}</span><span class="row__s">${esc(p.papel || p.telefone)}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'avisar-comp:' + id });
+}
+function avisarUmaPessoa(i) { const a = window.__avisarComp; if (!a || !a.pessoas[i]) return; const p = a.pessoas[i]; abrirWhats(p.telefone, a.msg(p), p.tipo + ':' + p.id); }
+function irItemAgenda(k, id) {
+  const it = itemAgenda(k, id); if (!it) return;
+  if (it.imovel_id && (k === 'visita' || it.bruto.lat == null) && !it.bruto.local) return abrirMapaId(it.imovel_id);
+  abrirMapa({ lat: it.lat, lng: it.lng, endereco: it.local, bairro: '', nome: it.titulo });
+}
+
+// ---------- visita: pessoas, duração e lembretes ----------
+function editarDetalhesVisita(id) {
+  const it = itemAgenda('visita', id); if (!it) return;
+  const extras = it.pessoas.filter(p => !p.principal).map(p => ({ tipo: p.tipo, id: p.id, papel: p.papel }));
+  openSheet(`<div class="between"><h2 class="sheet__title" id="sheet-title" style="margin:0">Detalhes da visita</h2>${estrelaFormHTML('fvd-destaque', it.destaque)}</div>
+    <p class="muted" style="margin:var(--s2) 0 var(--s3)">${esc(it.imovel_nome)}${it.bruto.lead_nome ? ' · ' + esc(it.bruto.lead_nome) : ''}</p>
+    <form id="form-visdet" onsubmit="event.preventDefault();salvarDetalhesVisita(${id})" novalidate>
+      <input type="hidden" id="fvd-destaque" value="${it.destaque}">
+      <input type="hidden" id="fvd-dur" value="${it.dur}"><input type="hidden" id="fvd-lemb" value="${esc(JSON.stringify(it.lembretes))}">
+      ${pickerPessoasHTML('fvd', extras)}
+      <p class="muted" style="margin:calc(var(--s2) * -1) 0 var(--s3)">${it.bruto.lead_nome ? esc(it.bruto.lead_nome) + ' já está na visita como lead. ' : ''}Aqui entram as outras pessoas: cônjuge, proprietário, corretor parceiro.</p>
+      <div class="field"><label>Duração</label>${chipsHTML('fvd-dur', DURACOES, false)}</div>
+      <div class="field"><label>Lembretes</label>${chipsHTML('fvd-lemb', OPCOES_LEMBRETE, true)}</div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+      </div>
+    </form>`, { chave: 'visdet:' + id });
+  ['fvd-dur', 'fvd-lemb'].forEach(marcarChips); renderPessoasSel('fvd');
+}
+function salvarDetalhesVisita(id) {
+  const antes = q('SELECT duracao_min, lembretes, destaque FROM visita WHERE id=?', [id])[0]; if (!antes) return;
+  const pessoasAntes = pessoasDoItem('visita', id);
+  let lemb = []; try { lemb = JSON.parse(val('fvd-lemb') || '[]'); } catch (e) { /* vazio */ }
+  run(`UPDATE visita SET duracao_min=?, lembretes=?, destaque=? WHERE id=?`, [+val('fvd-dur') || null, lembretesParaGravar(lemb, 'visita'), +val('fvd-destaque') || 0, id]);
+  gravarPessoasItem('visita', id, pessoasSel('fvd'));
+  vibrar(); closeSheet(); atualizarAgenda();
+  if (viewAtual === 'visita') renderVisita();
+  showToast('Visita atualizada.', { label: 'Desfazer', fn: () => {
+    run(`UPDATE visita SET duracao_min=?, lembretes=?, destaque=? WHERE id=?`, [antes.duracao_min, antes.lembretes, antes.destaque, id]);
+    gravarPessoasItem('visita', id, pessoasAntes); atualizarAgenda(); if (viewAtual === 'visita') renderVisita(); } });
+  pedirAvisosUmaVez(lemb);
+}
+
+// ---------- lembretes: onde o aviso chega ----------
+function estadoAvisosTexto() {
+  if (!('Notification' in window) || !window.isSecureContext) return 'este navegador não mostra aviso do app.';
+  if (Notification.permission === 'granted') return 'ativados — o app avisa enquanto está aberto ou recém-minimizado.';
+  if (Notification.permission === 'denied') return 'bloqueados nas configurações do navegador.';
+  return 'desligados.';
+}
+async function ativarAvisos() {
+  if (!('Notification' in window)) return showToastErr('Este navegador não mostra avisos.');
+  const p = await Notification.requestPermission();
+  renderAgendaCfg();
+  if (folhaAtual && String(folhaAtual.chave || '').startsWith('lembrete:')) { const [, k, id] = folhaAtual.chave.split(':'); lembreteItemSheet(k, +id); }
+  if (p === 'granted') { showToast('Avisos ativados.'); verificarLembretes(); }
+  else showToastErr('Sem permissão, o aviso só aparece dentro do app.');
+}
+// a primeira vez que alguém marca algo com lembrete, oferece ativar — uma vez só
+function pedirAvisosUmaVez(lembretes) {
+  if (!lembretes || !lembretes.length || !('Notification' in window) || !window.isSecureContext || Notification.permission !== 'default') return;
+  try { if (localStorage.getItem('avisos:oferecido')) return; localStorage.setItem('avisos:oferecido', '1'); } catch (e) { return; }
+  setTimeout(() => showToast('Quer aviso no celular antes dos compromissos?', { label: 'Ativar', fn: ativarAvisos }), 4000);
+}
+function lembreteItemSheet(k, id) {
+  const it = itemAgenda(k, id); if (!it) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Lembretes</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(it.titulo)} · ${esc(quandoItem(it))}</p>
+    <input type="hidden" id="lb-lemb" value="${esc(JSON.stringify(it.lembretes))}">
+    <div class="field"><label>Avisar</label>${chipsHTML('lb-lemb', OPCOES_LEMBRETE, true)}</div>
+    <button class="btn btn--primary btn--block" onclick="salvarLembretesItem('${k}', ${id})">${ico('check')}Salvar lembretes</button>
+    <h3 class="blk-title">Onde o aviso chega</h3>
+    <div class="card card--sunken">
+      <p style="margin:0"><b>Neste app:</b> ${esc(estadoAvisosTexto())}</p>
+      ${'Notification' in window && window.isSecureContext && Notification.permission === 'default' ? `<button class="btn btn--sm btn--block" style="margin-top:var(--s2)" onclick="ativarAvisos()">${ico('sino')}Ativar avisos</button>` : ''}
+      <p class="muted" style="margin:var(--s2) 0 0">Com o app fechado o celular não garante o aviso. Pra garantir, ponha na agenda do celular: o arquivo leva os lembretes escolhidos acima.</p>
+    </div>
+    <button class="btn btn--block" style="margin-top:var(--s2)" onclick="baixarIcsItem('${k}', ${id})">${ico('download')}Pôr na agenda do celular</button>
+    <button class="btn btn--block" style="margin-top:var(--s2)" onclick="window.open(linkGoogleItem('${k}', ${id}), '_blank', 'noopener')">${ico('externo')}Abrir no Google Agenda (lembrete padrão de lá)</button>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'lembrete:' + k + ':' + id });
+  marcarChips('lb-lemb');
+}
+function salvarLembretesItem(k, id) {
+  let lemb = []; try { lemb = JSON.parse(val('lb-lemb') || '[]'); } catch (e) { /* vazio */ }
+  const it = itemAgenda(k, id); if (!it) return;
+  const tabela = k === 'visita' ? 'visita' : 'compromisso', antes = it.bruto.lembretes;
+  run(`UPDATE ${tabela} SET lembretes=? WHERE id=?`, [lembretesParaGravar(lemb, it.tipo), id]);
+  const redesenhar = () => { if (k === 'compromisso') redesenharCompromisso(id); else if (viewAtual === 'visita') renderVisita(); };
+  vibrar(); closeSheet(); atualizarAgenda(); redesenhar();
+  showToast('Lembretes: ' + textoLembretes(lemb) + '.', { label: 'Desfazer', fn: () => { run(`UPDATE ${tabela} SET lembretes=? WHERE id=?`, [antes, id]); atualizarAgenda(); redesenhar(); } });
+  pedirAvisosUmaVez(lemb);
+}
+function linkGoogleItem(k, id) {
+  const it = itemAgenda(k, id); if (!it) return '#';
+  const fmtD = ymd => ymd.replace(/-/g, '');
+  const fmtDT = d => localYMD(d).replace(/-/g, '') + 'T' + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0') + '00';
+  let datas;
+  if (it.diaInteiro) datas = fmtD(it.data) + '/' + fmtD(somarDias(it.data, 1));
+  else { const ini = dataHora(it.data, it.hora); datas = fmtDT(ini) + '/' + fmtDT(new Date(ini.getTime() + it.dur * 60000)); }
+  let fuso = 'America/Sao_Paulo'; try { fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || fuso; } catch (e) { /* ok */ }
+  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: it.titulo, dates: datas, ctz: fuso, location: it.local || '',
+    details: [it.pessoas.length ? 'Com: ' + it.pessoas.map(p => p.nome).join(', ') : '', 'Marcado no OHubImob Campo.'].filter(Boolean).join('\n') }).toString();
+}
+
+// ---------- .ics: a agenda do celular é quem avisa com o app fechado ----------
+function icsTexto(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
+// linha dobrada em 75 octetos (RFC 5545), contando bytes em UTF-8
+function icsDobra(linha) {
+  const enc = new TextEncoder(); let out = '', atual = '', bytes = 0;
+  for (const ch of linha) { const b = enc.encode(ch).length; if (bytes + b > 75) { out += atual + '\r\n '; atual = ''; bytes = 1; } atual += ch; bytes += b; }
+  return out + atual;
+}
+function icsUTC(d) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+function icsDe(itens) {
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//OHubImob//Campo//PT-BR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'], agora = icsUTC(new Date());
+  itens.forEach(it => {
+    L.push('BEGIN:VEVENT', 'UID:ohubimob-' + it.k + '-' + it.id + '@campo', 'DTSTAMP:' + agora);
+    if (it.diaInteiro) L.push('DTSTART;VALUE=DATE:' + it.data.replace(/-/g, ''), 'DTEND;VALUE=DATE:' + somarDias(it.data, 1).replace(/-/g, ''));
+    else { const ini = dataHora(it.data, it.hora); L.push('DTSTART:' + icsUTC(ini), 'DTEND:' + icsUTC(new Date(ini.getTime() + it.dur * 60000))); }
+    L.push('SUMMARY:' + icsTexto(it.titulo));
+    if (it.local) L.push('LOCATION:' + icsTexto(it.local));
+    L.push('DESCRIPTION:' + icsTexto([it.pessoas.length ? 'Com: ' + it.pessoas.map(p => p.nome + (p.telefone ? ' (' + p.telefone + ')' : '')).join(', ') : '',
+      it.bruto.notas || '', 'Marcado no OHubImob Campo.'].filter(Boolean).join('\n')));
+    it.lembretes.forEach(m => {
+      // dia inteiro começa à meia-noite: "na hora" vira 8h do dia
+      const rel = it.diaInteiro ? 480 - m : -m;
+      L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTexto(it.titulo), 'TRIGGER:' + (rel < 0 ? '-PT' + (-rel) + 'M' : 'PT' + rel + 'M'), 'END:VALARM');
+    });
+    L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.map(icsDobra).join('\r\n') + '\r\n';
+}
+async function entregarIcs(nome, texto, qtd) {
+  try {
+    const arquivo = new File([texto], nome, { type: 'text/calendar' });
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) { await navigator.share({ files: [arquivo], title: nome }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([texto], { type: 'text/calendar' })); a.download = nome; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  showToast((qtd > 1 ? plural(qtd, 'compromisso', 'compromissos') + ' no arquivo' : 'Arquivo de agenda baixado') + '. Abra pra pôr na agenda do celular.');
+}
+function baixarIcsItem(k, id) { const it = itemAgenda(k, id); if (it) entregarIcs('ohubimob-' + it.data + '-' + k + id + '.ics', icsDe([it]), 1); }
+function exportarAgendaIcs() {
+  const hoje = todayISO(0);
+  const itens = filtrarAg(itensDaAgenda(hoje, somarDias(hoje, 30))).filter(it => it.aberto && !it.cancelado);
+  if (!itens.length) return showToastErr('Nada marcado nos próximos 30 dias.');
+  entregarIcs('ohubimob-agenda-' + hoje + '.ics', icsDe(itens), itens.length);
+}
+
+// ---------- lembretes dentro do app (camada 1) ----------
+// Sem servidor, um app instalado pelo navegador só consegue avisar enquanto está vivo:
+// aberto ou recém-minimizado. Um relógio de 1 minuto confere o que vence e mostra a
+// notificação do sistema (se autorizada) ou um aviso na tela.
+const LEMB_DISPARADOS = 'lembrete:disparados:v1', LEMB_ADIADOS = 'lembrete:adiados:v1';
+function lerLocalJSON(k, padrao) { try { return JSON.parse(localStorage.getItem(k) || 'null') || padrao; } catch (e) { return padrao; } }
+function gravarLocalJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ok */ } }
+function lembretesPendentes() {
+  const itens = itensDaAgenda(todayISO(-1), todayISO(2)).filter(it => it.aberto && !it.cancelado && !it.emAndamento), out = [];
+  const inicio = it => it.diaInteiro ? dataLocal(it.data).getTime() + 8 * 3600000 : dataHora(it.data, it.hora).getTime();
+  itens.forEach(it => it.lembretes.forEach(m => out.push({ chave: `${it.k}:${it.id}:${it.data}:${it.hora || 'dia'}:${m}`, it, m, quando: inicio(it) - m * 60000, ini: inicio(it) })));
+  Object.entries(lerLocalJSON(LEMB_ADIADOS, {})).forEach(([chave, a]) => {
+    const it = itens.find(x => x.k === a.k && x.id === a.id);
+    if (it) out.push({ chave, it, m: null, quando: a.quando, ini: inicio(it), adiado: true });
+  });
+  return out;
+}
+let lembreteTimer = null;
+function verificarLembretes() {
+  if (!db) return;
+  const agora = Date.now(), disparados = lerLocalJSON(LEMB_DISPARADOS, {}), adiados = lerLocalJSON(LEMB_ADIADOS, {});
+  let proximo = null;
+  lembretesPendentes().forEach(p => {
+    if (disparados[p.chave]) return;
+    if (p.quando <= agora) {
+      // aviso com mais de 15 min de atraso, ou de algo que já começou há meia hora, não ajuda mais
+      if (agora - p.quando <= 15 * 60000 && agora - p.ini < 30 * 60000) dispararLembrete(p);
+      disparados[p.chave] = agora;
+      if (p.adiado) delete adiados[p.chave];
+    } else if (!proximo || p.quando < proximo) proximo = p.quando;
+  });
+  Object.keys(disparados).forEach(k => { if (agora - disparados[k] > 3 * 86400000) delete disparados[k]; });
+  gravarLocalJSON(LEMB_DISPARADOS, disparados); gravarLocalJSON(LEMB_ADIADOS, adiados);
+  clearTimeout(lembreteTimer);
+  if (proximo && proximo - agora < 3600000) lembreteTimer = setTimeout(verificarLembretes, Math.max(1000, proximo - agora + 500));
+}
+setInterval(verificarLembretes, 60000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') verificarLembretes(); });
+function tituloLembrete(p) {
+  const it = p.it, falta = Math.round((p.ini - Date.now()) / 60000), tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
+  const quando = it.diaInteiro ? (it.data === todayISO(0) ? 'hoje' : rotuloDia(it.data).toLowerCase())
+    : falta <= 1 ? 'agora' : falta < 60 ? 'em ' + falta + ' min' : it.data === todayISO(0) ? 'às ' + it.hora : rotuloDia(it.data).toLowerCase() + ' às ' + it.hora;
+  return tp.curto + ' ' + quando;
+}
+async function dispararLembrete(p) {
+  const it = p.it, titulo = tituloLembrete(p);
+  const corpo = cfg('notif:ocultar_nomes') === '1' ? (it.diaInteiro ? 'Dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur))
+    : [it.titulo, it.pessoas.map(x => x.nome).join(', '), it.local].filter(Boolean).join(' · ');
+  if (podeNotificar() && Notification.permission === 'granted') {
+    try {
+      const reg = await swPronto();
+      await reg.showNotification(titulo, { body: corpo, tag: 'lemb:' + it.k + ':' + it.id, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png',
+        data: { url: location.pathname, item: it.k + ':' + it.id, chave: p.chave }, actions: [{ action: 'adiar', title: 'Adiar 10 min' }, { action: 'abrir', title: 'Abrir' }] });
+    } catch (e) { /* segue com o aviso na tela */ }
+  }
+  if (document.visibilityState === 'visible') showToast(titulo + ' · ' + corpo, { label: 'Abrir', fn: () => abrirItemAgenda(it.k, it.id) });
+}
+function adiarLembrete(item, chave) {
+  const [k, id] = String(item || '').split(':'); if (!k || !+id) return;
+  const adiados = lerLocalJSON(LEMB_ADIADOS, {});
+  adiados['adiado:' + (chave || item) + ':' + Date.now()] = { k, id: +id, quando: Date.now() + 10 * 60000 };
+  gravarLocalJSON(LEMB_ADIADOS, adiados);
+  verificarLembretes();
+  if (document.visibilityState === 'visible') showToast('Aviso de novo em 10 min.');
+}
+Object.assign(ACOES_ATALHO, {
+  'agenda-item': p => { if (!p) return; const [k, id] = String(p.get('item') || '').split(':'); if (p.get('adiar')) adiarLembrete(p.get('item'), p.get('adiar')); else if (k && +id) abrirItemAgenda(k, +id); }
+});
+
+// ---------- Mais › Agenda e avisos ----------
+function renderAgendaCfg() {
+  const box = document.getElementById('agenda-cfg'); if (!box) return;
+  box.innerHTML = `<h4>Agenda e avisos</h4>
+    <p style="margin:0 0 var(--s2)"><b>Avisos do app:</b> ${esc(estadoAvisosTexto())}</p>
+    ${'Notification' in window && window.isSecureContext && Notification.permission === 'default' ? `<button class="btn btn--sm btn--block" style="margin-bottom:var(--s2)" onclick="ativarAvisos()">${ico('sino')}Ativar avisos</button>` : ''}
+    <p class="muted" style="margin:0 0 var(--s2)">Com o app fechado, o aviso garantido é o da agenda do celular: em cada compromisso, Lembrete › Pôr na agenda do celular.</p>
+    <label class="lembrar"><input type="checkbox" ${cfg('notif:ocultar_nomes') === '1' ? 'checked' : ''} onchange="setCfg('notif:ocultar_nomes', this.checked ? '1' : '0')"> Ocultar nomes nas notificações</label>
+    <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Lembretes padrão</div>
+    ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="row agcfg-row" onclick="lembretePadraoSheet('${k}')">
+      <span class="row__main"><span class="row__t" style="font-weight:500">${esc(t.t)}</span><span class="row__s">${esc(textoLembretes(lembretesPadrao(k)))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--sm btn--block" style="margin-top:var(--s3)" onclick="exportarAgendaIcs()">${ico('download')}Próximos 30 dias na agenda do celular</button>`;
+}
+function lembretePadraoSheet(tipo) {
+  const tp = TIPOS_AGENDA[tipo]; if (!tp) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Lembretes padrão · ${esc(tp.t)}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Vale pra tudo desse tipo que não tiver lembrete escolhido à mão.</p>
+    <input type="hidden" id="lp-lemb" value="${esc(JSON.stringify(lembretesPadrao(tipo)))}">
+    ${chipsHTML('lp-lemb', OPCOES_LEMBRETE, true)}
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" onclick="salvarLembretePadrao('${tipo}')">${ico('check')}Salvar</button>
+      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+    </div>`, { foco: false, chave: 'lembrete-padrao:' + tipo });
+  marcarChips('lp-lemb');
+}
+function salvarLembretePadrao(tipo) {
+  let lemb = []; try { lemb = JSON.parse(val('lp-lemb') || '[]'); } catch (e) { /* vazio */ }
+  setCfg('agenda:lembretes:' + tipo, JSON.stringify(lemb));
+  closeSheet(); renderAgendaCfg(); verificarLembretes();
+  showToast(TIPOS_AGENDA[tipo].t + ': ' + textoLembretes(lemb) + '.');
+  pedirAvisosUmaVez(lemb);
+}
+
+// ---------- Hoje, Rota e fichas ----------
+// o "+" da tela a partir de uma pessoa, imóvel ou visita leva o vínculo pro compromisso
+function ctxParaCompromisso(c) {
+  if (!c) return {};
+  if (TABELA_PESSOA[c.tipo]) return { pessoas: [{ tipo: c.tipo, id: c.id, papel: '' }] };
+  if (c.tipo === 'imovel') return { imovel_id: c.id };
+  if (c.tipo === 'visita') {
+    const v = q('SELECT imovel_id, lead_id FROM visita WHERE id=?', [c.id])[0] || {};
+    return { imovel_id: v.imovel_id, pessoas: v.lead_id ? [{ tipo: 'lead', id: v.lead_id, papel: '' }] : [] };
+  }
+  return {};
+}
+// paradas da Rota: visitas e compromissos de hoje com lugar
+function paradasDoDia() {
+  const hoje = todayISO(0);
+  return itensDaAgenda(hoje, hoje).filter(it => it.aberto && !it.cancelado && (it.k === 'visita' || it.lat != null || it.bruto.local || it.imovel_id)).map(it => it.k === 'visita'
+    ? Object.assign({}, it.bruto, { _k: 'visita', _aprox: it.aprox })
+    : { _k: 'compromisso', id: it.id, hora: it.diaInteiro ? '' : it.hora, lat: it.lat, lng: it.lng, endereco: it.local, bairro: it.bruto.local ? '' : it.bairro,
+        imovel_id: it.imovel_id, imovel_nome: it.titulo, codigo: '', lead_id: null, lead_nome: '', telefone: it.telefone, _titulo: it.titulo, _aprox: it.aprox });
+}
+function heroCompromissoHTML(it) {
+  const tp = TIPOS_AGENDA[it.tipo], tel = (it.pessoas.find(p => p.telefone) || {}).telefone || '';
+  const podeIr = it.lat != null || !!it.bruto.local || !!it.imovel_id;
+  return `<div class="hero">
+    <div class="hero__when">${ico(tp.ic)}<span class="num">${it.diaInteiro ? 'dia inteiro' : esc(it.hora)}</span><span class="row__meta">${esc(tp.curto)}</span>${estrelaHTML('compromisso', it.id, it.destaque)}</div>
+    <div class="hero__what"><button class="link" onclick="abrirCompromisso(${it.id})">${esc(it.titulo)}</button></div>
+    <div class="hero__who">${[it.pessoas.map(p => objLink(p.tipo, p.id, p.nome)).join(', '), esc(it.bruto.local || it.imovel_nome || '')].filter(Boolean).join(' · ') || esc(tp.t)}</div>
+    <button class="btn btn--primary btn--block" style="margin-bottom:var(--s2)" onclick="abrirCompromisso(${it.id})">${ico('agenda')}Abrir compromisso</button>
+    <div class="hero__acts hero__acts--3">
+      <button class="btn" onclick="irItemAgenda('compromisso', ${it.id})" ${podeIr ? '' : 'disabled'}>${ico('mapa')}Ir</button>
+      <button class="btn" ${tel ? `data-tel="${esc(tel)}" onclick="ligar(this.dataset.tel)"` : 'disabled'}>${ico('telefone')}Ligar</button>
+      <button class="btn btn--ok" onclick="avisarPessoasComp(${it.id})" ${tel && tp.aviso ? '' : 'disabled'}>${ico('conversa')}Avisar</button>
+    </div>
+  </div>`;
+}
+function proximosDaPessoaHTML(tipo, id) {
+  const hoje = todayISO(0);
+  const itens = itensDaAgenda(hoje, somarDias(hoje, 90)).filter(it => it.aberto && it.pessoas.some(p => p.tipo === tipo && p.id === id));
+  return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Próximos compromissos</h3>
+      <button class="btn btn--sm" onclick="abrirFormCompromisso({ pessoas: [{ tipo: '${tipo}', id: ${id}, papel: '' }] })">${ico('somar')}Marcar</button></div>
+    ${itens.length ? itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('') : `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>`}`;
+}
+function agendaDoImovelHTML(id) {
+  const hoje = todayISO(0);
+  const itens = itensDaAgenda(hoje, somarDias(hoje, 90)).filter(it => it.aberto && it.imovel_id === id);
+  return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Agenda do imóvel</h3>
+      <button class="btn btn--sm" onclick="novoNoImovel(${id})">${ico('somar')}Marcar</button></div>
+    ${itens.length ? itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('') : `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>`}`;
+}
+function novoNoImovel(id) {
+  window.__novoImovel = id;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Marcar neste imóvel</h2>
+    ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="card card--tap row" onclick="novoNoImovelTipo('${k}')">
+      <span class="row__ico">${ico(t.ic)}</span><span class="row__main"><span class="row__t">${t.t}</span><span class="row__s">${t.s}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false, chave: 'novo-imovel:' + id });
+}
+function novoNoImovelTipo(k) {
+  const id = window.__novoImovel;
+  if (k === 'visita') { closeSheet(); openForm('visita', { tipo: 'imovel', id }); }
+  else { closeSheet(); abrirFormCompromisso({ tipo: k, imovel_id: id }); }
+}
+
+// ---------- busca em tudo ----------
+let buscaTermo = '';
+function abrirBusca() {
+  const html = () => `<h2 class="sheet__title" id="sheet-title">Buscar</h2>
+    <label class="search"><svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
+      <input id="busca-global" value="${esc(buscaTermo)}" placeholder="Pessoa, imóvel, compromisso, nota…" autocomplete="off" oninput="buscaTermo=this.value;renderBusca()" aria-label="Buscar em tudo"></label>
+    <div id="busca-res">${resultadosBuscaHTML(buscaTermo)}</div>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`;
+  openSheet(html(), { top: true, chave: 'busca', refazer: html });
+}
+function renderBusca() { const r = document.getElementById('busca-res'); if (r) r.innerHTML = resultadosBuscaHTML(buscaTermo); }
+function resultadosBuscaHTML(termo) {
+  const t = String(termo || '').trim().toLowerCase();
+  const linha = (acao, ic, titulo, sub) => `<button class="card card--tap row" onclick="${acao}"><span class="row__ico">${ico(ic)}</span>
+    <span class="row__main"><span class="row__t">${esc(titulo)}</span>${sub ? `<span class="row__s">${esc(sub)}</span>` : ''}</span>${ico('chevron', 'row__chev')}</button>`;
+  if (t.length < 2) {
+    const rec = lerLocalJSON('busca:recentes', []);
+    return rec.length ? `<h3 class="blk-title">Abertos pela busca</h3>` + rec.map(r => linha(`abrirResultadoBusca('${r.tipo}', ${r.id})`, r.ic, r.t, r.s)).join('')
+      : `<p class="muted" style="margin:var(--s2) 0">Digite pelo menos 2 letras. Procura em pessoas, imóveis, agenda, notas e arquivos; com 3 números, em telefones também.</p>`;
+  }
+  const dig = t.replace(/\D/g, ''), tem = (...xs) => xs.some(x => String(x || '').toLowerCase().includes(t)), tel = x => dig.length >= 3 && String(x || '').replace(/\D/g, '').includes(dig);
+  const grupos = [];
+  const pessoas = [];
+  q('SELECT id, nome, telefone, bairro_interesse, estagio FROM lead').forEach(r => { if (tem(r.nome, r.bairro_interesse) || tel(r.telefone)) pessoas.push(['lead', r.id, r.nome, 'comprador · ' + (STAGE_LABELS[r.estagio] || r.estagio || '')]); });
+  q('SELECT id, nome, telefone, endereco FROM captacao_lp').forEach(r => { if (tem(r.nome, r.endereco) || tel(r.telefone)) pessoas.push(['captacao', r.id, r.nome, 'captação' + (r.endereco ? ' · ' + r.endereco : '')]); });
+  q('SELECT id, nome, telefone, observacoes FROM cliente').forEach(r => { if (tem(r.nome, r.observacoes) || tel(r.telefone)) pessoas.push(['cliente', r.id, r.nome, 'cliente']); });
+  if (pessoas.length) grupos.push(['Pessoas', pessoas.slice(0, 6).map(([tp, id, n, s]) => linha(`abrirResultadoBusca('${tp}', ${id})`, tp === 'captacao' ? 'casa' : 'pessoa', n, s))]);
+  const imoveis = q('SELECT id, codigo, nome, bairro, endereco, cep FROM imovel').filter(r => tem(r.codigo, r.nome, r.bairro, r.endereco) || (dig.length >= 5 && String(r.cep || '').replace(/\D/g, '').includes(dig)));
+  if (imoveis.length) grupos.push(['Imóveis', imoveis.slice(0, 6).map(r => linha(`abrirResultadoBusca('imovel', ${r.id})`, 'portfolio', nomeImovel(r), [r.endereco, r.bairro].filter(Boolean).join(' · ')))]);
+  const agenda = itensDaAgenda(todayISO(-60), somarDias(todayISO(0), 180)).filter(it => tem(it.titulo, it.local, it.bruto.notas, TIPOS_AGENDA[it.tipo].t) || it.pessoas.some(p => tem(p.nome)))
+    .sort((a, b) => Math.abs(dataLocal(a.data) - Date.now()) - Math.abs(dataLocal(b.data) - Date.now()));
+  if (agenda.length) grupos.push(['Agenda', agenda.slice(0, 6).map(it => linha(`abrirResultadoBusca('${it.k === 'visita' ? 'visita' : 'compromisso'}', ${it.id})`, TIPOS_AGENDA[it.tipo].ic, it.titulo, quandoItem(it) + (it.aberto ? '' : ' · ' + it.statusTxt)))]);
+  const notas = q('SELECT id, texto, referencia, criado_em FROM nota ORDER BY id DESC').filter(r => tem(r.texto, r.referencia));
+  if (notas.length) grupos.push(['Notas', notas.slice(0, 5).map(r => linha(`abrirResultadoBusca('nota', ${r.id})`, 'teclado', (r.texto || r.referencia || 'Nota').slice(0, 70), [r.referencia, fmtRelDate(r.criado_em)].filter(Boolean).join(' · ')))]);
+  const arquivos = q('SELECT id, nome FROM documento_carteira').filter(r => tem(r.nome));
+  if (arquivos.length) grupos.push(['Arquivos', arquivos.slice(0, 5).map(r => linha(`abrirResultadoBusca('arquivo', ${r.id})`, 'arquivo', r.nome, ''))]);
+  return grupos.length ? grupos.map(([g, ls]) => `<h3 class="blk-title">${g}</h3>` + ls.join('')).join('') : `<p class="muted" style="margin:var(--s2) 0">Nada com "${esc(termo.trim())}".</p>`;
+}
+function abrirResultadoBusca(tipo, id) {
+  const rot = (() => {
+    if (TABELA_PESSOA[tipo]) { const r = q(`SELECT nome FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [id])[0]; return r && { t: r.nome, s: { lead: 'comprador', captacao: 'captação', cliente: 'cliente' }[tipo], ic: tipo === 'captacao' ? 'casa' : 'pessoa' }; }
+    if (tipo === 'imovel') { const r = q('SELECT codigo, nome, bairro FROM imovel WHERE id=?', [id])[0]; return r && { t: nomeImovel(r), s: r.bairro || '', ic: 'portfolio' }; }
+    if (tipo === 'visita' || tipo === 'compromisso') { const it = itemAgenda(tipo, id); return it && { t: it.titulo, s: quandoItem(it), ic: TIPOS_AGENDA[it.tipo].ic }; }
+    if (tipo === 'arquivo') { const r = q('SELECT nome FROM documento_carteira WHERE id=?', [id])[0]; return r && { t: r.nome, s: 'arquivo', ic: 'arquivo' }; }
+    return null;
+  })();
+  if (rot) gravarLocalJSON('busca:recentes', [Object.assign({ tipo, id }, rot)].concat(lerLocalJSON('busca:recentes', []).filter(r => !(r.tipo === tipo && r.id === id))).slice(0, 8));
+  if (TABELA_PESSOA[tipo] || tipo === 'imovel' || tipo === 'arquivo') return openDetail(tipo, id);
+  if (tipo === 'compromisso') return abrirCompromisso(id);
+  if (tipo === 'visita') { closeSheet(); return abrirVisita(id); }
+  if (tipo === 'nota') {
+    const n = q('SELECT visita_id, lead_id, imovel_id, cliente_id FROM nota WHERE id=?', [id])[0] || {};
+    if (n.lead_id) return openDetail('lead', n.lead_id);
+    if (n.cliente_id) return openDetail('cliente', n.cliente_id);
+    if (n.imovel_id) return openDetail('imovel', n.imovel_id);
+    closeSheet(); if (n.visita_id) return abrirVisita(n.visita_id);
+    limparNotaCtx(); go('nt');
+  }
+}
+
+// =============================================================================
+// CADASTRO DE IMÓVEL — endereço com CEP e posição conferida (rodada 36, lote C1)
+// "Usar minha posição" gravava onde o corretor estava — do escritório, gravava o
+// escritório —, ignorava a precisão do GPS, e a posição sumia do rascunho. Agora há três
+// caminhos (estou no imóvel, pelo endereço, colar coordenada), a origem e a precisão
+// ficam gravadas, e um croqui mostra o ponto perto dos outros imóveis antes de salvar.
+// =============================================================================
+async function buscarJSON(url, ms) {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms || 8000);
+  try { const r = await fetch(url, { signal: ctl.signal }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
+  finally { clearTimeout(t); }
+}
+function blocoCepHTML(pfx, cep) {
+  // formulário novo esquece o CEP da última consulta: sem isso, o mesmo CEP num cadastro novo não buscava nada
+  cepConsultado[pfx] = cep ? String(cep).replace(/\D/g, '') : null;
+  return `<div class="field" id="f-${pfx}-cep"><label for="${pfx}-cep">CEP</label>
+    <div class="cep-linha"><input id="${pfx}-cep" inputmode="numeric" autocomplete="off" maxlength="9" placeholder="00000-000" value="${esc(cep || '')}" oninput="cepDigitado(this, '${pfx}')">
+      <button type="button" class="btn btn--sm" onclick="cepAjuda('${pfx}')">Não sei o CEP</button></div>
+    <div class="help" id="${pfx}-cep-msg" aria-live="polite">Com o CEP, rua, bairro e cidade vêm sozinhos.</div>
+    <div class="err"></div>
+    <div id="${pfx}-cep-ajuda" class="card card--sunken" hidden style="margin-top:var(--s2)">
+      <div class="field-inline" style="margin-bottom:var(--s2)">
+        <input data-cep-uf value="DF" maxlength="2" autocapitalize="characters" aria-label="UF" style="max-width:64px">
+        <input data-cep-cidade value="Brasília" aria-label="Cidade">
+      </div>
+      <input data-cep-rua placeholder="Parte do nome da rua" aria-label="Rua" style="margin-bottom:var(--s2)">
+      <button type="button" class="btn btn--sm btn--block" onclick="buscarCepPorRua('${pfx}')">${ico('busca')}Buscar CEP</button>
+      <div data-cep-res aria-live="polite"></div>
+    </div></div>`;
+}
+const cepConsultado = {};
+function cepDigitado(el, pfx) {
+  const d = el.value.replace(/\D/g, '').slice(0, 8), fmt = d.length > 5 ? d.slice(0, 5) + '-' + d.slice(5) : d;
+  if (el.value !== fmt) el.value = fmt;
+  if (d.length === 8 && cepConsultado[pfx] !== d) { cepConsultado[pfx] = d; buscarCep(pfx, d); }
+  if (d.length < 8) cepConsultado[pfx] = null;
+}
+async function buscarCep(pfx, d) {
+  const msg = document.getElementById(pfx + '-cep-msg'); if (msg) msg.textContent = 'Buscando o CEP…';
+  let r = null, naoAchou = false;
+  try {
+    const v = await buscarJSON(`https://viacep.com.br/ws/${d}/json/`, 6000);
+    if (v && v.erro) naoAchou = true; else if (v) r = { rua: v.logradouro, bairro: v.bairro, cidade: v.localidade, uf: v.uf };
+  } catch (e) { /* tenta a reserva */ }
+  if (!r && !naoAchou) {
+    try { const b = await buscarJSON(`https://brasilapi.com.br/api/cep/v2/${d}`, 6000); if (b && b.cep) r = { rua: b.street, bairro: b.neighborhood, cidade: b.city, uf: b.state }; }
+    catch (e) { /* sem internet ou fora do ar */ }
+  }
+  const campoCep = document.getElementById(pfx + '-cep');
+  if (!campoCep || campoCep.value.replace(/\D/g, '') !== d) return;   // formulário fechou ou o CEP mudou
+  if (!r) { if (msg) msg.textContent = naoAchou ? 'CEP não encontrado. Confere o número ou preencha à mão.' : 'Não consegui consultar o CEP agora. Preencha à mão.'; return; }
+  const set = (sufixo, v) => { const e = document.getElementById(pfx + '-' + sufixo); if (e && v) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); } };
+  if (document.getElementById(pfx + '-bairro')) { set('endereco', r.rua); set('bairro', r.bairro); set('cidade', r.cidade); set('uf', r.uf); }
+  else set('endereco', [r.rua, r.bairro, r.cidade && r.cidade + '/' + r.uf].filter(Boolean).join(', '));
+  if (msg) msg.textContent = [r.rua, r.bairro, r.cidade && r.cidade + '/' + r.uf].filter(Boolean).join(' · ') + (r.rua ? '' : ' — CEP geral: escreva a rua');
+  const prox = document.getElementById(pfx + (r.rua ? '-numero' : '-endereco')); if (prox) prox.focus();
+}
+function cepAjuda(pfx) { const b = document.getElementById(pfx + '-cep-ajuda'); if (!b) return; b.hidden = !b.hidden; if (!b.hidden) b.querySelector('[data-cep-rua]').focus(); }
+async function buscarCepPorRua(pfx) {
+  const b = document.getElementById(pfx + '-cep-ajuda'); if (!b) return;
+  const uf = b.querySelector('[data-cep-uf]').value.trim(), cidade = b.querySelector('[data-cep-cidade]').value.trim(), rua = b.querySelector('[data-cep-rua]').value.trim();
+  const out = b.querySelector('[data-cep-res]');
+  if (uf.length !== 2 || cidade.length < 3 || rua.length < 3) { out.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">UF com 2 letras, a cidade e pelo menos 3 letras da rua.</p>'; return; }
+  out.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Buscando…</p>';
+  try {
+    const r = await buscarJSON(`https://viacep.com.br/ws/${encodeURIComponent(uf)}/${encodeURIComponent(cidade)}/${encodeURIComponent(rua)}/json/`, 8000);
+    if (!Array.isArray(r) || !r.length) { out.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Nada encontrado com esse nome.</p>'; return; }
+    window.__cepLista = r;
+    out.innerHTML = r.slice(0, 8).map((x, i) => `<button type="button" class="card card--tap row" style="margin-top:var(--s2)" onclick="usarCepDaLista('${pfx}', ${i})">
+      <span class="row__main"><span class="row__t num">${esc(x.cep)}</span><span class="row__s">${esc([x.logradouro, x.complemento, x.bairro].filter(Boolean).join(' · '))}</span></span></button>`).join('');
+  } catch (e) { out.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Não consegui buscar agora.</p>'; }
+}
+function usarCepDaLista(pfx, i) {
+  const x = (window.__cepLista || [])[i], el = document.getElementById(pfx + '-cep'); if (!x || !el) return;
+  el.value = x.cep; el.dispatchEvent(new Event('input', { bubbles: true }));
+  document.getElementById(pfx + '-cep-ajuda').hidden = true;
+}
+// ---------- posição ----------
+function blocoGeoHTML(pfx, im) {
+  im = im || {};
+  return `<div class="field" id="f-${pfx}-geo"><label>Localização (pra Rota do dia)</label>
+    <input type="hidden" id="${pfx}-lat" value="${im.lat != null ? im.lat : ''}"><input type="hidden" id="${pfx}-lng" value="${im.lng != null ? im.lng : ''}">
+    <input type="hidden" id="${pfx}-geo-origem" value="${esc(im.geo_origem || (im.lat != null ? 'gps' : ''))}"><input type="hidden" id="${pfx}-geo-precisao" value="${im.geo_precisao_m != null ? im.geo_precisao_m : ''}">
+    <div class="acoes-3 geo-acoes">
+      <button type="button" class="btn" onclick="geoEstouAqui('${pfx}')">${ico('mapa')}Estou no imóvel</button>
+      <button type="button" class="btn" onclick="geoPeloEndereco('${pfx}')">${ico('busca')}Pelo endereço</button>
+      <button type="button" class="btn" onclick="geoColar('${pfx}')">${ico('copiar')}Colar</button>
+    </div>
+    <div id="${pfx}-geo-colar" hidden class="field-inline" style="margin-top:var(--s2)">
+      <input data-geo-colar placeholder="-15.8341, -47.9127 ou link do Google Maps" autocomplete="off" aria-label="Coordenada ou link do mapa">
+      <button type="button" class="btn btn--sm" onclick="geoAplicarColada('${pfx}')">Usar</button>
+    </div>
+    <div id="${pfx}-geo-status" aria-live="polite"></div></div>`;
+}
+function rotuloGeo(origem, precisao) {
+  return origem === 'gps' ? 'pelo GPS' + (precisao ? ' · ±' + Math.round(precisao) + ' m' : '')
+    : origem === 'endereco' ? 'pelo endereço · aproximada' : origem === 'bairro' ? 'pelo CEP ou bairro · bem aproximada' : origem === 'colada' ? 'colada de um mapa' : 'origem não registrada';
+}
+function geoSet(pfx, lat, lng, origem, precisao) {
+  [['lat', lat], ['lng', lng], ['geo-origem', origem], ['geo-precisao', precisao == null ? '' : Math.round(precisao)]].forEach(([s, v]) => {
+    const e = document.getElementById(pfx + '-' + s); if (e) { e.value = v == null ? '' : String(v); e.dispatchEvent(new Event('input', { bubbles: true })); }
+  });
+  window.__geoLongeOk = false;
+  if (pfx === 'gf') renderGeoStatusFicha(); else renderGeoStatus(pfx);
+}
+function geoLimpar(pfx) { geoSet(pfx, '', '', '', null); }
+function renderGeoStatus(pfx, extra) {
+  const st = document.getElementById(pfx + '-geo-status'); if (!st) return;
+  const lat = val(pfx + '-lat'), lng = val(pfx + '-lng');
+  if (lat === '' || lng === '') { st.innerHTML = `<p class="muted" style="margin:var(--s2) 0 0">${pfx === 'gf' ? 'Escolha como achar a posição nova.' : 'Sem posição.'} "Estou no imóvel" só na porta dele: o GPS grava onde você está.</p>`; return; }
+  const origem = val(pfx + '-geo-origem'), prec = +val(pfx + '-geo-precisao') || null, idAtual = +val(pfx + '-id') || null;
+  st.innerHTML = `<p style="margin:var(--s2) 0 var(--s1)"><b>Posição</b> <span class="muted">${esc(rotuloGeo(origem, prec))}</span></p>
+    ${croquiHTML(+lat, +lng, idAtual)}
+    <div class="btn-row">
+      <button type="button" class="btn btn--sm btn--grow" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${+lat},${+lng}', '_blank', 'noopener')">${ico('externo')}Conferir no mapa</button>
+      <button type="button" class="btn btn--sm btn--ghost" onclick="geoLimpar('${pfx}')">Tirar</button>
+    </div>
+    ${origem === 'endereco' || origem === 'bairro' ? '<p class="muted" style="margin:var(--s1) 0 0;font-size:var(--t-xs)">Busca pelo endereço: © colaboradores do OpenStreetMap</p>' : ''}
+    ${extra || ''}`;
+}
+// croqui: o ponto novo entre os outros imóveis com posição — sem mapa de fundo, funciona
+// offline, e um ponto a 900 km dos outros salta aos olhos
+function croquiHTML(lat, lng, ignorarId) {
+  const outros = q('SELECT id, codigo, nome, lat, lng FROM imovel WHERE lat IS NOT NULL AND lng IS NOT NULL').filter(o => o.id !== ignorarId);
+  if (!outros.length) return `<p class="muted" style="margin:0 0 var(--s2)">Nenhum outro imóvel com posição pra comparar.</p>`;
+  const perto = outros.map(o => ({ o, km: haversineKm({ lat, lng }, o) })).sort((a, b) => a.km - b.km)[0];
+  const pts = outros.map(o => ({ lat: o.lat, lng: o.lng })).concat([{ lat, lng, novo: true }]);
+  const lat0 = pts.reduce((s, p) => s + p.lat, 0) / pts.length, kx = 111.32 * Math.cos(lat0 * Math.PI / 180), ky = 110.57;
+  const xs = pts.map(p => p.lng * kx), ys = pts.map(p => p.lat * ky);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const W = 320, H = 120, pad = 16, esc2 = Math.min((W - 2 * pad) / Math.max(maxX - minX, 0.5), (H - 2 * pad) / Math.max(maxY - minY, 0.5));
+  const cx = (W - (maxX - minX) * esc2) / 2, cy = (H - (maxY - minY) * esc2) / 2;
+  const X = p => (cx + (p.lng * kx - minX) * esc2).toFixed(1), Y = p => (H - cy - (p.lat * ky - minY) * esc2).toFixed(1);
+  return `<svg class="croqui" viewBox="0 0 ${W} ${H}" role="img" aria-label="Croqui: a posição nova fica a ${fmtKm(perto.km)} de ${esc(nomeImovel(perto.o))}">
+      ${pts.filter(p => !p.novo).map(p => `<circle cx="${X(p)}" cy="${Y(p)}" r="4" style="fill:var(--text-3)"/>`).join('')}
+      <circle cx="${X({ lat, lng })}" cy="${Y({ lat, lng })}" r="8" style="fill:var(--brand);stroke:var(--surface);stroke-width:2"/></svg>
+    <p class="muted" style="margin:0 0 var(--s2)">A ${fmtKm(perto.km)} de ${esc(nomeImovel(perto.o))}, o mais perto.${perto.km > 60 ? ' <b style="color:var(--warn)">Longe de todos os outros: confere.</b>' : ''}</p>`;
+}
+function geoEstouAqui(pfx) {
+  const st = document.getElementById(pfx + '-geo-status'); if (!st) return;
+  if (!navigator.geolocation) { st.innerHTML = '<p class="muted">Este navegador não dá a localização.</p>'; return; }
+  st.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Buscando sua posição… fique na porta do imóvel.</p>';
+  navigator.geolocation.getCurrentPosition(pos => {
+    if (!document.getElementById(pfx + '-lat')) return;
+    const { latitude, longitude, accuracy } = pos.coords;
+    if (accuracy > 50) {
+      window.__geoPendente = { pfx, lat: latitude, lng: longitude, acc: accuracy };
+      st.innerHTML = `<div class="aviso-conflito" style="margin-top:var(--s2)"><p><b>Posição imprecisa: ±${Math.round(accuracy)} m.</b> Dentro de casa o GPS erra; na rua melhora.</p>
+        <div class="btn-row"><button type="button" class="btn btn--sm btn--grow" onclick="geoEstouAqui('${pfx}')">Tentar de novo</button>
+        <button type="button" class="btn btn--sm btn--grow" onclick="geoUsarPendente()">Usar mesmo assim</button></div></div>`;
+      return;
+    }
+    geoSet(pfx, latitude, longitude, 'gps', accuracy);
+  }, err => {
+    st.innerHTML = `<p class="muted" style="margin:var(--s2) 0 0">Não consegui a posição (${esc(err && err.message ? err.message : 'erro')}). Tente "Pelo endereço" ou "Colar".</p>`;
+  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+}
+function geoUsarPendente() { const g = window.__geoPendente; if (!g) return; window.__geoPendente = null; geoSet(g.pfx, g.lat, g.lng, 'gps', g.acc); }
+let nominatimUltimo = 0;
+async function geoPeloEndereco(pfx) {
+  const st = document.getElementById(pfx + '-geo-status'); if (!st) return;
+  const rua = val(pfx + '-endereco'), num = val(pfx + '-numero'), bairro = val(pfx + '-bairro'), cidade = val(pfx + '-cidade'), uf = val(pfx + '-uf'), cep = val(pfx + '-cep').replace(/\D/g, '');
+  if (!rua && cep.length !== 8 && !bairro) { st.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Preencha o CEP ou o endereço primeiro.</p>'; return; }
+  let aviso = '';
+  try { if (!localStorage.getItem('geo:osm-aviso')) { aviso = ' O endereço do imóvel vai pro OpenStreetMap pra achar a posição.'; localStorage.setItem('geo:osm-aviso', '1'); } } catch (e) { /* ok */ }
+  st.innerHTML = `<p class="muted" style="margin:var(--s2) 0 0">Buscando pelo endereço…${aviso}</p>`;
+  const lugar = [cidade, uf].filter(Boolean).join(', ');
+  const tentativas = [];
+  if (rua) tentativas.push([{ street: [num, rua].filter(Boolean).join(' '), city: cidade, state: uf, postalcode: cep.length === 8 ? cep.slice(0, 5) + '-' + cep.slice(5) : '' }, 'endereco']);
+  if (rua) tentativas.push([{ q: [rua, num, bairro, lugar].filter(Boolean).join(', ') }, 'endereco']);
+  if (cep.length === 8) tentativas.push([{ postalcode: cep.slice(0, 5) + '-' + cep.slice(5) }, 'bairro']);
+  if (bairro) tentativas.push([{ q: [bairro, lugar].filter(Boolean).join(', ') }, 'bairro']);
+  for (const [params, nivel] of tentativas) {
+    // a política do Nominatim pede no máximo 1 pedido por segundo e nada enquanto digita
+    const espera = 1100 - (Date.now() - nominatimUltimo); if (espera > 0) await new Promise(r => setTimeout(r, espera));
+    nominatimUltimo = Date.now();
+    const p = new URLSearchParams({ format: 'jsonv2', limit: '1', countrycodes: 'br', 'accept-language': 'pt-BR' });
+    Object.entries(params).forEach(([k, v]) => { if (v) p.set(k, v); });
+    try {
+      const r = await buscarJSON('https://nominatim.openstreetmap.org/search?' + p.toString(), 9000);
+      if (!document.getElementById(pfx + '-lat')) return;
+      if (Array.isArray(r) && r.length) return geoSet(pfx, +(+r[0].lat).toFixed(6), +(+r[0].lon).toFixed(6), nivel, null);
+    } catch (e) { if (navigator.onLine === false) break; }
+  }
+  if (document.getElementById(pfx + '-geo-status')) st.innerHTML = `<p class="muted" style="margin:var(--s2) 0 0">${navigator.onLine === false ? 'Sem internet.' : 'Não achei esse endereço no mapa.'} Tente "Colar" ou "Estou no imóvel" quando estiver lá.</p>`;
+}
+function geoColar(pfx) { const b = document.getElementById(pfx + '-geo-colar'); if (!b) return; b.hidden = !b.hidden; if (!b.hidden) b.querySelector('[data-geo-colar]').focus(); }
+function lerCoordenada(txt) {
+  const t = String(txt || '').trim();
+  const m = t.match(/@(-?\d{1,2}\.\d+),\s*(-?\d{1,3}\.\d+)/) || t.match(/[?&](?:q|ll|query|destination|center)=(-?\d{1,2}\.\d+)(?:,|%2C)\s*(-?\d{1,3}\.\d+)/i)
+    || t.match(/(-?\d{1,2}\.\d{2,})\s*,\s*(-?\d{1,3}\.\d{2,})/) || t.match(/(-?\d{1,2},\d{2,})\s*[; ]\s*(-?\d{1,3},\d{2,})/);
+  if (!m) return null;
+  const lat = +m[1].replace(',', '.'), lng = +m[2].replace(',', '.');
+  if (!(lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180)) return null;
+  return { lat, lng, foraDoBrasil: lat < -34 || lat > 6 || lng < -74 || lng > -32 };
+}
+function geoAplicarColada(pfx) {
+  const b = document.getElementById(pfx + '-geo-colar'); if (!b) return;
+  const c = lerCoordenada(b.querySelector('[data-geo-colar]').value), st = document.getElementById(pfx + '-geo-status');
+  if (!c) { st.innerHTML = '<p class="muted" style="margin:var(--s2) 0 0">Não entendi. Formato: -15.8341, -47.9127 (no Google Maps, toque e segure no lugar e copie os números).</p>'; return; }
+  b.hidden = true; b.querySelector('[data-geo-colar]').value = '';
+  geoSet(pfx, c.lat, c.lng, 'colada', null);
+  if (c.foraDoBrasil) st.insertAdjacentHTML('beforeend', '<p style="margin:var(--s1) 0 0;color:var(--warn)"><b>Essa coordenada fica fora do Brasil.</b> Confere a ordem: latitude primeiro.</p>');
+}
+// ficha do imóvel: trocar a posição pede confirmação, avisa quando fica longe da atual e tem Desfazer
+function posicaoImovelSheet(id) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [id])[0]; if (!im) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Posição do imóvel</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(nomeImovel(im))} · ${im.lat != null ? 'posição atual ' + esc(rotuloGeo(im.geo_origem, im.geo_precisao_m)) : 'ainda sem posição'}</p>
+    <input type="hidden" id="gf-id" value="${id}">
+    ${['endereco', 'numero', 'bairro', 'cidade', 'uf', 'cep'].map(c => `<input type="hidden" id="gf-${c}" value="${esc(im[c] || '')}">`).join('')}
+    ${blocoGeoHTML('gf', {})}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'posicao:' + id });
+  renderGeoStatusFicha();
+}
+function renderGeoStatusFicha() {
+  const id = +val('gf-id'); if (!id) return;
+  if (val('gf-lat') === '') return renderGeoStatus('gf');
+  renderGeoStatus('gf', `<button type="button" class="btn btn--primary btn--block" style="margin-top:var(--s2)" id="gf-gravar" onclick="gravarPosicaoFicha(${id})">${ico('check')}Gravar esta posição</button><div id="gf-aviso"></div>`);
+}
+function gravarPosicaoFicha(id) {
+  const im = q('SELECT lat, lng, geo_origem, geo_precisao_m FROM imovel WHERE id=?', [id])[0]; if (!im) return;
+  const nova = { lat: +val('gf-lat'), lng: +val('gf-lng') }, origem = val('gf-geo-origem'), prec = val('gf-geo-precisao') ? +val('gf-geo-precisao') : null;
+  if (im.lat != null && !window.__geoLongeOk) {
+    const km = haversineKm(im, nova);
+    if (km > 1) {
+      window.__geoLongeOk = true;
+      document.getElementById('gf-aviso').innerHTML = `<div class="aviso-conflito" role="alert" style="margin-top:var(--s2)"><p><b>Fica a ${fmtKm(km)} da posição gravada.</b> ${origem === 'gps' ? 'Você está mesmo no imóvel?' : 'Confere antes de trocar.'}</p><p style="margin:0">Toque em Gravar de novo pra trocar mesmo assim.</p></div>`;
+      return;
+    }
+  }
+  window.__geoLongeOk = false;
+  run('UPDATE imovel SET lat=?, lng=?, geo_origem=?, geo_precisao_m=? WHERE id=?', [nova.lat, nova.lng, origem || null, prec, id]);
+  vibrar(); closeSheet(); renderVI(); if (viewAtual === 'rota') renderRota();
+  showToast('Posição do imóvel gravada.', { label: 'Desfazer', fn: () => {
+    run('UPDATE imovel SET lat=?, lng=?, geo_origem=?, geo_precisao_m=? WHERE id=?', [im.lat, im.lng, im.geo_origem, im.geo_precisao_m, id]);
+    renderVI(); if (folhaAtual && folhaAtual.chave === 'imovel:' + id) openDetail('imovel', id); } });
+}
+function editarImovel(id) { openForm('imovel', { tipo: 'editar', id, editar: id }); }
+function enderecoCompleto(im) {
+  const linha1 = [im.endereco, im.numero, im.complemento].filter(Boolean).join(', ');
+  return [linha1, im.bairro, im.cidade && (im.cidade + (im.uf ? '/' + im.uf : '')), im.cep && 'CEP ' + im.cep].filter(Boolean).join(' · ');
+}
+
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
   renderCalcImovelSelect(); cCalcFin(); cCalcCom(); cCalcITBI(); renderCamLinkSelects(); renderInstallBox(); marcarMapaApp();
-  atualizarSino(); marcarTamanhoTexto(); marcarVisual(); renderPerfil(); renderTrava(); renderBackup();
+  atualizarSino(); marcarTamanhoTexto(); marcarVisual(); renderPerfil(); renderTrava(); renderBackup(); renderAgendaCfg(); verificarLembretes();
   const n = q('SELECT COUNT(*) c FROM imovel')[0].c;
   const nl = q('SELECT COUNT(*) c FROM lead')[0].c;
   document.getElementById('foot-count').textContent = n + ' imóveis · ' + nl + ' leads no banco local';
@@ -5601,6 +7132,11 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     }
     // toque na notificação da visita (B15): o worker foca esta aba e manda a ação
     if (evento.data && evento.data.tipo === 'acao' && evento.data.acao) executarAtalho('?acao=' + encodeURIComponent(evento.data.acao));
+    // lembrete da agenda (rodada 36): Adiar 10 min ou Abrir
+    if (evento.data && evento.data.tipo === 'lembrete' && db) {
+      if (evento.data.acao === 'adiar') adiarLembrete(evento.data.item, evento.data.chave);
+      else { const [k, id] = String(evento.data.item || '').split(':'); if (k && +id) abrirItemAgenda(k, +id); }
+    }
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
