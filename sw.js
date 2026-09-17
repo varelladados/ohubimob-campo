@@ -18,7 +18,8 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v15';  // v15: agenda nova (compromissos, pessoas, favorito, visões, lembretes, .ics), imóvel com CEP e posição conferida, busca em tudo
+const CACHE = 'ohubimob-campo-v16';  // v16: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)
+// v15 anterior: agenda nova (compromissos, pessoas, favorito, visões, lembretes, .ics), imóvel com CEP e posição conferida, busca em tudo
 // v14 anterior: design system DS 3 (visual Leve: tinta + rosa-ipê, Atkinson Hyperlegible Next), Perto como alternativa em Mais
 // v13 anterior: Interações com humor e sinais; qualificação de lead e captação com motivos e o que falta saber
 // v12 anterior: texto do canal do follow-up segue o botão (E-mail virava WhatsApp só no botão)
@@ -147,12 +148,12 @@ self.addEventListener('notificationclick', event => {
   const tag = event.notification.tag || '';
   if (tag.startsWith('lemb:')) {
     event.notification.close();
-    const d = event.notification.data || {}, adiar = event.action === 'adiar', destinoL = d.url || './';
+    const d = event.notification.data || {}, adiar = event.action === 'adiar', confirmar = event.action === 'confirmar', destinoL = d.url || './';
     event.waitUntil((async () => {
       const abas = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
       const aba = abas.find(a => new URL(a.url).pathname === new URL(destinoL, self.location.origin).pathname) || abas[0];
-      if (aba) { if (!adiar) await aba.focus(); aba.postMessage({ tipo: 'lembrete', acao: adiar ? 'adiar' : 'abrir', item: d.item, chave: d.chave }); }
-      else await self.clients.openWindow(destinoL + '?acao=agenda-item&item=' + encodeURIComponent(d.item || '') + (adiar ? '&adiar=' + encodeURIComponent(d.chave || '1') : ''));
+      if (aba) { if (!adiar) await aba.focus(); aba.postMessage({ tipo: 'lembrete', acao: adiar ? 'adiar' : confirmar ? 'confirmar' : 'abrir', item: d.item, chave: d.chave }); }
+      else await self.clients.openWindow(destinoL + '?acao=agenda-item&item=' + encodeURIComponent(d.item || '') + (adiar ? '&adiar=' + encodeURIComponent(d.chave || '1') : '') + (confirmar ? '&confirmar=1' : ''));
     })());
     return;
   }

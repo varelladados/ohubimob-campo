@@ -65,6 +65,7 @@
 
   /* ---- semântica ---- */
   --ok: #17794A;      --ok-bg: #E2F3EA;
+  --on-ok: #FFFFFF;   /* check e ícone sobre --ok cheio */
   --warn: #9E4F08;    --warn-bg: #FBEEDC;
   --danger: #BF2530;  --danger-bg: #FCE7E8;
   --neutral: #444954; --neutral-bg: #E8EAEE;
@@ -154,6 +155,7 @@
     --on-brand: #14161B;
     --brand-tint: #33192A;
     --ok: #5BC98A;      --ok-bg: #122A1D;
+    --on-ok: #14161B;
     --warn: #F0A45B;    --warn-bg: #2E1F10;
     --danger: #FF8C8C;  --danger-bg: #381A1C;
     --neutral: #A9AEB8; --neutral-bg: #1F2227;
@@ -186,6 +188,7 @@
   --on-brand: #14161B;
   --brand-tint: #33192A;
   --ok: #5BC98A;      --ok-bg: #122A1D;
+  --on-ok: #14161B;
   --warn: #F0A45B;    --warn-bg: #2E1F10;
   --danger: #FF8C8C;  --danger-bg: #381A1C;
   --neutral: #A9AEB8; --neutral-bg: #1F2227;
@@ -223,6 +226,7 @@
   --on-brand: #FFFFFF;
   --brand-tint: #E4EFEF;
   --ok: #137A4F;      --ok-bg: #E2F2EA;
+  --on-ok: #FFFFFF;
   --warn: #B04A06;    --warn-bg: #FCEADB;
   --danger: #B42318;  --danger-bg: #FBE4E1;
   --neutral: #3B475C; --neutral-bg: #E6EDED;
@@ -265,6 +269,7 @@
     --on-brand: #06201F;
     --brand-tint: #12302F;
     --ok: #5CCB8E;      --ok-bg: #13281E;
+    --on-ok: #06201F;
     --warn: #F0A061;    --warn-bg: #2E1E12;
     --danger: #FF8A7A;  --danger-bg: #3A1F1F;
     --neutral: #A9B4C4; --neutral-bg: #182335;
@@ -295,6 +300,7 @@
   --on-brand: #06201F;
   --brand-tint: #12302F;
   --ok: #5CCB8E;      --ok-bg: #13281E;
+  --on-ok: #06201F;
   --warn: #F0A061;    --warn-bg: #2E1E12;
   --danger: #FF8A7A;  --danger-bg: #3A1F1F;
   --neutral: #A9B4C4; --neutral-bg: #182335;
@@ -806,13 +812,15 @@ a { color: inherit; text-decoration: none; }
   .chk__main { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--s3); min-height: 48px; padding: var(--s1) 0;
     background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
   .chk__box { width: 24px; height: 24px; border: 2px solid var(--border-2); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex: none; }
-  .chk.is-feito .chk__box { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .chk.is-feito .chk__box { background: var(--ok); border-color: var(--ok); color: var(--on-ok); }
   .chk.is-feito .chk__t { color: var(--text-3); }
   .lembrar { display: flex; align-items: center; gap: var(--s2); min-height: 44px; margin: var(--s2) 0; font-size: var(--t-sm); }
   .lembrar input { width: 22px; height: 22px; flex: none; }
 
   /* ======================= rodada 36 — agenda (lote C1) ======================= */
   .chip-row--wrap { flex-wrap: wrap; overflow: visible; }
+  /* grade de ações: sem min-width 0 o rótulo longo ("Não aconteceu") empurra o último botão pra fora da tela */
+  .acoes-2 > .btn, .acoes-3 > .btn { min-width: 0; padding-left: var(--s2); padding-right: var(--s2); }
   .ag-topo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); margin-bottom: var(--s3); }
   .ag-visoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-bottom: var(--s2); }
   .ag-visoes .chip { justify-content: center; }
@@ -895,6 +903,32 @@ a { color: inherit; text-decoration: none; }
   .geo-acoes .btn { flex-direction: column; gap: 2px; min-height: 58px; padding: var(--s1); font-size: var(--t-xs); }
   .croqui { width: 100%; height: auto; display: block; background: var(--surface-2); border-radius: var(--r-sm); margin: var(--s1) 0 var(--s2); }
   .agcfg-row { min-height: var(--tap); padding: var(--s1) 0; border-bottom: 1px solid var(--border); }
+
+  /* ======================= rodada 36 — agenda (lote C2) ======================= */
+  .ag-visoes { grid-template-columns: repeat(4, 1fr); }
+  .ag-mes-cab, .ag-mes { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .ag-mes-cab { margin-top: var(--s2); }
+  .ag-mes-cab span { text-align: center; font-size: var(--t-xs); color: var(--text-3); padding: 2px 0; }
+  .ag-md { border: 0; background: var(--chip-bg); border-radius: var(--r-xs); min-height: 52px; padding: 5px 0 4px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-2); font: inherit; min-width: 0; }
+  .ag-md__n { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ag-md.is-fora { opacity: 0.45; }
+  .ag-md.is-hoje .ag-md__n { color: var(--brand-text); }
+  .ag-md.on { background: var(--chip-on-bg); color: var(--chip-on-text); }
+  .ag-md.on .ag-md__n { color: inherit; }
+  .ag-md .ag-dots { gap: 2px; }
+  .ag-md .ag-dot { width: 6px; height: 6px; }
+  .ag-dot.ag-dot--tarefa { background: transparent; border: 1.5px solid currentColor; opacity: 0.7; }
+  .ag-mais { font-size: 10px; line-height: 6px; }
+  .fala-previa { display: flex; flex-wrap: wrap; gap: 4px; margin-top: var(--s2); }
+  .sair { margin: var(--s2) 0 0; font-size: var(--t-sm); color: var(--text-2); display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  .sair .ic { color: var(--brand-text); }
+  .hero .sair { margin: calc(var(--s2) * -1) 0 var(--s3); }
+  .live .sair, .live .sair .muted, .live .sair .ic { color: inherit; }
+  .tarefa { padding-left: 0; }
+  .tarefa__check { width: var(--tap); height: var(--tap); flex: none; border: 0; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+  .tarefa.is-feita .chk__box { background: var(--ok); border-color: var(--ok); color: var(--on-ok); }
+  .tarefa.is-feita .row__t { text-decoration: line-through; color: var(--text-3); }
 </style>
 
 <!-- ds2-icons:inicio -->
@@ -1012,6 +1046,7 @@ a { color: inherit; text-decoration: none; }
       <div class="greet" id="hj-hello"></div>
       <span class="muted" id="hj-sum"></span>
       <div id="hj-backup"></div>
+      <div id="hj-amanha"></div>
 
       <h2 class="blk-title">Próxima ação</h2>
       <div id="hj-next"></div>
@@ -1022,6 +1057,8 @@ a { color: inherit; text-decoration: none; }
       <div id="hj-today"></div>
 
       <div id="hj-registrar"></div>
+
+      <div id="hj-tarefas"></div>
 
       <h2 class="blk-title">Pendências <button class="jump" onclick="go('cr')">ver leads</button></h2>
       <div id="hj-followup"></div>
@@ -1077,7 +1114,7 @@ a { color: inherit; text-decoration: none; }
         <button class="tile" onclick="limparNotaCtx();go('nt')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-mic"/></svg><div class="tile__n">Notas</div><div class="tile__p">voz, texto, foto</div></button>
         <button class="tile" onclick="go('cart')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pasta"/></svg><div class="tile__n">Arquivos</div><div class="tile__p">fotos e documentos</div></button>
         <button class="tile" onclick="go('calc')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-calculadora"/></svg><div class="tile__n">Calculadoras</div><div class="tile__p">financiamento, comissão, CMA</div></button>
-        <button class="tile" onclick="pessoasTipo='cliente';go('cr');renderCR()"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-pessoa"/></svg><div class="tile__n">Clientes</div><div class="tile__p">agora em Pessoas</div></button>
+        <button class="tile" onclick="go('msgs')"><svg class="ic ic-lg" aria-hidden="true"><use href="#i-conversa"/></svg><div class="tile__n">Mensagens prontas</div><div class="tile__p">textos do WhatsApp</div></button>
       </div>
 
       <div class="data-box" id="install-box" hidden></div>
@@ -1132,6 +1169,15 @@ a { color: inherit; text-decoration: none; }
         <div class="foot-count" id="foot-count"></div>
         <div class="foot-count" style="margin-top:6px;line-height:1.5">Versão de demonstração — imóveis, clientes e telefones são <b>fictícios</b>. Use “Recomeçar do zero” e cadastre os seus.</div>
       </div>
+    </section>
+
+    <!-- ============================ MENSAGENS PRONTAS ============================ -->
+    <section class="panel" id="panel-msgs">
+      <p class="muted" style="margin:0 0 var(--s3)">Textos que abrem no WhatsApp já escritos, com o nome da pessoa, o imóvel e o horário no lugar certo.</p>
+      <button class="btn btn--primary btn--block" onclick="editarMensagem(0)">
+        <svg class="ic" aria-hidden="true"><use href="#i-somar"/></svg>Nova mensagem
+      </button>
+      <div id="msgs-list"></div>
     </section>
 
     <!-- ============================ NOTAS ============================ -->
@@ -1638,10 +1684,15 @@ const SCHEMA_MIGRATIONS = [
   `ALTER TABLE imovel ADD COLUMN uf TEXT`,
   `ALTER TABLE imovel ADD COLUMN geo_origem TEXT`,
   `ALTER TABLE imovel ADD COLUMN geo_precisao_m REAL`,
-  `ALTER TABLE captacao_lp ADD COLUMN cep TEXT`
+  `ALTER TABLE captacao_lp ADD COLUMN cep TEXT`,
+  // Rodada 36 (lote C2) — compromissos que se repetem (ligados pela série), tarefas sem hora e mensagens prontas
+  `ALTER TABLE compromisso ADD COLUMN serie_id INTEGER`,
+  `CREATE TABLE IF NOT EXISTS tarefa (id INTEGER PRIMARY KEY AUTOINCREMENT, texto TEXT, data TEXT, feito_em TEXT, pessoa_tipo TEXT, pessoa_id INTEGER, imovel_id INTEGER, destaque INTEGER DEFAULT 0, criado_em TEXT)`,
+  `CREATE TABLE IF NOT EXISTS mensagem_pronta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, contexto TEXT, ordem INTEGER, padrao INTEGER DEFAULT 0)`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
+  try { semearMensagensProntas(); } catch (e) { /* segue sem as mensagens padrão */ }
 }
 
 const STAGE_LABELS = { novo: 'Novo', contato: 'Contato', visita: 'Visita', proposta: 'Proposta', fechado: 'Fechado' };
@@ -2038,7 +2089,8 @@ const VIEWS = {
   cli:    { t: 'Clientes',      tab: 'mais', back: 'mais' },
   visita: { t: 'Visita',        tab: 'ag',   back: 'ag', render: () => renderVisita() },
   rota:   { t: 'Rota do dia',   tab: 'ag',   back: 'ag', render: () => renderRota() },
-  lixo:   { t: 'Lixeira',       tab: 'mais', back: 'mais', render: () => renderLixeira() }
+  lixo:   { t: 'Lixeira',       tab: 'mais', back: 'mais', render: () => renderLixeira() },
+  msgs:   { t: 'Mensagens prontas', tab: 'mais', back: 'mais', render: () => renderMensagens() }
 };
 let viewAtual = 'hj';
 // ---------- histórico (rodada 33, A2) ----------
@@ -2143,6 +2195,7 @@ const CRIAR_OPCOES = [
   { k: 'foto',          ic: 'camera',    t: 'Foto ou documento', s: 'câmera do aparelho' },
   { k: 'visita',        ic: 'visita',    t: 'Visita',           s: 'imóvel, check-in e roteiro' },
   { k: 'compromisso',   ic: 'agenda',    t: 'Compromisso',      s: 'reunião, cartório, plantão, ligação' },
+  { k: 'tarefa',        ic: 'check',     t: 'Tarefa',           s: 'sem hora: pedir certidão, mandar fotos' },
   { k: 'lead-venda',    ic: 'leads',     t: 'Lead comprador',   s: 'quem quer comprar' },
   { k: 'lead-captacao', ic: 'casa',      t: 'Lead captação',    s: 'quem quer vender' },
   { k: 'cliente',       ic: 'pessoa',    t: 'Cliente',          s: 'contato geral' },
@@ -2187,6 +2240,7 @@ function criarEscolha(k) {
   }
   closeSheet();
   if (k === 'compromisso') return abrirFormCompromisso(ctxParaCompromisso(criarCtx));
+  if (k === 'tarefa') return abrirFormTarefa(ctxParaTarefa(criarCtx));
   if (k === 'nota-voz' || k === 'nota-texto' || k === 'foto') {
     aplicarCtxNaNota();
     go('nt');
@@ -2397,7 +2451,7 @@ const FORMS = {
              </div>
              <div class="chip-row" style="flex-wrap:wrap;overflow:visible">
                ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="document.getElementById('fvi-hora').value='${h}'">${h.slice(0, 2)}h</button>`).join('')}
-             </div>` +
+             </div>` + livresBotaoHTML('fvi') +
             // rodada 36: outras pessoas, duração, lembretes e favorito
             `<details class="fold"><summary>${ico('chevron', 'ic-sm')}pessoas, duração e lembretes</summary>
                <input type="hidden" id="fvi-destaque" value="0">
@@ -2441,7 +2495,14 @@ function openForm(tipo, ctx) {
       if (ctx.tipo === 'imovel') setV('fvi-imovel', ctx.id);
       if (ctx.tipo === 'lead') { setV('fvi-lead', ctx.id); const l = q('SELECT imovel_id FROM lead WHERE id=?', [ctx.id])[0]; if (l) setV('fvi-imovel', l.imovel_id); }
       if (ctx.tipo === 'visita') { const v = q('SELECT imovel_id, lead_id FROM visita WHERE id=?', [ctx.id])[0]; if (v) { setV('fvi-imovel', v.imovel_id); setV('fvi-lead', v.lead_id); } }
-      if (ctx.preset) { if (ctx.preset.data) setV('fvi-data', ctx.preset.data); if (ctx.preset.hora) setV('fvi-hora', ctx.preset.hora); }
+      if (ctx.preset) {
+        const pr = ctx.preset;
+        if (pr.data) setV('fvi-data', pr.data); if (pr.hora) setV('fvi-hora', pr.hora);
+        if (pr.imovel_id) setV('fvi-imovel', pr.imovel_id); if (pr.lead_id) setV('fvi-lead', pr.lead_id);
+        if (pr.dur) setV('fvi-dur', pr.dur);
+        if (pr.pessoas && pr.pessoas.length) setV('fvi-pessoas', JSON.stringify(pr.pessoas.map(x => ({ tipo: x.tipo, id: x.id, papel: x.papel || '' }))));
+        if (pr.dur || (pr.pessoas && pr.pessoas.length)) { const fold = document.querySelector('#form-sheet details'); if (fold) fold.open = true; }
+      }
     }
     if (tipo === 'lead-venda' && ctx.tipo === 'imovel') setV('fv-imovel', ctx.id);
   }
@@ -2689,7 +2750,16 @@ function seedDatabase() {
   const escritura = novoComp('cartorio', 'Assinatura da escritura', todayISO(3), '10:00', 60, 'Cartório', b2, 4);
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cliente')`, [escritura, clienteBy('Renata Kunz')]);
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cônjuge')`, [escritura, clienteBy('Marcelo Dias')]);
-  novoComp('plantao', null, todayISO(2), '09:00', 240, null, c1, 0);
+  // plantão toda semana, 4 vezes (C2: repetição em série)
+  const plantao = novoComp('plantao', null, todayISO(2), '09:00', 240, null, c1, 0);
+  [0, 7, 14, 21].forEach(n => {
+    const cid = n ? novoComp('plantao', null, todayISO(2 + n), '09:00', 240, null, c1, 0) : plantao;
+    db.run(`UPDATE compromisso SET serie_id=?, recorrencia='semanal', recorrencia_ate=? WHERE id=?`, [plantao, todayISO(23), cid]);
+  });
+  // tarefas sem hora (C2)
+  db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Pedir a certidão de matrícula', todayISO(0), null, null, b2, todayISO(-1)]);
+  db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Mandar os comparáveis com condomínio menor', todayISO(1), 'lead', marina, null, todayISO(-1)]);
+  db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Atualizar as fotos do anúncio', null, null, null, b3, todayISO(-2)]);
   db.run(`UPDATE visita SET destaque=1 WHERE lead_id=?`, [marina]);
 
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
@@ -2757,9 +2827,15 @@ async function resetDb() {
   crFilter = 'novo';
   // rascunhos, roteiros e o que o sino já mostrou pertencem ao banco apagado
   try { Object.keys(localStorage).filter(k => /^(rascunho|roteiro|sino|dados|backup):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
+  limparMarcasPorId();
   renderAll();
   colapsarPilha();
   showToast('Banco recomeçado do zero.');
+}
+// Marcas guardadas fora do banco que apontam pra um item pelo id: com outro banco os ids se
+// repetem, e "confirmado" ou "lembrete já mostrado" cairiam num item que não é o mesmo.
+function limparMarcasPorId() {
+  try { Object.keys(localStorage).filter(k => /^confirmado:|^lembrete:(disparados|adiados):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
 }
 function exportDb() {
   const bytes = db.export();
@@ -2838,6 +2914,7 @@ function importDb(evt) {
       db = anterior;
       showToastErr('Não consegui importar: ' + (e && e.message ? e.message : e)); evt.target.value = ''; return;
     }
+    limparMarcasPorId();
     persist(); persistNow();
     renderAll();
     colapsarPilha();
@@ -2907,7 +2984,8 @@ function abrirAvisar(visitaId) {
       <button class="btn btn--grow" onclick="enviarAviso(20)">20 min</button>
       <button class="btn btn--grow" onclick="enviarAviso(30)">30 min</button>
     </div>
-    <button class="btn btn--block" style="margin-top:var(--s3)" data-tel="${esc(v.telefone)}" onclick="closeSheet();ligar(this.dataset.tel)">${ico('telefone')}Ligar em vez de mandar mensagem</button>
+    <button class="btn btn--block" style="margin-top:var(--s3)" onclick="mensagensDaVisita(${v.id})">${ico('conversa')}Outras mensagens prontas</button>
+    <button class="btn btn--block" style="margin-top:var(--s2)" data-tel="${esc(v.telefone)}" onclick="closeSheet();ligar(this.dataset.tel)">${ico('telefone')}Ligar em vez de mandar mensagem</button>
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false });
 }
 function enviarAviso(qual) {
@@ -3084,7 +3162,7 @@ function acoesContato(tel, pessoa) {
   const t = esc(tel || ''), p = esc(pessoa || '');
   return `<div class="btn-row" style="margin-top:var(--s3)">
     <button class="btn btn--grow" data-tel="${t}" data-pessoa="${p}" onclick="ligar(this.dataset.tel, this.dataset.pessoa)">${ico('telefone')}Ligar</button>
-    <button class="btn btn--grow btn--ok" data-tel="${t}" data-pessoa="${p}" onclick="abrirWhats(this.dataset.tel, '', this.dataset.pessoa)">${ico('conversa')}WhatsApp</button>
+    <button class="btn btn--grow btn--ok" data-tel="${t}" data-pessoa="${p}" onclick="mensagemPessoa(this.dataset.pessoa, this.dataset.tel)">${ico('conversa')}WhatsApp</button>
   </div>`;
 }
 function blocoLinhaDoTempo(tipo, id) {
@@ -3474,6 +3552,7 @@ function heroVisitaHTML(v) {
       <span class="pill ${v.status === 'confirmada' ? 'ok' : 'warn'}" style="margin-left:auto">${esc(v.status)}</span>${estrelaHTML('visita', v.id, v.destaque)}</div>
     <div class="hero__what">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
     <div class="hero__who">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome || '') : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
+    ${linhaSairHTML(itemAgenda('visita', v.id))}
     <button class="btn btn--primary btn--block" style="margin-bottom:var(--s2)" onclick="iniciarVisita(${v.id})">${ico(v.inicio ? 'visita' : 'check')}${v.inicio ? 'Continuar visita' : 'Check-in e começar'}</button>
     <div class="hero__acts hero__acts--3">
       <button class="btn" onclick="abrirMapaId(${v.imovel_id})">${ico('mapa')}Ir</button>
@@ -3496,9 +3575,9 @@ function heroPendenciaHTML(r) {
     ? `<button class="btn btn--primary btn--block" onclick="openDetail('lead', ${leadId})">${ico('pessoa')}Abrir ficha — sem telefone</button>`
     : canalAcao(r.canal) === 'ligar'
       ? `<button class="btn btn--primary btn--block" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar agora</button>`
-      : `<button class="btn btn--primary btn--block" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}Mandar WhatsApp</button>`;
+      : `<button class="btn btn--primary btn--block" data-tel="${tel}" onclick="mensagemPessoa('lead:${leadId}', this.dataset.tel)">${ico('conversa')}Mandar WhatsApp</button>`;
   const outra = !tel ? '' : canalAcao(r.canal) === 'ligar'
-    ? `<button class="btn btn--ok btn--block" style="margin-top:var(--s2)" data-tel="${tel}" onclick="abrirWhats(this.dataset.tel)">${ico('conversa')}WhatsApp</button>`
+    ? `<button class="btn btn--ok btn--block" style="margin-top:var(--s2)" data-tel="${tel}" onclick="mensagemPessoa('lead:${leadId}', this.dataset.tel)">${ico('conversa')}WhatsApp</button>`
     : `<button class="btn btn--block" style="margin-top:var(--s2)" data-tel="${tel}" onclick="ligar(this.dataset.tel)">${ico('telefone')}Ligar</button>`;
   return `<div class="hero">
     <div class="hero__when">${ico('leads')}Follow-up${r._quando ? `<span class="row__meta" style="margin-left:auto">${esc(r._quando)}</span>` : ''}</div>
@@ -3638,6 +3717,14 @@ function renderHJ() {
       registrar.slice(-3).reverse().map(it => cartaoItemAgenda(it, { comData: true })).join('')
     : '';
 
+  // rodada 36 (C2): tarefas vencidas e de hoje; à noite, o cartão de amanhã
+  const aFazer = tarefasDoDia(hoje);
+  document.getElementById('hj-tarefas').innerHTML = aFazer.length
+    ? `<h2 class="blk-title">A fazer <button class="jump" onclick="abrirFormTarefa({})">+ tarefa</button></h2>` + aFazer.slice(0, 6).map(tarefaHTML).join('') +
+      (aFazer.length > 6 ? `<button class="btn btn--ghost btn--block" onclick="setAgVisao('lista');go('ag')">Mais ${aFazer.length - 6} na agenda</button>` : '')
+    : '';
+  document.getElementById('hj-amanha').innerHTML = cartaoAmanhaHTML();
+
   // prazo e canal descem pro subtítulo: à direita, o FAB cobria esse texto
   const MAX = 6;
   document.getElementById('hj-followup').innerHTML = restoPend.length
@@ -3664,7 +3751,7 @@ function botoesContato(tel, pessoa, extra) {
   const t = esc(tel || '');
   return `<div class="btn-row">
     <button class="btn btn--sm btn--grow" data-tel="${t}" data-pessoa="${pessoa}" onclick="ligar(this.dataset.tel, this.dataset.pessoa)">${ico('telefone')}Ligar</button>
-    <button class="btn btn--sm btn--grow btn--ok" data-tel="${t}" data-pessoa="${pessoa}" onclick="abrirWhats(this.dataset.tel, '', this.dataset.pessoa)">${ico('conversa')}WhatsApp</button>
+    <button class="btn btn--sm btn--grow btn--ok" data-tel="${t}" data-pessoa="${pessoa}" onclick="mensagemPessoa(this.dataset.pessoa, this.dataset.tel)">${ico('conversa')}WhatsApp</button>
     ${extra || ''}
   </div>`;
 }
@@ -4137,6 +4224,7 @@ function renderVisita() {
       <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
       <div style="opacity:.85;font-size:var(--t-sm)">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
       ${(() => { const ex = pessoasDoItem('visita', v.id); return ex.length ? `<div style="opacity:.85;font-size:var(--t-sm)">com ${ex.map(pp => objLink(pp.tipo, pp.id, pp.nome) + (pp.papel ? ' (' + esc(pp.papel) + ')' : '')).join(', ')}</div>` : ''; })()}
+      ${!v.inicio ? linhaSairHTML(itemAgenda('visita', v.id)) : ''}
     </div>
 
     ${!v.inicio ? `<button class="btn btn--primary btn--block" style="margin-bottom:var(--s3)" onclick="iniciarVisita(${v.id})">${ico('check')}Fazer check-in e começar</button>` : ''}
@@ -4570,7 +4658,7 @@ function usarMinhaPosicaoNaRota() {
   showToast('Buscando sua posição...');
   navigator.geolocation.getCurrentPosition(
     pos => {
-      posicaoAtual = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      posicaoAtual = { lat: pos.coords.latitude, lng: pos.coords.longitude, t: Date.now() };
       renderRota();
       showToast('Rota reordenada a partir de onde você está.');
     },
@@ -4648,7 +4736,10 @@ const APAGAVEIS = {
   arquivo:  { tabela: 'documento_carteira', nome: 'Arquivo', rot: r => r.nome, filhos: [] },
   foto:     { tabela: 'imovel_foto', nome: 'Foto', rot: () => 'Foto de imóvel', filhos: [], depois: r => openDetail('imovel', r.imovel_id) },
   // rodada 36: o terceiro elemento do filho é um filtro a mais (agenda_pessoa serve visita e compromisso)
-  compromisso: { tabela: 'compromisso', nome: 'Compromisso', rot: r => r.titulo || (TIPOS_AGENDA[r.tipo] || { t: 'Compromisso' }).t, filhos: [['agenda_pessoa', 'item_id', "item_tipo='compromisso'"]] }
+  compromisso: { tabela: 'compromisso', nome: 'Compromisso', rot: r => r.titulo || (TIPOS_AGENDA[r.tipo] || { t: 'Compromisso' }).t, filhos: [['agenda_pessoa', 'item_id', "item_tipo='compromisso'"]] },
+  // rodada 36 (C2): "apagar este e os próximos" guarda a série inteira num pacote só
+  serie:    { tabela: 'compromisso', nome: 'Compromissos repetidos', rot: r => (r.titulo || (TIPOS_AGENDA[r.tipo] || { t: 'Compromisso' }).t) + ' e os seguintes', filhos: [] },
+  tarefa:   { tabela: 'tarefa', nome: 'Tarefa', rot: r => r.texto || 'Tarefa', filhos: [] }
 };
 function botaoApagar(tipo, id, rotulo) {
   return `<button class="btn btn--ghost btn--block" style="color:var(--danger);margin-top:var(--s4)" onclick="apagar('${tipo}', ${id})">${ico('lixeira')}${rotulo}</button>`;
@@ -4707,7 +4798,7 @@ function restaurar(lid) {
 // Depois de 30 dias o item sai de vez. O que apontava pra ele (nota, arquivo, lead, visita)
 // fica, mas sem o vínculo: um id que não existe mais não pode sobrar solto no banco.
 const SOLTAR_AO_ESVAZIAR = {
-  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id'], ['compromisso', 'imovel_id']],
+  imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id'], ['compromisso', 'imovel_id'], ['tarefa', 'imovel_id']],
   lead: [['visita', 'lead_id'], ['nota', 'lead_id'], ['documento_carteira', 'lead_id']],
   cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']]
 };
@@ -4721,7 +4812,10 @@ function esvaziarLixeiraVencida() {
       (p.filhos || []).filter(([t]) => t === 'visita').forEach(([, rows]) =>
         rows.forEach(r => { db.run('UPDATE nota SET visita_id=NULL WHERE visita_id=?', [r.id]); db.run("DELETE FROM agenda_pessoa WHERE item_tipo='visita' AND item_id=?", [r.id]); }));
       // pessoa que sai de vez deixa de estar marcada nos compromissos
-      if (TABELA_PESSOA[v.tabela]) db.run('DELETE FROM agenda_pessoa WHERE pessoa_tipo=? AND pessoa_id=?', [v.tabela, p.row.id]);
+      if (TABELA_PESSOA[v.tabela]) {
+        db.run('DELETE FROM agenda_pessoa WHERE pessoa_tipo=? AND pessoa_id=?', [v.tabela, p.row.id]);
+        db.run('UPDATE tarefa SET pessoa_tipo=NULL, pessoa_id=NULL WHERE pessoa_tipo=? AND pessoa_id=?', [v.tabela, p.row.id]);
+      }
     } catch (e) { /* item ilegível: sai mesmo assim */ }
     db.run('DELETE FROM lixeira WHERE id=?', [v.id]);
   });
@@ -5285,6 +5379,8 @@ function linhaDoTempoHTML(tipo, id) {
       s: [r.texto, r.impressao, sg.length ? 'Sinais: ' + sg.join(', ') : ''].filter(Boolean).join(' — ') });
   });
   // rodada 36: compromissos e visitas em que a pessoa foi marcada
+  q(`SELECT * FROM tarefa WHERE pessoa_tipo=? AND pessoa_id=?`, [tipo, id]).forEach(t2 => it.push({ q: t2.feito_em || t2.data || t2.criado_em, ic: 'check',
+    t: t2.feito_em ? 'Tarefa feita' : 'A fazer', s: t2.texto, futuro: !t2.feito_em, go: `abrirFormTarefa({ id: ${t2.id} })` }));
   q(`SELECT item_tipo, item_id FROM agenda_pessoa WHERE pessoa_tipo=? AND pessoa_id=?`, [tipo, id]).forEach(r => {
     const ag = itemAgenda(r.item_tipo, r.item_id); if (!ag) return;
     if (ag.k === 'visita' && tipo === 'lead' && ag.bruto.lead_id === id) return;
@@ -5742,7 +5838,7 @@ const OPCOES_LEMBRETE = [[0, 'Na hora'], [5, '5 min'], [15, '15 min'], [30, '30 
 const DURACOES = [[15, '15 min'], [30, '30 min'], [45, '45 min'], [60, '1 h'], [120, '2 h'], [240, '4 h']];
 const CORES_ESTRELA = ['', 'verde', 'amarelo', 'laranja', 'vermelho', 'azul'];
 const PAPEIS = ['', 'cliente', 'cônjuge', 'proprietário', 'corretor parceiro', 'advogado', 'outro'];
-const VELOCIDADE_KMH = 30;   // deslocamento urbano médio, sem trânsito real (config fica pro lote C2)
+const VELOCIDADE_KMH = 30;   // padrão; o valor em uso vem de velocidadeKmh() (Mais › Agenda e avisos)
 
 // ---------- datas e horas ----------
 function minDe(hora) { const [h, m] = String(hora || '').split(':').map(Number); return isNaN(h) ? null : h * 60 + (m || 0); }
@@ -5753,7 +5849,7 @@ function inicioSemana(ymd) { const d = dataLocal(ymd); d.setDate(d.getDate() - (
 function rotuloDia(ymd) { return ymd === todayISO(0) ? 'Hoje' : ymd === todayISO(1) ? 'Amanhã' : ymd === todayISO(-1) ? 'Ontem' : fmtDataCurta(ymd); }
 
 // ---------- padrões por tipo ----------
-function duracaoPadrao(tipo) { return (TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao).dur; }
+function duracaoPadrao(tipo) { return +cfg('agenda:duracao:' + tipo) || (TIPOS_AGENDA[tipo] || TIPOS_AGENDA.reuniao).dur; }
 function lembretesPadrao(tipo) {
   const c = cfg('agenda:lembretes:' + tipo);
   if (c) { try { const a = JSON.parse(c); if (Array.isArray(a)) return a; } catch (e) { /* padrão do tipo */ } }
@@ -5860,7 +5956,7 @@ function conflitosDe(novo, excluir) {
     const a = minDe(it.hora), b = a + it.dur;
     if (ini < b && a < fim) { avisos.push(`Já tem ${it.titulo} das ${it.hora} às ${hhmm(b)}.`); return; }
     if (novo.lat == null || novo.lng == null || it.lat == null || it.lng == null) return;
-    const km = haversineKm(novo, it) * 1.3, precisa = Math.round(km / VELOCIDADE_KMH * 60) + 10;
+    const km = haversineKm(novo, it) * 1.3, precisa = Math.round(km / velocidadeKmh() * 60) + 10;
     if (b <= ini && ini - b < precisa) avisos.push(`Saindo de ${it.titulo} às ${hhmm(b)}, são ${fmtKm(km)} até aqui: uns ${precisa} min, e o intervalo é de ${ini - b} min.`);
     if (fim <= a && a - fim < precisa) avisos.push(`Daqui até ${it.titulo} (${it.hora}) são ${fmtKm(km)}: uns ${precisa} min, e o intervalo é de ${a - fim} min.`);
   });
@@ -5946,8 +6042,9 @@ function marcarChips(hiddenId) {
 // ---------- pessoas marcadas ----------
 // Seletor dentro do próprio formulário: abrir outra folha por cima apagaria o que já
 // foi digitado. A lista escolhida mora num campo escondido, então entra no rascunho.
-function pickerPessoasHTML(pfx, lista) {
-  return `<div class="field" id="f-${pfx}-busca"><label>Pessoas</label>
+function pickerPessoasHTML(pfx, lista, opts) {
+  opts = opts || {};
+  return `<div class="field" id="f-${pfx}-busca" data-max="${opts.max || 0}" data-sem-papel="${opts.semPapel ? 1 : 0}"><label>${opts.rotulo || 'Pessoas'}</label>
     <input type="hidden" id="${pfx}-pessoas" value="${esc(JSON.stringify(lista || []))}">
     <div id="${pfx}-sel"></div>
     <input data-busca="${pfx}" placeholder="Buscar nome ou telefone" autocomplete="off" oninput="buscarPessoaAgenda('${pfx}')" aria-label="Buscar pessoa pra marcar">
@@ -5968,10 +6065,11 @@ function setPessoasSel(pfx, lista) {
 function nomePessoa(p) { const r = TABELA_PESSOA[p.tipo] && q(`SELECT nome FROM ${TABELA_PESSOA[p.tipo]} WHERE id=?`, [p.id])[0]; return r ? r.nome : ''; }
 function renderPessoasSel(pfx) {
   const box = document.getElementById(pfx + '-sel'); if (!box) return;
+  const semPapel = ((document.getElementById('f-' + pfx + '-busca') || {}).dataset || {}).semPapel === '1';
   box.innerHTML = pessoasSel(pfx).map((p, i) => {
     const nome = nomePessoa(p); if (!nome) return '';
     return `<div class="pessoa-sel"><span class="pessoa-sel__n">${esc(nome)}</span>
-      <select aria-label="Papel de ${esc(nome)}" onchange="papelPessoaSel('${pfx}', ${i}, this.value)">${PAPEIS.map(pp => `<option value="${pp}" ${pp === (p.papel || '') ? 'selected' : ''}>${pp || 'papel…'}</option>`).join('')}</select>
+      ${semPapel ? '' : `<select aria-label="Papel de ${esc(nome)}" onchange="papelPessoaSel('${pfx}', ${i}, this.value)">${PAPEIS.map(pp => `<option value="${pp}" ${pp === (p.papel || '') ? 'selected' : ''}>${pp || 'papel…'}</option>`).join('')}</select>`}
       <button type="button" class="btn btn--icon btn--ghost" onclick="tirarPessoaSel('${pfx}', ${i})" aria-label="Tirar ${esc(nome)}">${ico('x')}</button></div>`;
   }).join('');
 }
@@ -5993,7 +6091,9 @@ function buscarPessoaAgenda(pfx) {
     || `<p class="muted" style="margin:var(--s1) 0">Ninguém com esse nome. Use "Pessoa nova".</p>`;
 }
 function addPessoaSel(pfx, tipo, id) {
-  const l = pessoasSel(pfx); if (!l.some(p => p.tipo === tipo && p.id === id)) l.push({ tipo, id, papel: '' });
+  const max = +(((document.getElementById('f-' + pfx + '-busca') || {}).dataset || {}).max || 0);
+  let l = pessoasSel(pfx); if (!l.some(p => p.tipo === tipo && p.id === id)) l.push({ tipo, id, papel: '' });
+  if (max && l.length > max) l = l.slice(-max);
   const campoBusca = document.querySelector(`[data-busca="${pfx}"]`); if (campoBusca) campoBusca.value = '';
   const res = document.getElementById(pfx + '-res'); if (res) res.innerHTML = '';
   setPessoasSel(pfx, l);
@@ -6017,9 +6117,9 @@ function criarPessoaInline(pfx) {
 // ---------- visões da agenda ----------
 let agVisao = 'semana', agData = null, agListaDias = 30;
 const agFiltro = { tipos: [], cores: [], pessoa: '' };
-try { const v = localStorage.getItem('agenda:visao'); if (['dia', 'semana', 'lista'].includes(v)) agVisao = v; } catch (e) { /* ok */ }
+try { const v = localStorage.getItem('agenda:visao'); if (['dia', 'semana', 'mes', 'lista'].includes(v)) agVisao = v; } catch (e) { /* ok */ }
 function setAgVisao(v) { agVisao = v; try { localStorage.setItem('agenda:visao', v); } catch (e) { /* ok */ } renderAG(); }
-function moverAg(n) { agData = somarDias(agData || todayISO(0), agVisao === 'semana' ? 7 * n : n); renderAG(); }
+function moverAg(n) { agData = agVisao === 'mes' ? somarMeses(agData || todayISO(0), n) : somarDias(agData || todayISO(0), agVisao === 'semana' ? 7 * n : n); renderAG(); }
 function agHoje() { agData = todayISO(0); renderAG(); }
 function escolherDiaSemana(ymd) { agData = ymd; renderAGSemRolar(); }
 function renderAGSemRolar() { const sb = document.getElementById('screen-body'), y = sb ? sb.scrollTop : 0; renderAG(); if (sb) sb.scrollTop = y; }
@@ -6038,7 +6138,8 @@ function cartaoItemAgenda(it, opts) {
   opts = opts || {};
   const tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
   const quando = it.diaInteiro ? 'dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur);
-  const sub = [it.pessoas.map(p => p.nome).join(', '), it.k === 'compromisso' ? (it.imovel_nome || it.local) : it.bairro].filter(Boolean).join(' · ');
+  const sub = [it.pessoas.map(p => p.nome).join(', '), it.k === 'compromisso' ? (it.imovel_nome || it.local) : it.bairro,
+    it.k === 'compromisso' && it.bruto.recorrencia ? '↻ ' + REP_TEXTO[it.bruto.recorrencia] : ''].filter(Boolean).join(' · ');
   const passou = jaTerminou(it);
   const pill = !it.aberto ? `<span class="pill">${esc(it.statusTxt)}</span>`
     : it.emAndamento ? `<span class="pill ok">em andamento</span>`
@@ -6063,7 +6164,7 @@ function renderAG() {
   const lista = document.getElementById('ag-list'); if (!lista || !db) return;
   const hoje = todayISO(0);
   if (!agData) agData = hoje;
-  document.getElementById('ag-visoes').innerHTML = [['dia', 'Dia'], ['semana', 'Semana'], ['lista', 'Lista']].map(([k, t]) =>
+  document.getElementById('ag-visoes').innerHTML = [['dia', 'Dia'], ['semana', 'Semana'], ['mes', 'Mês'], ['lista', 'Lista']].map(([k, t]) =>
     `<button class="chip ${agVisao === k ? 'on' : ''}" aria-pressed="${agVisao === k}" onclick="setAgVisao('${k}')">${t}</button>`).join('');
   const nav = document.getElementById('ag-nav');
   nav.hidden = agVisao === 'lista';
@@ -6071,23 +6172,24 @@ function renderAG() {
     const ini = inicioSemana(agData), fim = somarDias(ini, 6);
     const rot = agVisao === 'dia' ? rotuloDia(agData) + (agData === hoje || agData === todayISO(1) || agData === todayISO(-1) ? ' · ' + fmtDataCurta(agData).split(', ')[1] : '')
       : dataLocal(ini).getDate() + (ini.slice(5, 7) !== fim.slice(5, 7) ? ' ' + MESES[dataLocal(ini).getMonth()] : '') + '–' + dataLocal(fim).getDate() + ' ' + MESES[dataLocal(fim).getMonth()];
-    const naHoje = agVisao === 'dia' ? agData === hoje : ini === inicioSemana(hoje);
-    nav.innerHTML = `<button class="btn btn--icon" onclick="moverAg(-1)" aria-label="${agVisao === 'dia' ? 'Dia anterior' : 'Semana anterior'}">${ico('chevron', 'ic-esq')}</button>
-      <span class="ag-nav__t" aria-live="polite">${esc(rot)}</span>
+    const naHoje = agVisao === 'dia' ? agData === hoje : agVisao === 'mes' ? agData.slice(0, 7) === hoje.slice(0, 7) : ini === inicioSemana(hoje);
+    const rotulo = agVisao === 'mes' ? MESES_LONGO[dataLocal(agData).getMonth()] + ' ' + dataLocal(agData).getFullYear() : rot;
+    nav.innerHTML = `<button class="btn btn--icon" onclick="moverAg(-1)" aria-label="${agVisao === 'dia' ? 'Dia anterior' : agVisao === 'mes' ? 'Mês anterior' : 'Semana anterior'}">${ico('chevron', 'ic-esq')}</button>
+      <span class="ag-nav__t" aria-live="polite">${esc(rotulo)}</span>
       <button class="btn btn--sm" onclick="agHoje()" ${naHoje ? 'disabled' : ''}>Hoje</button>
-      <button class="btn btn--icon" onclick="moverAg(1)" aria-label="${agVisao === 'dia' ? 'Próximo dia' : 'Próxima semana'}">${ico('chevron')}</button>`;
+      <button class="btn btn--icon" onclick="moverAg(1)" aria-label="${agVisao === 'dia' ? 'Próximo dia' : agVisao === 'mes' ? 'Próximo mês' : 'Próxima semana'}">${ico('chevron')}</button>`;
   }
   const n = filtroAtivo();
   document.getElementById('ag-filtro').innerHTML = `<button class="chip ${n ? 'on' : ''}" onclick="filtroAgendaSheet()">Filtrar${n ? ' · ' + n : ''}</button>
     ${n ? `<button class="btn btn--sm btn--ghost" onclick="limparFiltroAg()">Limpar filtro</button>` : ''}
     <button class="btn btn--sm btn--ghost" style="margin-left:auto" onclick="exportarAgendaIcs()">${ico('download', 'ic-sm')}Agenda do celular</button>`;
-  lista.innerHTML = agVisao === 'dia' ? agDiaHTML(agData) : agVisao === 'semana' ? agSemanaHTML(agData) : agListaHTML();
+  lista.innerHTML = agVisao === 'dia' ? agDiaHTML(agData) : agVisao === 'semana' ? agSemanaHTML(agData) : agVisao === 'mes' ? agMesHTML(agData) : agListaHTML();
 }
 function agDiaHTML(ymd) {
   const hoje = todayISO(0);
   const itens = filtrarAg(itensDaAgenda(ymd, ymd));
   const semHora = itens.filter(it => it.diaInteiro), comHora = itens.filter(it => !it.diaInteiro);
-  const follow = filtroAtivo() ? [] : followUpsDe(ymd);
+  const follow = filtroAtivo() ? [] : followUpsDe(ymd), tarefas = filtroAtivo() ? [] : tarefasDoDia(ymd);
   const PX = 1.1, inicios = comHora.map(it => minDe(it.hora)), fins = comHora.map(it => minDe(it.hora) + it.dur);
   const H0 = Math.floor(Math.min(7 * 60, ...inicios) / 60) * 60, H1 = Math.ceil(Math.max(21 * 60, ...fins) / 60) * 60;
   // raias: item que se sobrepõe a outro divide a largura com ele
@@ -6113,7 +6215,7 @@ function agDiaHTML(ymd) {
   }).join('');
   const n = new Date(), agoraMin = n.getHours() * 60 + n.getMinutes();
   const agora = ymd === hoje && agoraMin >= H0 && agoraMin <= H1 ? `<div class="ag-agora" style="top:${(agoraMin - H0) * PX}px" aria-hidden="true"></div>` : '';
-  return (semHora.length || follow.length ? `<h2 class="blk-title">Sem hora</h2>` + semHora.map(it => cartaoItemAgenda(it)).join('') + follow.map(linhaFollowUpHTML).join('') : '')
+  return (semHora.length || follow.length || tarefas.length ? `<h2 class="blk-title">Sem hora</h2>` + semHora.map(it => cartaoItemAgenda(it)).join('') + tarefas.map(tarefaHTML).join('') + follow.map(linhaFollowUpHTML).join('') : '')
     + (comHora.length ? '' : `<p class="muted" style="margin:var(--s2) 0">${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Dia livre. Toque num horário pra marcar.'}</p>`)
     + `<div class="ag-dia" style="height:${(H1 - H0) * PX}px">${horas}${blocos}${agora}</div>`;
 }
@@ -6127,24 +6229,31 @@ function agSemanaHTML(ymd) {
         aria-label="${esc(fmtDataCurta(d))}: ${plural(doDia.length, 'compromisso', 'compromissos')}">
       <span class="ag-sd__d">${DIAS_SEM[dt.getDay()]}</span><span class="ag-sd__n">${dt.getDate()}</span><span class="ag-dots">${pontos}</span></button>`;
   }).join('');
-  const doDia = itens.filter(it => it.data === ymd), follow = filtroAtivo() ? [] : followUpsDe(ymd);
+  const doDia = itens.filter(it => it.data === ymd), follow = filtroAtivo() ? [] : followUpsDe(ymd), tarefas = filtroAtivo() ? [] : tarefasDoDia(ymd);
   return `<div class="ag-semana" role="group" aria-label="Dias da semana">${faixa}</div>
     <h2 class="blk-title">${esc(rotuloDia(ymd))}${ymd === hoje || ymd === todayISO(1) ? ' · ' + esc(fmtDataCurta(ymd).split(', ')[1]) : ''}
       <button class="jump" onclick="novoAgendaSheet('${ymd}')">+ marcar</button></h2>
-    ${doDia.map(it => cartaoItemAgenda(it)).join('') + follow.map(linhaFollowUpHTML).join('')
+    ${doDia.map(it => cartaoItemAgenda(it)).join('') + tarefas.map(tarefaHTML).join('') + follow.map(linhaFollowUpHTML).join('')
       || `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Nada marcado neste dia.'}</p></div>`}`;
 }
 function agListaHTML() {
-  const hoje = todayISO(0);
+  const hoje = todayISO(0), ate = somarDias(hoje, agListaDias), semFiltro = !filtroAtivo();
   const registrar = filtrarAg(praRegistrar(14)), chaves = new Set(registrar.map(it => it.k + it.id));
-  const itens = filtrarAg(itensDaAgenda(hoje, somarDias(hoje, agListaDias))).filter(it => !chaves.has(it.k + it.id) && (it.aberto || it.data >= hoje));
+  const itens = filtrarAg(itensDaAgenda(hoje, ate)).filter(it => !chaves.has(it.k + it.id) && (it.aberto || it.data >= hoje));
+  const tarefasHoje = semFiltro ? tarefasDoDia(hoje) : [];
+  const tarefasFuturas = semFiltro ? q('SELECT * FROM tarefa WHERE feito_em IS NULL AND data>? AND data<=? ORDER BY data, id', [hoje, ate]) : [];
+  const semData = semFiltro ? tarefasSemData() : [];
   let html = registrar.length ? `<h2 class="blk-title">Pra registrar</h2>` + registrar.map(it => cartaoItemAgenda(it, { comData: it.data !== hoje })).join('') : '';
-  const grupos = {};
-  itens.forEach(it => { (grupos[it.data] = grupos[it.data] || []).push(it); });
+  const grupos = {}, grupo = d => (grupos[d] = grupos[d] || { itens: [], tarefas: [] });
+  itens.forEach(it => grupo(it.data).itens.push(it));
+  tarefasFuturas.forEach(t => grupo(t.data).tarefas.push(t));
+  if (tarefasHoje.length) grupo(hoje).tarefas = tarefasHoje;
   Object.keys(grupos).sort().forEach(d => {
-    html += `<h2 class="blk-title">${esc(rotuloDia(d))}${d === hoje || d === todayISO(1) ? ' · ' + esc(fmtDataCurta(d).split(', ')[1]) : ''}</h2>` + grupos[d].map(it => cartaoItemAgenda(it)).join('');
+    html += `<h2 class="blk-title">${esc(rotuloDia(d))}${d === hoje || d === todayISO(1) ? ' · ' + esc(fmtDataCurta(d).split(', ')[1]) : ''}</h2>` +
+      grupos[d].itens.map(it => cartaoItemAgenda(it)).join('') + grupos[d].tarefas.map(tarefaHTML).join('');
   });
-  if (!itens.length && !registrar.length) html = `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro.' : 'Nada marcado nos próximos ' + agListaDias + ' dias.'}</p>
+  if (semData.length) html += `<h2 class="blk-title">A fazer sem data</h2>` + semData.map(tarefaHTML).join('');
+  if (!Object.keys(grupos).length && !registrar.length && !semData.length) html = `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro.' : 'Nada marcado nos próximos ' + agListaDias + ' dias.'}</p>
     <button class="btn btn--sm" onclick="novoAgendaSheet()">Marcar</button></div>`;
   return html + `<button class="btn btn--ghost btn--block" style="margin-top:var(--s2)" onclick="agListaDias += 30; renderAGSemRolar()">Mostrar mais 30 dias</button>`;
 }
@@ -6183,14 +6292,24 @@ function abrirItemAgenda(k, id) { if (k === 'visita') abrirVisita(id); else abri
 function novoAgendaSheet(data, hora) {
   const d = data || (agVisao === 'lista' || !agData ? todayISO(0) : agData);
   window.__novoAg = { data: d, hora: hora || '' };
+  falaAtual = null;
   openSheet(`<h2 class="sheet__title" id="sheet-title">Marcar ${d === todayISO(0) ? 'hoje' : d === todayISO(1) ? 'amanhã' : esc(fmtDataCurta(d))}${hora ? ' às ' + esc(hora) : ''}</h2>
+    <div class="field"><label for="fala">Escreva como fala</label>
+      <input id="fala" autocomplete="off" autocapitalize="sentences" enterkeyhint="go" placeholder="Ex.: visita Lúcia sábado 10h" oninput="previaFala()"
+        onkeydown="if (event.key === 'Enter') { event.preventDefault(); if (falaAtual) continuarFala(!falaAtual.hora && !falaAtual.diaInteiro && !falaAtual.tipo ? 'tarefa' : 'agenda'); }">
+      <div class="help">Dia, hora, pessoa, imóvel, "por 1h" e "toda semana" viram campos. O microfone do teclado também serve.</div>
+      <div id="fala-previa" aria-live="polite"></div></div>
+    <h3 class="blk-title">Ou escolha o tipo</h3>
     ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="card card--tap row" onclick="novoDoTipo('${k}')">
       <span class="row__ico">${ico(t.ic)}</span><span class="row__main"><span class="row__t">${t.t}</span><span class="row__s">${t.s}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="card card--tap row" onclick="novoDoTipo('tarefa')"><span class="row__ico">${ico('check')}</span>
+      <span class="row__main"><span class="row__t">Tarefa sem hora</span><span class="row__s">pedir certidão, mandar fotos, cobrar documento</span></span>${ico('chevron', 'row__chev')}</button>
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Cancelar</button>`, { foco: false });
 }
 function novoDoTipo(k) {
   const n = window.__novoAg || { data: todayISO(0), hora: '' };
   closeSheet();
+  if (k === 'tarefa') return abrirFormTarefa({ data: n.data });
   if (k === 'visita') openForm('visita', { tipo: 'agenda', id: (n.data + n.hora).replace(/\D/g, ''), preset: n });
   else abrirFormCompromisso({ tipo: k, data: n.data, hora: n.hora });
 }
@@ -6198,21 +6317,22 @@ function novoDoTipo(k) {
 // ---------- formulário de compromisso ----------
 function proximaHoraCheia() { const d = new Date(); return hhmm((d.getHours() + 1) * 60); }
 function abrirFormCompromisso(o) {
-  o = Object.assign({ tipo: 'reuniao', data: todayISO(0), hora: '', titulo: '', pessoas: [], imovel_id: null, local: '', lat: null, lng: null, notas: '', destaque: 0, diaInteiro: false }, o || {});
+  o = Object.assign({ tipo: 'reuniao', data: todayISO(0), hora: '', titulo: '', pessoas: [], imovel_id: null, local: '', lat: null, lng: null, notas: '', destaque: 0, diaInteiro: false, rep: '', repAte: '' }, o || {});
   if (!TIPOS_AGENDA[o.tipo] || o.tipo === 'visita') o.tipo = 'reuniao';
   if (!o.hora && !o.diaInteiro) o.hora = o.data === todayISO(0) ? proximaHoraCheia() : '10:00';
   if (!o.dur) o.dur = duracaoPadrao(o.tipo);
   if (!o.lembretes) o.lembretes = lembretesPadrao(o.tipo);
   const imoveis = q(`SELECT id, codigo, nome FROM imovel ORDER BY nome`);
-  window.__confOk = null;
+  window.__confOk = null; window.__serieModo = null;
   openSheet(`
     <div class="between"><h2 class="sheet__title" id="sheet-title" style="margin:0">${o.id ? 'Editar compromisso' : 'Novo compromisso'}</h2>${estrelaFormHTML('fco-destaque', o.destaque)}</div>
-    <form id="form-comp" onsubmit="event.preventDefault();salvarCompromisso(${o.id || 0})" novalidate>
+    <form id="form-comp" onsubmit="event.preventDefault();salvarCompromisso(${o.id || 0})" oninput="if (event.target.id === 'fco-rep' || event.target.id === 'fco-data') textoSerieForm()" novalidate>
       <input type="hidden" id="fco-destaque" value="${o.destaque || 0}">
       <input type="hidden" id="fco-tipo" value="${o.tipo}">
       <input type="hidden" id="fco-dur" value="${o.dur}"><input type="hidden" id="fco-durmod" value="${o.id ? 1 : 0}">
       <input type="hidden" id="fco-lemb" value="${esc(JSON.stringify(o.lembretes))}"><input type="hidden" id="fco-lembmod" value="${o.id ? 1 : 0}">
       <input type="hidden" id="fco-diaint" value="${o.diaInteiro ? 1 : 0}">
+      <input type="hidden" id="fco-rep" value="${esc(o.rep || '')}">
       <input type="hidden" id="fco-lat" value="${o.lat != null ? o.lat : ''}"><input type="hidden" id="fco-lng" value="${o.lng != null ? o.lng : ''}">
       <div class="chip-row chip-row--wrap" data-chips="fco-tipo" data-multi="0" style="margin:var(--s3) 0">${Object.entries(TIPOS_AGENDA).filter(([k]) => k !== 'visita').map(([k, t]) =>
         `<button type="button" class="chip" data-v="${k}" aria-pressed="false" onclick="escolherTipoComp(this)">${t.curto}</button>`).join('')}</div>
@@ -6226,12 +6346,19 @@ function abrirFormCompromisso(o) {
         <button type="button" class="chip" onclick="dataRapida('sab', 'fco-data')">Sábado</button>
         ${['09:00', '10:00', '14:00', '16:00'].map(h => `<button type="button" class="chip" onclick="horaRapida('fco-hora', '${h}')">${h.slice(0, 2)}h</button>`).join('')}
       </div>
+      ${livresBotaoHTML('fco')}
       <label class="lembrar"><input type="checkbox" ${o.diaInteiro ? 'checked' : ''} onchange="diaInteiroComp(this.checked)"> Dia inteiro</label>
       ${pickerPessoasHTML('fco', o.pessoas)}
       ${campo('fco-imovel', 'Imóvel', selDados('fco-imovel', imoveis, nomeImovel, '(nenhum)'))}
       <details class="fold"><summary>${ico('chevron', 'ic-sm')}mais detalhes</summary>
         ${campo('fco-titulo', 'Título', inp('fco-titulo', 'Automático: tipo e pessoa', '', `value="${esc(o.titulo || '')}"`))}
         <div class="field"><label>Duração</label>${chipsHTML('fco-dur', DURACOES, false)}</div>
+        <div class="field"><label>Repetir</label>${chipsHTML('fco-rep', REPETICOES, false)}
+          <div id="fco-rep-ate-box" ${o.rep ? '' : 'hidden'} style="margin-top:var(--s2)">
+            <label for="fco-rep-ate" style="display:block;font-size:var(--t-sm);color:var(--text-2);margin-bottom:var(--s1)">Até</label>
+            <input id="fco-rep-ate" type="date" value="${esc(o.repAte || '')}" oninput="textoSerieForm()">
+          </div>
+          <div class="help" id="fco-rep-help"></div></div>
         ${campo('fco-local', 'Local', inp('fco-local', 'Ex.: cartório, escritório, endereço', '', `value="${esc(o.local || '')}"`))}
         <button type="button" class="btn btn--sm btn--ghost" style="margin:calc(var(--s2) * -1) 0 var(--s2)" onclick="localAquiComp()">${ico('mapa')}Usar onde estou</button>
         <p class="muted" id="fco-geo-msg" style="margin:0 0 var(--s3)">${o.lat != null ? 'Posição do local gravada.' : ''}</p>
@@ -6246,13 +6373,13 @@ function abrirFormCompromisso(o) {
       </div>
     </form>`, { chave: 'form-comp:' + (o.id || 'novo') });
   const imovelSel = document.getElementById('fco-imovel'); if (imovelSel && o.imovel_id) imovelSel.value = String(o.imovel_id);
-  ['fco-tipo', 'fco-dur', 'fco-lemb'].forEach(marcarChips);
+  ['fco-tipo', 'fco-dur', 'fco-lemb', 'fco-rep'].forEach(marcarChips); textoSerieForm();
   renderPessoasSel('fco');
   const form = document.getElementById('form-comp');
   prepararEnter(form);
   const chaveCtx = o.chaveRascunho || ((o.pessoas[0] ? o.pessoas[0].tipo + o.pessoas[0].id : '') + (o.imovel_id ? 'i' + o.imovel_id : ''));
   ligarRascunho('comp:' + (o.id || 'novo') + ':' + chaveCtx, form, () => {
-    ['fco-tipo', 'fco-dur', 'fco-lemb'].forEach(marcarChips); renderPessoasSel('fco'); sincronizarEstrelaForm('fco-destaque');
+    ['fco-tipo', 'fco-dur', 'fco-lemb', 'fco-rep'].forEach(marcarChips); textoSerieForm(); renderPessoasSel('fco'); sincronizarEstrelaForm('fco-destaque');
     const di = val('fco-diaint') === '1', cb = form.querySelector('.lembrar input'); if (cb) cb.checked = di;
     const h = document.getElementById('fco-hora'); if (h) h.disabled = di;
   });
@@ -6289,28 +6416,66 @@ function salvarCompromisso(id) {
   const imovelId = +val('fco-imovel') || null;
   const lat = val('fco-lat') !== '' ? +val('fco-lat') : null, lng = val('fco-lng') !== '' ? +val('fco-lng') : null;
   let lembretes = []; try { lembretes = JSON.parse(val('fco-lemb') || '[]'); } catch (e) { /* sem lembrete */ }
+  const rep = REP_TEXTO[val('fco-rep')] ? val('fco-rep') : '', repAte = rep ? (val('fco-rep-ate') || ateSugerido(data, rep)) : '';
+  const row = id ? q('SELECT * FROM compromisso WHERE id=?', [id])[0] : null;
+  if (id && !row) return;
+  // série: primeiro pergunta se a mudança vale só pra este ou pros próximos
+  const proximos = row && row.serie_id ? q('SELECT id FROM compromisso WHERE serie_id=? AND data>?', [row.serie_id, row.data]) : [];
+  if (proximos.length && !window.__serieModo) return pedirModoSerie(proximos.length);
   const geo = lat != null ? { lat, lng } : imovelId ? (q('SELECT lat, lng FROM imovel WHERE id=?', [imovelId])[0] || {}) : {};
   if (avisarConflito(conflitosDe({ data, hora, dur, diaInteiro: diaInt, lat: geo.lat, lng: geo.lng }, { k: 'compromisso', id }), [data, hora, dur, geo.lat, geo.lng].join('|'))) return;
-  const valores = [tipo, val('fco-titulo') || null, data, hora || null, diaInt ? 1 : 0, dur, val('fco-local') || null, lat, lng, imovelId,
-    val('fco-notas') || null, +val('fco-destaque') || 0, lembretesParaGravar(lembretes, tipo)];
-  let novoId = id, antes = null;
-  if (id) {
-    antes = { row: q('SELECT * FROM compromisso WHERE id=?', [id])[0], pessoas: pessoasDoItem('compromisso', id) };
-    run(`UPDATE compromisso SET tipo=?, titulo=?, data=?, hora=?, dia_inteiro=?, duracao_min=?, local=?, lat=?, lng=?, imovel_id=?, notas=?, destaque=?, lembretes=? WHERE id=?`, valores.concat(id));
-  } else {
-    novoId = insertAndGetId(`INSERT INTO compromisso (tipo, titulo, data, hora, dia_inteiro, duracao_min, local, lat, lng, imovel_id, notas, destaque, lembretes, status, criado_em)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,'marcado',?)`, valores.concat(agoraISO()));
-  }
-  gravarPessoasItem('compromisso', novoId, pessoas);
-  limparRascunho(); vibrar(); closeSheet(); atualizarAgenda();
-  const it = itemAgenda('compromisso', novoId);
-  const desfazer = () => {
-    if (antes) { inserirLinha('compromisso', antes.row); gravarPessoasItem('compromisso', id, antes.pessoas); }
-    else { run('DELETE FROM agenda_pessoa WHERE item_tipo=? AND item_id=?', ['compromisso', novoId]); run('DELETE FROM compromisso WHERE id=?', [novoId]); }
-    persist(); atualizarAgenda();
-    if (folhaAtual && folhaAtual.chave === 'comp:' + (id || novoId)) { if (antes) abrirCompromisso(id); else closeSheet(); }
+  const campos = { tipo, titulo: val('fco-titulo') || null, hora: hora || null, dia_inteiro: diaInt ? 1 : 0, duracao_min: dur, local: val('fco-local') || null, lat, lng,
+    imovel_id: imovelId, notas: val('fco-notas') || null, destaque: +val('fco-destaque') || 0, lembretes: lembretesParaGravar(lembretes, tipo) };
+  const cols = Object.keys(campos), sets = cols.map(c => c + '=?').join(', '), vals = cols.map(c => campos[c]);
+  const inserir = (d, serieId) => {
+    const nid = insertAndGetId(`INSERT INTO compromisso (${cols.join(',')}, data, recorrencia, recorrencia_ate, serie_id, status, criado_em) VALUES (${cols.map(() => '?').join(',')},?,?,?,?,'marcado',?)`,
+      vals.concat([d, rep || null, repAte || null, serieId, agoraISO()]));
+    gravarPessoasItem('compromisso', nid, pessoas);
+    return nid;
   };
-  showToast((id ? 'Compromisso atualizado' : 'Marcado') + ': ' + (it ? quandoItem(it) : ''), { label: 'Desfazer', fn: desfazer });
+  const apagarLinha = cid => { run(`DELETE FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [cid]); run('DELETE FROM compromisso WHERE id=?', [cid]); };
+  let desfazer, msg, principal = id;
+  if (!row) {
+    const datas = datasDaSerie(data, rep, repAte);
+    principal = inserir(datas[0], null);
+    if (rep) { run('UPDATE compromisso SET serie_id=? WHERE id=?', [principal, principal]); datas.slice(1).forEach(d => inserir(d, principal)); }
+    desfazer = () => (rep ? q('SELECT id FROM compromisso WHERE serie_id=?', [principal]) : [{ id: principal }]).forEach(r => apagarLinha(r.id));
+    const it = itemAgenda('compromisso', principal);
+    msg = 'Marcado: ' + (it ? quandoItem(it) : '') + (datas.length > 1 ? ' · e mais ' + plural(datas.length - 1, 'vez', 'vezes') : '');
+  } else {
+    const modo = window.__serieModo || (rep ? 'proximos' : 'este');
+    const serieId = row.serie_id || id;
+    const antesRows = row.serie_id ? q('SELECT * FROM compromisso WHERE serie_id=? AND data>=?', [row.serie_id, row.data]) : [row];
+    const antesPessoas = antesRows.flatMap(r => q(`SELECT * FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [r.id]));
+    desfazer = () => {
+      q('SELECT id FROM compromisso WHERE (serie_id=? AND data>=?) OR id=?', [serieId, row.data, id]).forEach(r => apagarLinha(r.id));
+      antesRows.forEach(r => inserirLinha('compromisso', r)); antesPessoas.forEach(pp => inserirLinha('agenda_pessoa', pp));
+    };
+    if (modo === 'este') {
+      run(`UPDATE compromisso SET ${sets}, data=? WHERE id=?`, vals.concat([data, id]));
+      gravarPessoasItem('compromisso', id, pessoas);
+      msg = 'Compromisso atualizado';
+    } else {
+      const futuros = q('SELECT id, status FROM compromisso WHERE serie_id=? AND data>?', [serieId, row.data]);
+      const mudouRegra = (rep || '') !== (row.recorrencia || '') || (repAte || '') !== (row.recorrencia_ate || '') || data !== row.data;
+      if (mudouRegra) {
+        // regra ou dia mudou: refaz as próximas (as já concluídas ou canceladas ficam como histórico)
+        futuros.filter(f => f.status === 'marcado').forEach(f => apagarLinha(f.id));
+        run(`UPDATE compromisso SET ${sets}, data=?, recorrencia=?, recorrencia_ate=?, serie_id=? WHERE id=?`, vals.concat([data, rep || null, repAte || null, rep ? serieId : (row.serie_id || null), id]));
+        gravarPessoasItem('compromisso', id, pessoas);
+        if (rep) datasDaSerie(data, rep, repAte).slice(1).forEach(d => { if (!q('SELECT id FROM compromisso WHERE serie_id=? AND data=?', [serieId, d]).length) inserir(d, serieId); });
+      } else {
+        [id].concat(futuros.filter(f => f.status === 'marcado').map(f => f.id)).forEach(cid => { run(`UPDATE compromisso SET ${sets} WHERE id=?`, vals.concat(cid)); gravarPessoasItem('compromisso', cid, pessoas); });
+      }
+      msg = row.serie_id || rep ? 'Atualizado este e os próximos' : 'Compromisso atualizado';
+    }
+  }
+  window.__serieModo = null;
+  limparRascunho(); vibrar(); closeSheet(); atualizarAgenda();
+  showToast(msg, { label: 'Desfazer', fn: () => {
+    desfazer(); persist(); atualizarAgenda();
+    if (folhaAtual && folhaAtual.chave === 'comp:' + principal) { if (q('SELECT id FROM compromisso WHERE id=?', [principal]).length) abrirCompromisso(principal); else closeSheet(); }
+  } });
   pedirAvisosUmaVez(lembretes);
 }
 function editarCompromisso(id) {
@@ -6318,7 +6483,7 @@ function editarCompromisso(id) {
   const c = it.bruto;
   abrirFormCompromisso({ id, tipo: c.tipo, data: c.data, hora: c.hora || '', diaInteiro: !!c.dia_inteiro, dur: c.duracao_min || duracaoPadrao(c.tipo), titulo: c.titulo || '',
     pessoas: it.pessoas.map(p => ({ tipo: p.tipo, id: p.id, papel: p.papel })), imovel_id: c.imovel_id, local: c.local || '', lat: c.lat, lng: c.lng,
-    notas: c.notas || '', destaque: c.destaque || 0, lembretes: it.lembretes });
+    notas: c.notas || '', destaque: c.destaque || 0, lembretes: it.lembretes, rep: c.recorrencia || '', repAte: c.recorrencia_ate || '' });
 }
 function duplicarCompromisso(id) {
   const it = itemAgenda('compromisso', id); if (!it) return;
@@ -6342,6 +6507,8 @@ function compromissoHTML(id) {
       ${it.imovel_id ? linhaCampo('Imóvel', objLink('imovel', it.imovel_id, it.imovel_nome)) : ''}
       ${c.local ? linhaCampo('Local', esc(c.local)) : ''}
       ${c.notas ? linhaCampo('Notas', esc(c.notas)) : ''}
+      ${c.recorrencia ? linhaCampo('Repete', esc(textoRepeticao(c))) : ''}
+      ${it.aberto ? linhaSairHTML(it) : ''}
       ${it.aberto ? linhaCampo('Lembretes', `${esc(textoLembretes(it.lembretes))} <button class="link" onclick="lembreteItemSheet('compromisso', ${id})">trocar</button>`) : ''}
       ${c.resultado ? linhaCampo('Como foi', esc(c.resultado)) : ''}
     </div>
@@ -6362,6 +6529,8 @@ function compromissoHTML(id) {
       <button class="btn btn--grow" onclick="duplicarCompromisso(${id})">${ico('copiar')}Duplicar</button>
     </div>
     ${botaoApagar('compromisso', id, 'Apagar compromisso')}
+    ${c.serie_id && q('SELECT COUNT(*) n FROM compromisso WHERE serie_id=? AND data>?', [c.serie_id, c.data])[0].n
+      ? `<button class="btn btn--ghost btn--block" style="color:var(--danger)" onclick="apagarSerieDaqui(${id})">${ico('lixeira')}Apagar este e os próximos</button>` : ''}
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`;
 }
 function abrirCompromisso(id) { openSheet(compromissoHTML(id), { foco: false, chave: 'comp:' + id, refazer: () => compromissoHTML(id) }); }
@@ -6452,14 +6621,14 @@ function avisarPessoasComp(id) {
   const comTel = it.pessoas.filter(p => p.telefone), tp = TIPOS_AGENDA[it.tipo];
   const msg = p => `Oi ${p.nome.split(' ')[0]}! Aqui é ${nomeCorretor()}. Confirmando ${tp.aviso || 'nosso compromisso'} ${rotuloDia(it.data).toLowerCase()}${it.diaInteiro ? '' : ' às ' + it.hora}${it.local ? ' — ' + it.local : ''}. Tudo certo?`;
   if (!comTel.length) return showToastErr('Ninguém marcado aqui tem telefone.');
-  if (comTel.length === 1) return abrirWhats(comTel[0].telefone, msg(comTel[0]), comTel[0].tipo + ':' + comTel[0].id);
-  window.__avisarComp = { pessoas: comTel, msg };
+  if (comTel.length === 1) return escolherMensagem({ contexto: 'compromisso', vars: varsItem(it, comTel[0]), tel: comTel[0].telefone, pessoa: comTel[0].tipo + ':' + comTel[0].id });
+  window.__avisarComp = { pessoas: comTel, msg, it };
   openSheet(`<h2 class="sheet__title" id="sheet-title">Avisar quem?</h2>
     ${comTel.map((p, i) => `<button class="card card--tap row" onclick="avisarUmaPessoa(${i})"><span class="row__ico">${ico('conversa')}</span>
       <span class="row__main"><span class="row__t">${esc(p.nome)}</span><span class="row__s">${esc(p.papel || p.telefone)}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
     <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'avisar-comp:' + id });
 }
-function avisarUmaPessoa(i) { const a = window.__avisarComp; if (!a || !a.pessoas[i]) return; const p = a.pessoas[i]; abrirWhats(p.telefone, a.msg(p), p.tipo + ':' + p.id); }
+function avisarUmaPessoa(i) { const a = window.__avisarComp; if (!a || !a.pessoas[i]) return; const p = a.pessoas[i]; escolherMensagem({ contexto: 'compromisso', vars: varsItem(a.it, p), tel: p.telefone, pessoa: p.tipo + ':' + p.id }); }
 function irItemAgenda(k, id) {
   const it = itemAgenda(k, id); if (!it) return;
   if (it.imovel_id && (k === 'visita' || it.bruto.lat == null) && !it.bruto.local) return abrirMapaId(it.imovel_id);
@@ -6616,9 +6785,18 @@ const LEMB_DISPARADOS = 'lembrete:disparados:v1', LEMB_ADIADOS = 'lembrete:adiad
 function lerLocalJSON(k, padrao) { try { return JSON.parse(localStorage.getItem(k) || 'null') || padrao; } catch (e) { return padrao; } }
 function gravarLocalJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ok */ } }
 function lembretesPendentes() {
+  const hoje = todayISO(0);
   const itens = itensDaAgenda(todayISO(-1), todayISO(2)).filter(it => it.aberto && !it.cancelado && !it.emAndamento), out = [];
   const inicio = it => it.diaInteiro ? dataLocal(it.data).getTime() + 8 * 3600000 : dataHora(it.data, it.hora).getTime();
   itens.forEach(it => it.lembretes.forEach(m => out.push({ chave: `${it.k}:${it.id}:${it.data}:${it.hora || 'dia'}:${m}`, it, m, quando: inicio(it) - m * 60000, ini: inicio(it) })));
+  // hora de sair (C2): só hoje, pra quem tem lugar e ponto de partida
+  if (cfg('agenda:aviso_sair') !== '0') itens.filter(it => it.data === hoje).forEach(it => {
+    const sair = horaDeSair(it); if (!sair || sair.sair < 0) return;
+    out.push({ chave: `sair:${it.k}:${it.id}:${it.data}:${it.hora}:${hhmm(sair.sair)}`, it, m: null, quando: dataHora(it.data, hhmm(sair.sair)).getTime(), ini: inicio(it), especial: 'sair', sair });
+  });
+  // resumo de amanhã (C2)
+  const hr = horaResumo();
+  if (hr) { const quando = dataHora(hoje, hr).getTime(); out.push({ chave: 'resumo:' + hoje, it: null, m: null, quando, ini: quando + 4 * 3600000, especial: 'resumo' }); }
   Object.entries(lerLocalJSON(LEMB_ADIADOS, {})).forEach(([chave, a]) => {
     const it = itens.find(x => x.k === a.k && x.id === a.id);
     if (it) out.push({ chave, it, m: null, quando: a.quando, ini: inicio(it), adiado: true });
@@ -6633,8 +6811,8 @@ function verificarLembretes() {
   lembretesPendentes().forEach(p => {
     if (disparados[p.chave]) return;
     if (p.quando <= agora) {
-      // aviso com mais de 15 min de atraso, ou de algo que já começou há meia hora, não ajuda mais
-      if (agora - p.quando <= 15 * 60000 && agora - p.ini < 30 * 60000) dispararLembrete(p);
+      // aviso atrasado demais não ajuda: 15 min (o resumo aceita 1 h), ou algo que já começou há meia hora
+      if (agora - p.quando <= (p.especial === 'resumo' ? 60 : 15) * 60000 && agora - p.ini < 30 * 60000) dispararLembrete(p);
       disparados[p.chave] = agora;
       if (p.adiado) delete adiados[p.chave];
     } else if (!proximo || p.quando < proximo) proximo = p.quando;
@@ -6653,17 +6831,33 @@ function tituloLembrete(p) {
   return tp.curto + ' ' + quando;
 }
 async function dispararLembrete(p) {
-  const it = p.it, titulo = tituloLembrete(p);
-  const corpo = cfg('notif:ocultar_nomes') === '1' ? (it.diaInteiro ? 'Dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur))
-    : [it.titulo, it.pessoas.map(x => x.nome).join(', '), it.local].filter(Boolean).join(' · ');
+  const ocultar = cfg('notif:ocultar_nomes') === '1';
+  let titulo, corpo, dados, acoes, toastAcao;
+  if (p.especial === 'resumo') {
+    const r = resumoAmanha(); if (!r.itens.length && !r.tarefas.length) return;
+    titulo = 'Amanhã: ' + r.texto;
+    corpo = ocultar ? '' : r.itens.slice(0, 3).map(it => (it.diaInteiro ? 'dia inteiro' : it.hora) + ' ' + it.titulo).join(' · ');
+    dados = { item: 'resumo' };
+    acoes = r.itens.some(it => it.pessoas.some(x => x.telefone)) ? [{ action: 'confirmar', title: 'Confirmar com clientes' }, { action: 'abrir', title: 'Ver amanhã' }] : [{ action: 'abrir', title: 'Ver amanhã' }];
+    toastAcao = { label: acoes.length > 1 ? 'Confirmar' : 'Ver', fn: () => acaoLembrete('resumo', acoes.length > 1 ? 'confirmar' : 'abrir') };
+  } else {
+    const it = p.it, tp = TIPOS_AGENDA[it.tipo] || TIPOS_AGENDA.reuniao;
+    titulo = p.especial === 'sair' ? 'Hora de sair · ' + tp.curto + ' às ' + it.hora : tituloLembrete(p);
+    corpo = p.especial === 'sair'
+      ? (ocultar ? fmtKm(p.sair.km) + ', uns ' + p.sair.min + ' min' : fmtKm(p.sair.km) + ' até ' + it.titulo + ': uns ' + p.sair.min + ' min, sem trânsito')
+      : ocultar ? (it.diaInteiro ? 'Dia inteiro' : it.hora + '–' + hhmm(minDe(it.hora) + it.dur)) : [it.titulo, it.pessoas.map(x => x.nome).join(', '), it.local].filter(Boolean).join(' · ');
+    dados = { item: it.k + ':' + it.id, chave: p.chave };
+    acoes = [{ action: 'adiar', title: 'Adiar 10 min' }, { action: 'abrir', title: 'Abrir' }];
+    toastAcao = { label: 'Abrir', fn: () => abrirItemAgenda(it.k, it.id) };
+  }
   if (podeNotificar() && Notification.permission === 'granted') {
     try {
       const reg = await swPronto();
-      await reg.showNotification(titulo, { body: corpo, tag: 'lemb:' + it.k + ':' + it.id, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png',
-        data: { url: location.pathname, item: it.k + ':' + it.id, chave: p.chave }, actions: [{ action: 'adiar', title: 'Adiar 10 min' }, { action: 'abrir', title: 'Abrir' }] });
+      await reg.showNotification(titulo, { body: corpo, tag: 'lemb:' + dados.item, renotify: true, icon: 'icon-192.png', badge: 'icon-192.png',
+        data: Object.assign({ url: location.pathname }, dados), actions: acoes });
     } catch (e) { /* segue com o aviso na tela */ }
   }
-  if (document.visibilityState === 'visible') showToast(titulo + ' · ' + corpo, { label: 'Abrir', fn: () => abrirItemAgenda(it.k, it.id) });
+  if (document.visibilityState === 'visible') showToast(titulo + (corpo ? ' · ' + corpo : ''), toastAcao);
 }
 function adiarLembrete(item, chave) {
   const [k, id] = String(item || '').split(':'); if (!k || !+id) return;
@@ -6674,40 +6868,32 @@ function adiarLembrete(item, chave) {
   if (document.visibilityState === 'visible') showToast('Aviso de novo em 10 min.');
 }
 Object.assign(ACOES_ATALHO, {
-  'agenda-item': p => { if (!p) return; const [k, id] = String(p.get('item') || '').split(':'); if (p.get('adiar')) adiarLembrete(p.get('item'), p.get('adiar')); else if (k && +id) abrirItemAgenda(k, +id); }
+  'agenda-item': p => { if (!p) return; acaoLembrete(p.get('item'), p.get('adiar') ? 'adiar' : p.get('confirmar') ? 'confirmar' : 'abrir', p.get('adiar')); }
 });
 
 // ---------- Mais › Agenda e avisos ----------
 function renderAgendaCfg() {
   const box = document.getElementById('agenda-cfg'); if (!box) return;
+  const exp = expediente(), hr = horaResumo();
   box.innerHTML = `<h4>Agenda e avisos</h4>
     <p style="margin:0 0 var(--s2)"><b>Avisos do app:</b> ${esc(estadoAvisosTexto())}</p>
     ${'Notification' in window && window.isSecureContext && Notification.permission === 'default' ? `<button class="btn btn--sm btn--block" style="margin-bottom:var(--s2)" onclick="ativarAvisos()">${ico('sino')}Ativar avisos</button>` : ''}
     <p class="muted" style="margin:0 0 var(--s2)">Com o app fechado, o aviso garantido é o da agenda do celular: em cada compromisso, Lembrete › Pôr na agenda do celular.</p>
     <label class="lembrar"><input type="checkbox" ${cfg('notif:ocultar_nomes') === '1' ? 'checked' : ''} onchange="setCfg('notif:ocultar_nomes', this.checked ? '1' : '0')"> Ocultar nomes nas notificações</label>
-    <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Lembretes padrão</div>
-    ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="row agcfg-row" onclick="lembretePadraoSheet('${k}')">
-      <span class="row__main"><span class="row__t" style="font-weight:500">${esc(t.t)}</span><span class="row__s">${esc(textoLembretes(lembretesPadrao(k)))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
-    <button class="btn btn--sm btn--block" style="margin-top:var(--s3)" onclick="exportarAgendaIcs()">${ico('download')}Próximos 30 dias na agenda do celular</button>`;
-}
-function lembretePadraoSheet(tipo) {
-  const tp = TIPOS_AGENDA[tipo]; if (!tp) return;
-  openSheet(`<h2 class="sheet__title" id="sheet-title">Lembretes padrão · ${esc(tp.t)}</h2>
-    <p class="muted" style="margin:0 0 var(--s3)">Vale pra tudo desse tipo que não tiver lembrete escolhido à mão.</p>
-    <input type="hidden" id="lp-lemb" value="${esc(JSON.stringify(lembretesPadrao(tipo)))}">
-    ${chipsHTML('lp-lemb', OPCOES_LEMBRETE, true)}
-    <div class="btn-row sheet__acts">
-      <button class="btn btn--primary btn--grow" onclick="salvarLembretePadrao('${tipo}')">${ico('check')}Salvar</button>
-      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
-    </div>`, { foco: false, chave: 'lembrete-padrao:' + tipo });
-  marcarChips('lp-lemb');
-}
-function salvarLembretePadrao(tipo) {
-  let lemb = []; try { lemb = JSON.parse(val('lp-lemb') || '[]'); } catch (e) { /* vazio */ }
-  setCfg('agenda:lembretes:' + tipo, JSON.stringify(lemb));
-  closeSheet(); renderAgendaCfg(); verificarLembretes();
-  showToast(TIPOS_AGENDA[tipo].t + ': ' + textoLembretes(lemb) + '.');
-  pedirAvisosUmaVez(lemb);
+    <label class="lembrar"><input type="checkbox" ${cfg('agenda:aviso_sair') !== '0' ? 'checked' : ''} onchange="setCfg('agenda:aviso_sair', this.checked ? '1' : '0');verificarLembretes()"> Avisar na hora de sair (quando dá pra calcular o caminho)</label>
+    <div class="field" style="margin-top:var(--s2)"><label for="cfg-resumo">Resumo de amanhã</label>
+      <select id="cfg-resumo" onchange="setCfg('agenda:resumo_hora', this.value);renderHJ();verificarLembretes()">
+        ${[['off', 'desligado'], ['18:00', 'às 18h'], ['19:00', 'às 19h'], ['20:00', 'às 20h'], ['21:00', 'às 21h']].map(([v, t]) => `<option value="${v}" ${(hr || 'off') === v ? 'selected' : ''}>${t}</option>`).join('')}
+      </select></div>
+    <button class="row agcfg-row" onclick="expedienteSheet()"><span class="row__main"><span class="row__t" style="font-weight:500">Expediente</span>
+      <span class="row__s">${hhmm(exp.ini)}–${hhmm(exp.fim)} · ${DIAS_EXPEDIENTE.find(x => x[0] === exp.dias)[1]} · onde o app procura horário livre</span></span>${ico('chevron', 'row__chev')}</button>
+    <div class="field" style="margin-top:var(--s3)"><label>Deslocamento médio (sem trânsito)</label>
+      <div class="chip-row chip-row--wrap">${[20, 30, 40, 50].map(v => `<button class="chip ${velocidadeKmh() === v ? 'on' : ''}" aria-pressed="${velocidadeKmh() === v}" onclick="setCfg('agenda:velocidade', '${v}');renderAgendaCfg()">${v} km/h</button>`).join('')}</div></div>
+    <div class="eyebrow" style="color:var(--text-3);margin-top:var(--s2)">Duração e lembretes por tipo</div>
+    ${Object.entries(TIPOS_AGENDA).map(([k, t]) => `<button class="row agcfg-row" onclick="tipoPadraoSheet('${k}')">
+      <span class="row__main"><span class="row__t" style="font-weight:500">${esc(t.t)}</span><span class="row__s">${esc(fmtAntecedencia(duracaoPadrao(k)) + ' · ' + textoLembretes(lembretesPadrao(k)))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--sm btn--block" style="margin-top:var(--s3)" onclick="exportarAgendaIcs()">${ico('download')}Próximos 30 dias na agenda do celular</button>
+    <button class="btn btn--sm btn--block" style="margin-top:var(--s2)" onclick="go('msgs')">${ico('conversa')}Mensagens prontas</button>`;
 }
 
 // ---------- Hoje, Rota e fichas ----------
@@ -6737,6 +6923,7 @@ function heroCompromissoHTML(it) {
     <div class="hero__when">${ico(tp.ic)}<span class="num">${it.diaInteiro ? 'dia inteiro' : esc(it.hora)}</span><span class="row__meta">${esc(tp.curto)}</span>${estrelaHTML('compromisso', it.id, it.destaque)}</div>
     <div class="hero__what"><button class="link" onclick="abrirCompromisso(${it.id})">${esc(it.titulo)}</button></div>
     <div class="hero__who">${[it.pessoas.map(p => objLink(p.tipo, p.id, p.nome)).join(', '), esc(it.bruto.local || it.imovel_nome || '')].filter(Boolean).join(' · ') || esc(tp.t)}</div>
+    ${linhaSairHTML(it)}
     <button class="btn btn--primary btn--block" style="margin-bottom:var(--s2)" onclick="abrirCompromisso(${it.id})">${ico('agenda')}Abrir compromisso</button>
     <div class="hero__acts hero__acts--3">
       <button class="btn" onclick="irItemAgenda('compromisso', ${it.id})" ${podeIr ? '' : 'disabled'}>${ico('mapa')}Ir</button>
@@ -6748,16 +6935,26 @@ function heroCompromissoHTML(it) {
 function proximosDaPessoaHTML(tipo, id) {
   const hoje = todayISO(0);
   const itens = itensDaAgenda(hoje, somarDias(hoje, 90)).filter(it => it.aberto && it.pessoas.some(p => p.tipo === tipo && p.id === id));
-  return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Próximos compromissos</h3>
+  const tarefas = q('SELECT * FROM tarefa WHERE feito_em IS NULL AND pessoa_tipo=? AND pessoa_id=? ORDER BY data IS NULL, data', [tipo, id]);
+  const tel = (q(`SELECT telefone FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [id])[0] || {}).telefone;
+  return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Agenda e tarefas</h3>
       <button class="btn btn--sm" onclick="abrirFormCompromisso({ pessoas: [{ tipo: '${tipo}', id: ${id}, papel: '' }] })">${ico('somar')}Marcar</button></div>
-    ${itens.length ? itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('') : `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>`}`;
+    ${itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('')}${tarefas.map(tarefaHTML).join('')}
+    ${!itens.length && !tarefas.length ? `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>` : ''}
+    <div class="btn-row" style="margin-top:var(--s2)">
+      <button class="btn btn--sm btn--grow" onclick="abrirFormTarefa({ pessoa: { tipo: '${tipo}', id: ${id} } })">${ico('check')}Tarefa</button>
+      ${tel ? `<button class="btn btn--sm btn--grow" onclick="livresParaPessoaSheet('${tipo}', ${id})">${ico('agenda')}Mandar horários livres</button>` : ''}
+    </div>`;
 }
 function agendaDoImovelHTML(id) {
   const hoje = todayISO(0);
   const itens = itensDaAgenda(hoje, somarDias(hoje, 90)).filter(it => it.aberto && it.imovel_id === id);
+  const tarefas = q('SELECT * FROM tarefa WHERE feito_em IS NULL AND imovel_id=? ORDER BY data IS NULL, data', [id]);
   return `<div class="between" style="margin-top:var(--s4)"><h3 class="blk-title" style="margin:0">Agenda do imóvel</h3>
       <button class="btn btn--sm" onclick="novoNoImovel(${id})">${ico('somar')}Marcar</button></div>
-    ${itens.length ? itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('') : `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>`}`;
+    ${itens.slice(0, 5).map(it => cartaoItemAgenda(it, { comData: true })).join('')}${tarefas.map(tarefaHTML).join('')}
+    ${!itens.length && !tarefas.length ? `<p class="muted" style="margin:var(--s2) 0">Nada marcado.</p>` : ''}
+    <button class="btn btn--sm btn--block" style="margin-top:var(--s2)" onclick="abrirFormTarefa({ imovel_id: ${id} })">${ico('check')}Tarefa deste imóvel</button>`;
 }
 function novoNoImovel(id) {
   window.__novoImovel = id;
@@ -6804,6 +7001,8 @@ function resultadosBuscaHTML(termo) {
   const agenda = itensDaAgenda(todayISO(-60), somarDias(todayISO(0), 180)).filter(it => tem(it.titulo, it.local, it.bruto.notas, TIPOS_AGENDA[it.tipo].t) || it.pessoas.some(p => tem(p.nome)))
     .sort((a, b) => Math.abs(dataLocal(a.data) - Date.now()) - Math.abs(dataLocal(b.data) - Date.now()));
   if (agenda.length) grupos.push(['Agenda', agenda.slice(0, 6).map(it => linha(`abrirResultadoBusca('${it.k === 'visita' ? 'visita' : 'compromisso'}', ${it.id})`, TIPOS_AGENDA[it.tipo].ic, it.titulo, quandoItem(it) + (it.aberto ? '' : ' · ' + it.statusTxt)))]);
+  const tarefasB = q('SELECT id, texto, data, feito_em FROM tarefa ORDER BY feito_em IS NOT NULL, data').filter(r => tem(r.texto));
+  if (tarefasB.length) grupos.push(['Tarefas', tarefasB.slice(0, 5).map(r => linha(`abrirResultadoBusca('tarefa', ${r.id})`, 'check', r.texto, prazoTarefa(r)))]);
   const notas = q('SELECT id, texto, referencia, criado_em FROM nota ORDER BY id DESC').filter(r => tem(r.texto, r.referencia));
   if (notas.length) grupos.push(['Notas', notas.slice(0, 5).map(r => linha(`abrirResultadoBusca('nota', ${r.id})`, 'teclado', (r.texto || r.referencia || 'Nota').slice(0, 70), [r.referencia, fmtRelDate(r.criado_em)].filter(Boolean).join(' · ')))]);
   const arquivos = q('SELECT id, nome FROM documento_carteira').filter(r => tem(r.nome));
@@ -6816,9 +7015,11 @@ function abrirResultadoBusca(tipo, id) {
     if (tipo === 'imovel') { const r = q('SELECT codigo, nome, bairro FROM imovel WHERE id=?', [id])[0]; return r && { t: nomeImovel(r), s: r.bairro || '', ic: 'portfolio' }; }
     if (tipo === 'visita' || tipo === 'compromisso') { const it = itemAgenda(tipo, id); return it && { t: it.titulo, s: quandoItem(it), ic: TIPOS_AGENDA[it.tipo].ic }; }
     if (tipo === 'arquivo') { const r = q('SELECT nome FROM documento_carteira WHERE id=?', [id])[0]; return r && { t: r.nome, s: 'arquivo', ic: 'arquivo' }; }
+    if (tipo === 'tarefa') { const r = q('SELECT texto FROM tarefa WHERE id=?', [id])[0]; return r && { t: r.texto, s: 'tarefa', ic: 'check' }; }
     return null;
   })();
   if (rot) gravarLocalJSON('busca:recentes', [Object.assign({ tipo, id }, rot)].concat(lerLocalJSON('busca:recentes', []).filter(r => !(r.tipo === tipo && r.id === id))).slice(0, 8));
+  if (tipo === 'tarefa') return abrirFormTarefa({ id });
   if (TABELA_PESSOA[tipo] || tipo === 'imovel' || tipo === 'arquivo') return openDetail(tipo, id);
   if (tipo === 'compromisso') return abrirCompromisso(id);
   if (tipo === 'visita') { closeSheet(); return abrirVisita(id); }
@@ -7076,6 +7277,708 @@ function enderecoCompleto(im) {
   return [linha1, im.bairro, im.cidade && (im.cidade + (im.uf ? '/' + im.uf : '')), im.cep && 'CEP ' + im.cep].filter(Boolean).join(' · ');
 }
 
+// =============================================================================
+// AGENDA — lote C2 (rodada 36, plano-agenda-campo.md §4 e §6)
+// Escrever como fala, horários livres pra mandar no WhatsApp, hora de sair, resumo de
+// amanhã, compromissos que se repetem, visão Mês, mensagens prontas e tarefas sem hora.
+// Tudo local e determinístico: nenhuma dessas peças usa rede nem IA.
+// =============================================================================
+
+// ---------- configurações da agenda ----------
+function velocidadeKmh() { return +cfg('agenda:velocidade') || VELOCIDADE_KMH; }
+function expediente() {
+  const dias = cfg('agenda:exp_dias') || 'seg-sab';
+  return { ini: minDe(cfg('agenda:exp_ini') || '08:00'), fim: minDe(cfg('agenda:exp_fim') || '19:00'), dias,
+    diasSemana: dias === 'seg-sex' ? [1, 2, 3, 4, 5] : dias === 'todos' ? [0, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6] };
+}
+const DIAS_EXPEDIENTE = [['seg-sex', 'seg a sex'], ['seg-sab', 'seg a sáb'], ['todos', 'todo dia']];
+const MESES_LONGO = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+function somarMeses(ymd, n) {
+  const d = dataLocal(ymd), dia = d.getDate();
+  const alvo = new Date(d.getFullYear(), d.getMonth() + n, 1);
+  alvo.setDate(Math.min(dia, new Date(alvo.getFullYear(), alvo.getMonth() + 1, 0).getDate()));
+  return localYMD(alvo);
+}
+function diaCurto(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth() + 1); }
+function horaFalada(hora) { const [h, m] = String(hora).split(':').map(Number); return h + 'h' + (m ? String(m).padStart(2, '0') : ''); }
+
+// ---------- repetição ----------
+// Cada ocorrência vira uma linha própria, ligada pela série: concluir, remarcar ou
+// favoritar uma não mexe nas outras, e o lembrete e o .ics funcionam sem regra especial.
+const REPETICOES = [['', 'Não repete'], ['diaria', 'Todo dia'], ['semanal', 'Toda semana'], ['quinzenal', 'A cada 2 semanas'], ['mensal', 'Todo mês']];
+const REP_TEXTO = { diaria: 'todo dia', semanal: 'toda semana', quinzenal: 'a cada 2 semanas', mensal: 'todo mês' };
+const REP_MAX = 60;
+function dataDaOcorrencia(inicio, regra, n) {
+  if (regra === 'diaria') return somarDias(inicio, n);
+  if (regra === 'semanal') return somarDias(inicio, 7 * n);
+  if (regra === 'quinzenal') return somarDias(inicio, 14 * n);
+  if (regra === 'mensal') return somarMeses(inicio, n);
+  return inicio;
+}
+function ateSugerido(inicio, regra) {
+  return regra === 'diaria' ? somarDias(inicio, 29) : regra === 'mensal' ? somarMeses(inicio, 11) : regra === 'quinzenal' ? somarDias(inicio, 14 * 11) : somarDias(inicio, 7 * 11);
+}
+function datasDaSerie(inicio, regra, ate) {
+  if (!regra) return [inicio];
+  const limite = ate && ate >= inicio ? ate : ateSugerido(inicio, regra), umAno = somarDias(inicio, 366), out = [];
+  for (let n = 0; out.length < REP_MAX; n++) { const d = dataDaOcorrencia(inicio, regra, n); if (d > limite || d > umAno) break; out.push(d); }
+  return out;
+}
+function textoRepeticao(c) { return c && c.recorrencia ? REP_TEXTO[c.recorrencia] + (c.recorrencia_ate ? ' até ' + diaCurto(c.recorrencia_ate) : '') : ''; }
+function snapshotSerie(serieId, desde) {
+  const rows = q('SELECT * FROM compromisso WHERE serie_id=? AND data>=?', [serieId, desde]);
+  return { serieId, desde, rows, pessoas: rows.flatMap(r => q(`SELECT * FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [r.id])) };
+}
+function restaurarSnapshotSerie(s) {
+  q('SELECT id FROM compromisso WHERE serie_id=? AND data>=?', [s.serieId, s.desde]).forEach(r => {
+    run(`DELETE FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [r.id]); run('DELETE FROM compromisso WHERE id=?', [r.id]);
+  });
+  s.rows.forEach(r => inserirLinha('compromisso', r));
+  s.pessoas.forEach(p => inserirLinha('agenda_pessoa', p));
+  persist();
+}
+// apagar "este e os próximos": um pacote só na lixeira, que volta inteiro
+function apagarSerieDaqui(id) {
+  const c = q('SELECT * FROM compromisso WHERE id=?', [id])[0]; if (!c || !c.serie_id) return apagar('compromisso', id);
+  const rows = q('SELECT * FROM compromisso WHERE serie_id=? AND data>=? ORDER BY data', [c.serie_id, c.data]);
+  const pessoas = rows.flatMap(r => q(`SELECT * FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [r.id]));
+  const pacote = { tipo: 'serie', row: rows[0], filhos: [['compromisso', rows.slice(1)], ['agenda_pessoa', pessoas]] };
+  let lid;
+  try {
+    db.run('BEGIN');
+    db.run('INSERT INTO lixeira (tabela, rotulo, dados, apagado_em) VALUES (?,?,?,?)', ['serie', APAGAVEIS.serie.rot(rows[0]), JSON.stringify(pacote), agoraISO()]);
+    lid = q('SELECT MAX(id) m FROM lixeira')[0].m;
+    rows.forEach(r => { db.run(`DELETE FROM agenda_pessoa WHERE item_tipo='compromisso' AND item_id=?`, [r.id]); db.run('DELETE FROM compromisso WHERE id=?', [r.id]); });
+    db.run('COMMIT');
+  } catch (e) { try { db.run('ROLLBACK'); } catch (_) { /* ok */ } return showToastErr('Não consegui apagar: ' + (e.message || e)); }
+  persist(); if (sheetAberta()) closeSheet(); atualizarAgenda();
+  showToast('Apagados: ' + plural(rows.length, 'compromisso', 'compromissos') + ' · 30 dias na lixeira', { label: 'Desfazer', fn: () => restaurar(lid) });
+}
+
+// ---------- tarefas (a fazer sem hora) ----------
+function tarefasDoDia(ymd) {
+  const hoje = todayISO(0);
+  return q(`SELECT * FROM tarefa WHERE feito_em IS NULL AND ${ymd === hoje ? 'data IS NOT NULL AND data<=?' : 'data=?'} ORDER BY data, id`, [ymd]);
+}
+function tarefasSemData() { return q('SELECT * FROM tarefa WHERE feito_em IS NULL AND data IS NULL ORDER BY id DESC'); }
+function vinculoTarefa(t) {
+  const pessoa = t.pessoa_id && TABELA_PESSOA[t.pessoa_tipo] ? nomePessoa({ tipo: t.pessoa_tipo, id: t.pessoa_id }) : '';
+  const im = t.imovel_id ? q('SELECT codigo, nome FROM imovel WHERE id=?', [t.imovel_id])[0] : null;
+  return [pessoa, im ? nomeImovel(im) : ''].filter(Boolean).join(' · ');
+}
+function prazoTarefa(t) {
+  if (t.feito_em) return 'feita ' + fmtRelDate(t.feito_em);
+  if (!t.data) return 'sem data';
+  const hoje = todayISO(0);
+  if (t.data < hoje) return 'atrasada ' + plural(Math.round((dataLocal(hoje) - dataLocal(t.data)) / 86400000), 'dia', 'dias');
+  return t.data === hoje ? 'hoje' : rotuloDia(t.data).toLowerCase();
+}
+function tarefaHTML(t) {
+  const atrasada = !t.feito_em && t.data && t.data < todayISO(0);
+  return `<div class="card ag-item tarefa ${t.feito_em ? 'is-feita' : ''}">
+    <button class="tarefa__check" role="checkbox" aria-checked="${!!t.feito_em}" aria-label="${t.feito_em ? 'Desmarcar' : 'Concluir'}: ${esc(t.texto)}" onclick="concluirTarefa(${t.id})"><span class="chk__box">${t.feito_em ? ico('check', 'ic-sm') : ''}</span></button>
+    <button class="row" onclick="abrirFormTarefa({ id: ${t.id} })">
+      <span class="row__main"><span class="row__t">${esc(t.texto)}</span>
+        <span class="row__s"><span ${atrasada ? 'style="color:var(--warn);font-weight:600"' : ''}>${esc(prazoTarefa(t))}</span>${vinculoTarefa(t) ? ' · ' + esc(vinculoTarefa(t)) : ''}</span></span>
+    </button>
+  </div>`;
+}
+function redesenharTudoDaTarefa() {
+  renderHJ(); renderAGSemRolar();
+  if (folhaAtual && folhaAtual.chave && /^(lead|cliente|captacao|imovel):/.test(folhaAtual.chave)) { const [tipo, id] = folhaAtual.chave.split(':'); openDetail(tipo, +id); }
+}
+function concluirTarefa(id) {
+  const t = q('SELECT feito_em FROM tarefa WHERE id=?', [id])[0]; if (!t) return;
+  const novo = t.feito_em ? null : agoraISO();
+  run('UPDATE tarefa SET feito_em=? WHERE id=?', [novo, id]);
+  vibrar(); redesenharTudoDaTarefa();
+  showToast(novo ? 'Tarefa feita.' : 'Tarefa reaberta.', { label: 'Desfazer', fn: () => { run('UPDATE tarefa SET feito_em=? WHERE id=?', [t.feito_em, id]); redesenharTudoDaTarefa(); } });
+}
+function ctxParaTarefa(c) {
+  if (!c) return {};
+  if (TABELA_PESSOA[c.tipo]) return { pessoa: { tipo: c.tipo, id: c.id } };
+  if (c.tipo === 'imovel') return { imovel_id: c.id };
+  if (c.tipo === 'visita') { const v = q('SELECT imovel_id, lead_id FROM visita WHERE id=?', [c.id])[0] || {}; return { imovel_id: v.imovel_id, pessoa: v.lead_id ? { tipo: 'lead', id: v.lead_id } : null }; }
+  return {};
+}
+function abrirFormTarefa(o) {
+  o = o || {};
+  const t = o.id ? q('SELECT * FROM tarefa WHERE id=?', [o.id])[0] : null;
+  const dados = t ? { texto: t.texto, data: t.data || '', pessoa: t.pessoa_id ? { tipo: t.pessoa_tipo, id: t.pessoa_id } : null, imovel_id: t.imovel_id }
+    : { texto: o.texto || '', data: o.data === undefined ? todayISO(0) : (o.data || ''), pessoa: o.pessoa || null, imovel_id: o.imovel_id || null };
+  const imoveis = q('SELECT id, codigo, nome FROM imovel ORDER BY nome');
+  const sexta = (() => { const d = new Date(); d.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7 || 7)); return localYMD(d); })();
+  openSheet(`<h2 class="sheet__title" id="sheet-title">${t ? 'Tarefa' : 'Nova tarefa'}</h2>
+    <form id="form-tarefa" onsubmit="event.preventDefault();salvarTarefa(${t ? t.id : 0})" novalidate>
+      ${campo('fta-texto', 'O que fazer', `<input id="fta-texto" autocomplete="off" placeholder="Ex.: pedir a certidão de matrícula" value="${esc(dados.texto)}">`)}
+      <input type="hidden" id="fta-data" value="${esc(dados.data)}">
+      <div class="field"><label>Quando</label>
+        ${chipsHTML('fta-data', [[todayISO(0), 'Hoje'], [todayISO(1), 'Amanhã'], [sexta, 'Sexta'], [somarDias(inicioSemana(todayISO(0)), 7), 'Semana que vem'], ['', 'Sem data']], false)}
+        <input type="date" aria-label="Outra data" value="${esc(dados.data)}" onchange="const h=document.getElementById('fta-data');h.value=this.value;h.dispatchEvent(new Event('input',{bubbles:true}));marcarChips('fta-data')" style="margin-top:var(--s2);width:100%;min-height:var(--tap);border:1px solid var(--border-2);border-radius:var(--r-sm);background:var(--surface);color:var(--text);padding:0 var(--s3)">
+      </div>
+      ${pickerPessoasHTML('fta', dados.pessoa ? [Object.assign({ papel: '' }, dados.pessoa)] : [], { max: 1, semPapel: true, rotulo: 'Pessoa (opcional)' })}
+      ${campo('fta-imovel', 'Imóvel (opcional)', selDados('fta-imovel', imoveis, nomeImovel, '(nenhum)'))}
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>
+    ${t ? `<button class="btn btn--block" style="margin-top:var(--s2)" onclick="concluirTarefa(${t.id});closeSheet()">${ico('check')}${t.feito_em ? 'Reabrir' : 'Marcar como feita'}</button>${botaoApagar('tarefa', t.id, 'Apagar tarefa')}` : ''}`, { chave: 'form-tarefa:' + (t ? t.id : 'nova') });
+  const sel2 = document.getElementById('fta-imovel'); if (sel2 && dados.imovel_id) sel2.value = String(dados.imovel_id);
+  marcarChips('fta-data'); renderPessoasSel('fta');
+  const form = document.getElementById('form-tarefa'); prepararEnter(form);
+  ligarRascunho('tarefa:' + (t ? t.id : 'nova:' + (dados.pessoa ? dados.pessoa.tipo + dados.pessoa.id : '') + (dados.imovel_id || '')), form, () => { marcarChips('fta-data'); renderPessoasSel('fta'); });
+}
+function salvarTarefa(id) {
+  const texto = val('fta-texto'); if (!texto) return erroCampo('fta-texto', 'Escreva o que fazer.');
+  const p = pessoasSel('fta')[0] || null, data = val('fta-data') || null, imovelId = +val('fta-imovel') || null;
+  let antes = null, novoId = id;
+  if (id) { antes = q('SELECT * FROM tarefa WHERE id=?', [id])[0]; run('UPDATE tarefa SET texto=?, data=?, pessoa_tipo=?, pessoa_id=?, imovel_id=? WHERE id=?', [texto, data, p ? p.tipo : null, p ? p.id : null, imovelId, id]); }
+  else novoId = insertAndGetId('INSERT INTO tarefa (texto, data, pessoa_tipo, pessoa_id, imovel_id, criado_em) VALUES (?,?,?,?,?,?)', [texto, data, p ? p.tipo : null, p ? p.id : null, imovelId, agoraISO()]);
+  limparRascunho(); vibrar(); closeSheet(); redesenharTudoDaTarefa();
+  showToast((id ? 'Tarefa atualizada' : 'Tarefa criada') + (data ? ' · ' + prazoTarefa({ data }) : ' · sem data') + '.', { label: 'Desfazer', fn: () => {
+    if (antes) inserirLinha('tarefa', antes); else run('DELETE FROM tarefa WHERE id=?', [novoId]);
+    persist(); redesenharTudoDaTarefa(); } });
+}
+
+// ---------- escreva como fala ----------
+// "visita lúcia sábado 10h B3" ou "cartório com a Rita dia 20 14h30 por 1h". Lê tipo, dia,
+// hora, duração, pessoas, imóvel e repetição; o que sobra vira o título. Mostra o que
+// entendeu antes de abrir o formulário já preenchido — nada é gravado sem conferir.
+function semAcento(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+const FALA_TIPOS = [
+  ['visita', /\b(visita|visitar|mostrar|apresentar)\b/], ['captacao', /\b(captacao|captar|avaliacao|avaliar)\b/],
+  ['cartorio', /\b(cartorio|escritura|assinatura|assinar|contrato|firma)\b/], ['vistoria', /\b(vistoria|chaves?|entrega)\b/],
+  ['plantao', /\bplantao\b/], ['ligacao', /\b(ligar|ligacao|telefonar)\b/],
+  ['reuniao', /\b(reuniao|reunir|encontro|cafe|almoco|conversar)\b/], ['pessoal', /\b(medico|dentista|academia|pessoal|folga|bloquear|consulta)\b/]
+];
+const FALA_DIAS = { domingo: 0, segunda: 1, terca: 2, quarta: 3, quinta: 4, sexta: 5, sabado: 6 };
+const FALA_MESES = ['janeiro', 'fevereiro', 'marco', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const FALA_PARADAS = new Set(['com', 'as', 'a', 'o', 'os', 'no', 'na', 'em', 'de', 'do', 'da', 'pra', 'para', 'e', 'dia', 'por', 'ate', 'que', 'vem', 'proxima', 'proximo', 'toda', 'todo', 'nesta', 'neste', 'essa', 'esse', 'hora', 'horas', 'h']);
+function proximoDiaSemana(dow, pular) {
+  const d = dataLocal(todayISO(0)); let n = (dow - d.getDay() + 7) % 7; if (pular && n === 0) n = 7;
+  d.setDate(d.getDate() + n); return localYMD(d);
+}
+function interpretarFala(txt) {
+  let t = ' ' + semAcento(txt).replace(/[.,;!?]/g, ' ') + ' ';
+  const r = { tipo: null, data: null, hora: null, dur: null, diaInteiro: false, pessoas: [], duvida: [], imovel_id: null, rep: '', titulo: '' };
+  const tira = re => { const m = t.match(re); if (m) t = t.replace(re, ' '); return m; };
+  const hoje = todayISO(0);
+  let m;
+  // repetição (antes do dia: "toda segunda" também diz o dia)
+  if ((m = tira(/\b(?:a cada (?:duas|2) semanas|quinzenal(?:mente)?|toda quinzena)\b/))) r.rep = 'quinzenal';
+  else if ((m = tira(/\b(?:todo dia|todos os dias|diariamente)\b/))) r.rep = 'diaria';
+  else if ((m = tira(/\b(?:todo mes|todos os meses|mensal(?:mente)?)\b/))) r.rep = 'mensal';
+  else if ((m = tira(/\btod[ao]s? (?:as |os )?(segunda|terca|quarta|quinta|sexta|sabado|domingo)s?(?:-feiras?)?\b/))) { r.rep = 'semanal'; r.data = proximoDiaSemana(FALA_DIAS[m[1]], false); }
+  else if ((m = tira(/\b(?:toda semana|semanal(?:mente)?)\b/))) r.rep = 'semanal';
+  if (tira(/\b(?:o )?dia (?:inteiro|todo)\b/)) r.diaInteiro = true;
+  // duração
+  if ((m = tira(/\b(?:por|durante) (\d{1,2}) ?h(?:oras?)?(?: ?e? ?(\d{1,2}) ?(?:min(?:utos?)?)?)?\b/))) r.dur = +m[1] * 60 + (+m[2] || 0);
+  else if ((m = tira(/\b(?:por|durante) (\d{1,2})h(\d{2})\b/))) r.dur = +m[1] * 60 + +m[2];
+  else if ((m = tira(/\b(?:por|durante) (\d{1,3}) ?min(?:utos?)?\b/))) r.dur = +m[1];
+  else if (tira(/\b(?:por|durante) meia hora\b/)) r.dur = 30;
+  else if (tira(/\b(?:por|durante) uma hora\b/)) r.dur = 60;
+  // dia
+  if (!r.data) {
+    if (tira(/\bdepois de amanha\b/)) r.data = todayISO(2);
+    else if (tira(/\bamanha\b/)) r.data = todayISO(1);
+    else if (tira(/\bhoje\b/)) r.data = hoje;
+    else if ((m = tira(/\b(?:daqui a|em) (\d{1,2}) dias?\b/))) r.data = todayISO(+m[1]);
+    else if ((m = tira(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/))) {
+      const ano = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : dataLocal(hoje).getFullYear();
+      let d = new Date(ano, +m[2] - 1, +m[1]); if (!m[3] && localYMD(d) < hoje) d = new Date(ano + 1, +m[2] - 1, +m[1]);
+      r.data = localYMD(d);
+    } else if ((m = tira(/\b(\d{1,2}) de (janeiro|fevereiro|marco|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)\b/))) {
+      const ano = dataLocal(hoje).getFullYear(); let d = new Date(ano, FALA_MESES.indexOf(m[2]), +m[1]); if (localYMD(d) < hoje) d = new Date(ano + 1, FALA_MESES.indexOf(m[2]), +m[1]);
+      r.data = localYMD(d);
+    } else if ((m = tira(/\bdia (\d{1,2})\b/))) {
+      const base = dataLocal(hoje); let d = new Date(base.getFullYear(), base.getMonth(), +m[1]); if (localYMD(d) < hoje) d = new Date(base.getFullYear(), base.getMonth() + 1, +m[1]);
+      r.data = localYMD(d);
+    } else if ((m = tira(/\b(proxim[ao] |nesta |neste |na |no )?(segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?( que vem)?\b/))) {
+      r.data = proximoDiaSemana(FALA_DIAS[m[2]], !!(m[1] && /proxim/.test(m[1])) || !!m[3]);
+    }
+  }
+  // hora
+  let periodo = null;
+  if (tira(/\bda tarde\b/)) periodo = 'tarde'; else if (tira(/\bda noite\b/)) periodo = 'noite'; else if (tira(/\bda manha\b/)) periodo = 'manha';
+  if (tira(/\bmeio[- ]dia\b/)) r.hora = '12:00';
+  else if ((m = tira(/\b(?:as |a )?(\d{1,2})(?:h|:)(\d{2})\b/))) r.hora = hhmm(+m[1] * 60 + +m[2]);
+  else if ((m = tira(/\b(?:as |a )?(\d{1,2}) ?h(?:oras?)?\b/))) r.hora = hhmm(+m[1] * 60);
+  else if ((m = tira(/\bas (\d{1,2})\b/))) r.hora = hhmm(+m[1] * 60);
+  if (r.hora && periodo && periodo !== 'manha') { const h = +r.hora.slice(0, 2); if (h < 12) r.hora = hhmm((h + 12) * 60 + minDe(r.hora) % 60); }
+  if (r.hora && +r.hora.slice(0, 2) > 23) r.hora = null;
+  // tipo
+  for (const [k, re] of FALA_TIPOS) if (re.test(t)) { r.tipo = k; break; }
+  // imóvel: código ("B3", "A3+A4") ou nome inteiro
+  const imoveis = q('SELECT id, codigo, nome FROM imovel');
+  for (const im of imoveis) {
+    const cod = im.codigo && semAcento(im.codigo), nome = semAcento(im.nome);
+    const reCod = cod && new RegExp('(^|\\s)' + cod.replace(/[+]/g, '\\+') + '(?=\\s)');
+    if (reCod && reCod.test(t)) { r.imovel_id = im.id; t = t.replace(reCod, ' '); break; }
+    if (nome.length >= 5 && t.includes(' ' + nome + ' ')) { r.imovel_id = im.id; t = t.replace(' ' + nome + ' ', ' '); break; }
+  }
+  // pessoas: nome inteiro primeiro; primeiro nome só se for de uma pessoa só
+  const todas = [];
+  Object.keys(TABELA_PESSOA).forEach(tp => q(`SELECT id, nome FROM ${TABELA_PESSOA[tp]}`).forEach(p => todas.push({ tipo: tp, id: p.id, nome: p.nome, n: semAcento(p.nome).replace(/[.]/g, '').trim() })));
+  todas.sort((a, b) => b.n.length - a.n.length).forEach(p => {
+    if (p.n.length >= 4 && t.includes(' ' + p.n + ' ')) {
+      if (!r.pessoas.some(x => semAcento(x.nome) === semAcento(p.nome))) r.pessoas.push({ tipo: p.tipo, id: p.id, nome: p.nome, papel: '' });
+      t = t.replace(' ' + p.n + ' ', ' ');
+    }
+  });
+  const palavras = t.split(/\s+/).filter(w => w.length >= 3 && !FALA_PARADAS.has(w));
+  palavras.forEach(w => {
+    const cands = todas.filter(p => p.n.split(' ')[0] === w);
+    const nomesDiferentes = [...new Set(cands.map(c => c.n))];
+    if (!cands.length) return;
+    if (nomesDiferentes.length === 1) {
+      const p = cands.find(c => c.tipo === 'lead') || cands[0];
+      if (!r.pessoas.some(x => semAcento(x.nome) === semAcento(p.nome))) r.pessoas.push({ tipo: p.tipo, id: p.id, nome: p.nome, papel: '' });
+    } else r.duvida.push(w + ' (' + nomesDiferentes.length + ' pessoas)');
+    t = t.replace(new RegExp('\\s' + w + '(?=\\s)'), ' ');
+  });
+  // título: o que sobrou, com a grafia original
+  const originais = {};
+  String(txt).split(/\s+/).forEach(w => { const k = semAcento(w).replace(/[.,;!?]/g, ''); if (k && !originais[k]) originais[k] = w.replace(/[,;!?]+$/, ''); });
+  const sobra = t.split(/\s+/).filter(Boolean);
+  while (sobra.length && FALA_PARADAS.has(sobra[0])) sobra.shift();
+  while (sobra.length && FALA_PARADAS.has(sobra[sobra.length - 1])) sobra.pop();
+  const tipoSo = sobra.length === 1 && r.tipo && FALA_TIPOS.some(([k, re]) => k === r.tipo && re.test(' ' + sobra[0] + ' '));
+  if (sobra.length && !tipoSo) { const tt = sobra.map(w => originais[w] || w).join(' '); r.titulo = tt.charAt(0).toUpperCase() + tt.slice(1); }
+  return r;
+}
+let falaAtual = null;
+function previaFala() {
+  const campoFala = document.getElementById('fala'), box = document.getElementById('fala-previa'); if (!campoFala || !box) return;
+  const txt = campoFala.value.trim();
+  if (txt.length < 3) { box.innerHTML = ''; falaAtual = null; return; }
+  const r = interpretarFala(txt), pre = window.__novoAg || {};
+  if (!r.data) r.data = pre.data || todayISO(0);
+  if (!r.hora && !r.diaInteiro && pre.hora) r.hora = pre.hora;
+  falaAtual = Object.assign(r, { texto: txt });
+  const tp = TIPOS_AGENDA[r.tipo || 'reuniao'];
+  const im = r.imovel_id ? q('SELECT codigo, nome FROM imovel WHERE id=?', [r.imovel_id])[0] : null;
+  const chip = (t, fraco) => `<span class="pill ${fraco ? '' : 'brand'}">${esc(t)}</span>`;
+  const itens = [chip(r.tipo ? tp.curto : 'tipo? (reunião)', !r.tipo), chip(rotuloDia(r.data)), r.diaInteiro ? chip('dia inteiro') : chip(r.hora ? r.hora : 'sem hora', !r.hora),
+    r.dur ? chip(fmtAntecedencia(r.dur)) : '', ...r.pessoas.map(p => chip(p.nome)), im ? chip(nomeImovel(im)) : '', r.rep ? chip(REP_TEXTO[r.rep]) : '',
+    r.titulo ? chip('“' + r.titulo + '”') : '', ...r.duvida.map(d => chip(d + '?', true))].filter(Boolean).join(' ');
+  const semHora = !r.hora && !r.diaInteiro;
+  box.innerHTML = `<div class="fala-previa">${itens}</div>
+    <div class="btn-row" style="margin-top:var(--s2)">
+      ${semHora && !r.tipo ? `<button type="button" class="btn btn--primary btn--grow" onclick="continuarFala('tarefa')">${ico('check')}Criar tarefa</button>
+        <button type="button" class="btn btn--grow" onclick="continuarFala('agenda')">${ico('agenda')}Marcar na agenda</button>`
+      : `<button type="button" class="btn btn--primary btn--grow" onclick="continuarFala('agenda')">${ico('check')}Conferir e salvar</button>
+        ${semHora ? `<button type="button" class="btn btn--grow" onclick="continuarFala('tarefa')">${ico('check')}É uma tarefa</button>` : ''}`}
+    </div>`;
+}
+function continuarFala(modo) {
+  const r = falaAtual; if (!r) return;
+  const chave = 'fala' + Array.from(r.texto).reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7).toString(36);
+  closeSheet();
+  if (modo === 'tarefa') return abrirFormTarefa({ texto: r.titulo || r.texto, data: r.data, pessoa: r.pessoas[0] || null, imovel_id: r.imovel_id });
+  if (r.tipo === 'visita') {
+    const lead = r.pessoas.find(p => p.tipo === 'lead');
+    return openForm('visita', { tipo: 'fala', id: chave, preset: { data: r.data, hora: r.hora, imovel_id: r.imovel_id, lead_id: lead ? lead.id : null, pessoas: r.pessoas.filter(p => p !== lead), dur: r.dur } });
+  }
+  abrirFormCompromisso({ tipo: r.tipo || 'reuniao', data: r.data, hora: r.hora || '', diaInteiro: r.diaInteiro, dur: r.dur, pessoas: r.pessoas, imovel_id: r.imovel_id,
+    titulo: r.titulo, rep: r.rep, chaveRascunho: chave });
+}
+
+// ---------- horários livres ----------
+function deslocamentoMin(a, b) {
+  if (a.lat == null || a.lng == null || b.lat == null || b.lng == null) return 15;
+  return Math.round(haversineKm(a, b) * 1.3 / velocidadeKmh() * 60) + 10;
+}
+function horariosLivres(o) {
+  const exp = expediente(), agora = new Date(), agoraMin = agora.getHours() * 60 + agora.getMinutes(), porDia = [];
+  const dur = o.dur || 60, ponto = { lat: o.lat, lng: o.lng };
+  for (let i = 0; i < 21 && porDia.length < 6; i++) {
+    const d = somarDias(o.desde, i);
+    if (d < todayISO(0) || !exp.diasSemana.includes(dataLocal(d).getDay())) continue;
+    const ocup = itensDaAgenda(d, d).filter(it => it.aberto && !it.cancelado && !it.diaInteiro && minDe(it.hora) != null && !(o.excluir && it.k === o.excluir.k && it.id === o.excluir.id))
+      .map(it => ({ a: minDe(it.hora), b: minDe(it.hora) + it.dur, it }));
+    const livres = [];
+    for (let s = Math.ceil(exp.ini / 30) * 30; s + dur <= exp.fim; s += 30) {
+      if (d === todayISO(0) && s < agoraMin + 60) continue;
+      const e = s + dur;
+      if (ocup.some(x => s < x.b + deslocamentoMin(x.it, ponto) && x.a < e + deslocamentoMin(ponto, x.it))) continue;
+      if (livres.length && s - minDe(livres[livres.length - 1]) < 180) continue;   // espalha: pelo menos 3 h entre opções do mesmo dia
+      livres.push(hhmm(s));
+      if (livres.length >= 2) break;
+    }
+    if (livres.length) porDia.push({ data: d, horas: livres });
+  }
+  // prefere dias diferentes: uma opção de cada dia, depois a segunda do primeiro
+  const out = [];
+  porDia.forEach(p => { if (out.length < (o.quantos || 3)) out.push({ data: p.data, hora: p.horas[0] }); });
+  porDia.forEach(p => { if (out.length < (o.quantos || 3) && p.horas[1]) out.push({ data: p.data, hora: p.horas[1] }); });
+  return out.sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+}
+function textoHorarios(lista) {
+  const partes = lista.map(h => (h.data === todayISO(0) ? 'hoje' : h.data === todayISO(1) ? 'amanhã' : diaCurto(h.data)) + ' às ' + horaFalada(h.hora));
+  return partes.length > 1 ? partes.slice(0, -1).join(', ') + ' ou ' + partes[partes.length - 1] : (partes[0] || '');
+}
+// no formulário: as opções aparecem dentro dele (abrir outra folha apagaria o que foi digitado)
+function livresDoForm(pfx) {
+  const hoje = todayISO(0), desde = val(pfx + '-data') > hoje ? val(pfx + '-data') : hoje;
+  const imovelId = +val(pfx + '-imovel') || null;
+  const geo = pfx === 'fco' && val('fco-lat') !== '' ? { lat: +val('fco-lat'), lng: +val('fco-lng') } : imovelId ? (q('SELECT lat, lng FROM imovel WHERE id=?', [imovelId])[0] || {}) : {};
+  const dur = +val(pfx + '-dur') || duracaoPadrao(pfx === 'fvi' ? 'visita' : (val('fco-tipo') || 'reuniao'));
+  return { desde, dur, lat: geo.lat, lng: geo.lng };
+}
+function telefonesDoForm(pfx) {
+  const lista = pessoasSel(pfx).map(p => { const r = TABELA_PESSOA[p.tipo] && q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[p.tipo]} WHERE id=?`, [p.id])[0]; return r && r.telefone ? { tipo: p.tipo, id: r.id, nome: r.nome, telefone: r.telefone } : null; }).filter(Boolean);
+  if (pfx === 'fvi' && +val('fvi-lead')) { const l = q('SELECT id, nome, telefone FROM lead WHERE id=?', [+val('fvi-lead')])[0]; if (l && l.telefone) lista.unshift({ tipo: 'lead', id: l.id, nome: l.nome, telefone: l.telefone }); }
+  return lista;
+}
+function livresBotaoHTML(pfx) {
+  return `<button type="button" class="btn btn--sm btn--ghost" onclick="mostrarLivres('${pfx}')">${ico('busca')}Encontrar horário livre</button><div id="${pfx}-livres" aria-live="polite"></div>`;
+}
+function mostrarLivres(pfx, mais) {
+  const box = document.getElementById(pfx + '-livres'); if (!box) return;
+  const o = livresDoForm(pfx);
+  if (mais && window.__livres && window.__livres[pfx] && window.__livres[pfx].length) o.desde = somarDias(window.__livres[pfx][window.__livres[pfx].length - 1].data, 1);
+  const lista = horariosLivres(o);
+  window.__livres = Object.assign(window.__livres || {}, { [pfx]: lista });
+  const exp = expediente(), tels = telefonesDoForm(pfx);
+  box.innerHTML = lista.length ? `<div class="card card--sunken" style="margin-top:var(--s2)">
+      <p class="muted" style="margin:0 0 var(--s2)">Livres pra ${fmtAntecedencia(o.dur)}, no expediente (${hhmm(exp.ini)}–${hhmm(exp.fim)}, ${DIAS_EXPEDIENTE.find(x => x[0] === exp.dias)[1]}), com tempo de deslocamento. Toque pra usar:</p>
+      <div class="chip-row chip-row--wrap">${lista.map(h => `<button type="button" class="chip" onclick="usarLivre('${pfx}', '${h.data}', '${h.hora}')">${esc(diaCurto(h.data))} · ${horaFalada(h.hora)}</button>`).join('')}</div>
+      <div class="btn-row btn-row--wrap" style="margin-top:var(--s2)">
+        ${tels.length ? `<button type="button" class="btn btn--sm btn--ok btn--grow" onclick="mandarLivres('${pfx}')">${ico('conversa')}Mandar opções pra ${esc(tels[0].nome.split(' ')[0])}</button>` : ''}
+        <button type="button" class="btn btn--sm btn--grow" onclick="mostrarLivres('${pfx}', true)">Outros dias</button>
+      </div>
+      ${tels.length ? '' : '<p class="muted" style="margin:var(--s2) 0 0">Marque uma pessoa com telefone pra mandar as opções no WhatsApp.</p>'}
+    </div>`
+    : `<p class="muted" style="margin:var(--s2) 0">Nada livre nos próximos dias dentro do expediente. Dá pra mudar o expediente em Mais › Agenda e avisos.</p>`;
+}
+function usarLivre(pfx, data, hora) {
+  if (pfx === 'lvr') {
+    // da ficha da pessoa: o horário escolhido abre a marcação já com ela
+    const lp = window.__livresPessoa; if (!lp) return;
+    closeSheet();
+    if (lp.tipoItem === 'visita') return openForm('visita', { tipo: 'livre', id: lp.tipo + lp.id, preset: { data, hora, lead_id: lp.id } });
+    return abrirFormCompromisso({ tipo: 'reuniao', data, hora, pessoas: [{ tipo: lp.tipo, id: lp.id, papel: '' }] });
+  }
+  const set = (id, v) => { const e = document.getElementById(id); if (e) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); } };
+  set(pfx + '-data', data); set(pfx + '-hora', hora);
+  const box = document.getElementById(pfx + '-livres'); if (box) box.innerHTML = `<p class="muted" style="margin:var(--s2) 0">Marcado ${esc(diaCurto(data))} às ${horaFalada(hora)}.</p>`;
+}
+function mandarLivres(pfx) {
+  const lista = (window.__livres || {})[pfx] || [], p = telefonesDoForm(pfx)[0]; if (!lista.length || !p) return;
+  const m = q(`SELECT texto FROM mensagem_pronta WHERE titulo='Horários livres' ORDER BY id LIMIT 1`)[0];
+  const texto = preencherMensagem(m ? m.texto : 'Oi {nome}! Aqui é {corretor}. Tenho estes horários: {horarios}. Qual fica melhor pra você?',
+    Object.assign(varsPessoa(p), { horarios: textoHorarios(lista) }));
+  abrirWhats(p.telefone, texto, p.tipo + ':' + p.id);
+}
+// da ficha da pessoa: as opções e o WhatsApp numa folha própria
+function livresParaPessoaSheet(tipo, id) {
+  const p = q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [id])[0]; if (!p) return;
+  const tipoItem = tipo === 'lead' ? 'visita' : 'reuniao';
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Horários livres</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Pra mandar a ${esc(p.nome.split(' ')[0])} e marcar o que ela escolher.</p>
+    <input type="hidden" id="lvr-pessoas" value="${esc(JSON.stringify([{ tipo, id, papel: '' }]))}">
+    <input type="hidden" id="lvr-data" value="${todayISO(0)}"><input type="hidden" id="lvr-dur" value="${duracaoPadrao(tipoItem)}">
+    <div class="field"><label>Duração</label>${chipsHTML('lvr-dur', DURACOES, false)}</div>
+    <button type="button" class="btn btn--block" onclick="mostrarLivres('lvr')">${ico('busca')}Procurar</button>
+    <div id="lvr-livres"></div>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'livres:' + tipo + ':' + id });
+  marcarChips('lvr-dur'); mostrarLivres('lvr');
+  // escolher um horário daqui abre a marcação já com a pessoa e o horário
+  window.__livresPessoa = { tipo, id, tipoItem };
+}
+
+// ---------- hora de sair ----------
+function horaDeSair(it) {
+  if (!it || it.diaInteiro || !it.aberto || it.emAndamento || it.lat == null || it.lng == null || minDe(it.hora) == null) return null;
+  const ini = minDe(it.hora);
+  const antes = itensDaAgenda(it.data, it.data).filter(o => o.aberto && !o.cancelado && !o.diaInteiro && !(o.k === it.k && o.id === it.id)
+    && o.lat != null && o.lng != null && minDe(o.hora) != null && minDe(o.hora) + o.dur <= ini).sort((a, b) => minDe(b.hora) - minDe(a.hora))[0];
+  let origem = null, de = '';
+  if (antes) { origem = antes; de = 'saindo de ' + antes.titulo; }
+  else if (posicaoAtual && it.data === todayISO(0) && Date.now() - (posicaoAtual.t || 0) < 30 * 60000) { origem = posicaoAtual; de = 'de onde você estava há pouco'; }
+  if (!origem) return null;
+  const km = haversineKm(origem, it) * 1.3, min = Math.round(km / velocidadeKmh() * 60) + 10;
+  return { sair: ini - min, km, min, de };
+}
+function linhaSairHTML(it, cls) {
+  const s = horaDeSair(it); if (!s) return '';
+  return `<p class="sair ${cls || ''}">${ico('rota', 'ic-sm')} Saia às <b class="num">${hhmm(s.sair)}</b> · ${fmtKm(s.km)} ${esc(s.de)} <span class="muted">(estimativa, sem trânsito)</span></p>`;
+}
+
+// ---------- resumo de amanhã ----------
+function resumoAmanha() {
+  const d = todayISO(1);
+  const itens = itensDaAgenda(d, d).filter(it => it.aberto && !it.cancelado), tarefas = tarefasDoDia(d);
+  const primeiro = itens.find(it => !it.diaInteiro) || itens[0];
+  const texto = itens.length
+    ? plural(itens.length, 'compromisso', 'compromissos') + (primeiro.diaInteiro ? '' : ', o primeiro às ' + horaFalada(primeiro.hora)) + (primeiro.local ? ', ' + primeiro.local.split(' · ')[0] : '')
+      + (tarefas.length ? ' e ' + plural(tarefas.length, 'tarefa', 'tarefas') : '')
+    : tarefas.length ? plural(tarefas.length, 'tarefa', 'tarefas') + ', nada marcado com hora' : 'nada marcado';
+  return { itens, tarefas, texto };
+}
+function horaResumo() { const v = cfg('agenda:resumo_hora'); return v === 'off' ? null : (v || '20:00'); }
+function cartaoAmanhaHTML() {
+  const h = horaResumo(); if (!h) return '';
+  const agora = new Date(); if (agora.getHours() * 60 + agora.getMinutes() < minDe(h)) return '';
+  const r = resumoAmanha(); if (!r.itens.length && !r.tarefas.length) return '';
+  const pendentes = r.itens.filter(it => it.pessoas.some(p => p.telefone) && !confirmacaoMandada(it)).length;
+  return `<div class="card card--accent" style="margin-bottom:var(--s3)">
+    <div class="eyebrow">Amanhã</div>
+    <p style="margin:2px 0 var(--s2);font-weight:600">${esc(r.texto.charAt(0).toUpperCase() + r.texto.slice(1))}</p>
+    <div class="btn-row">
+      ${pendentes ? `<button class="btn btn--ok btn--grow" onclick="confirmarAmanhaSheet()">${ico('conversa')}Confirmar com ${plural(pendentes, 'pessoa', 'pessoas')}</button>` : ''}
+      <button class="btn btn--grow" onclick="agData=todayISO(1);setAgVisao('dia');go('ag')">${ico('agenda')}Ver amanhã</button>
+    </div></div>`;
+}
+function confirmacaoMandada(it) { try { return !!localStorage.getItem('confirmado:' + it.k + ':' + it.id + ':' + it.data); } catch (e) { return false; } }
+function confirmarAmanhaSheet() {
+  const r = resumoAmanha();
+  const linhas = r.itens.filter(it => it.pessoas.some(p => p.telefone));
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Confirmar amanhã</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Um toque abre o WhatsApp com a mensagem de confirmação já escrita.</p>
+    ${linhas.length ? linhas.map(it => {
+      const p = it.pessoas.find(x => x.telefone), feito = confirmacaoMandada(it);
+      return `<div class="card">
+        <div class="row__t"><span class="num">${it.diaInteiro ? 'dia inteiro' : esc(it.hora)}</span> · ${esc(it.titulo)}</div>
+        <div class="row__s">${esc(it.pessoas.map(x => x.nome).join(', '))}</div>
+        <div class="btn-row" style="margin-top:var(--s2)">
+          <button class="btn btn--sm btn--grow ${feito ? '' : 'btn--ok'}" onclick="mandarConfirmacao('${it.k}', ${it.id})">${ico(feito ? 'check' : 'conversa')}${feito ? 'Mandada · mandar de novo' : 'Confirmar com ' + esc(p.nome.split(' ')[0])}</button>
+          ${it.k === 'visita' && it.bruto.status !== 'confirmada' ? `<button class="btn btn--sm" onclick="marcarVisitaConfirmada(${it.id})">${ico('check')}Confirmada</button>` : ''}
+        </div></div>`;
+    }).join('') : `<div class="empty">${ico('check')}<p>Ninguém com telefone pra confirmar amanhã.</p></div>`}
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'confirmar-amanha', refazer: null });
+}
+function mandarConfirmacao(k, id) {
+  const it = itemAgenda(k, id); if (!it) return;
+  const p = it.pessoas.find(x => x.telefone); if (!p) return;
+  const m = q(`SELECT texto FROM mensagem_pronta WHERE contexto=? ORDER BY ordem, id LIMIT 1`, [k === 'visita' ? 'visita' : 'compromisso'])[0];
+  try { localStorage.setItem('confirmado:' + k + ':' + id + ':' + it.data, '1'); } catch (e) { /* ok */ }
+  abrirWhats(p.telefone, preencherMensagem(m ? m.texto : 'Oi {nome}! Confirmando {compromisso} {dia} às {hora}. Tudo certo?', varsItem(it, p)), p.tipo + ':' + p.id);
+  setTimeout(() => { if (folhaAtual && folhaAtual.chave === 'confirmar-amanha') confirmarAmanhaSheet(); renderHJ(); }, 400);
+}
+function marcarVisitaConfirmada(id) {
+  run(`UPDATE visita SET status='confirmada' WHERE id=? AND fim IS NULL`, [id]);
+  vibrar(); atualizarAgenda(); if (folhaAtual && folhaAtual.chave === 'confirmar-amanha') confirmarAmanhaSheet();
+  showToast('Visita confirmada.', { label: 'Desfazer', fn: () => { run(`UPDATE visita SET status='pendente' WHERE id=?`, [id]); atualizarAgenda(); } });
+}
+// ações que chegam da notificação (lembrete, hora de sair e resumo)
+function acaoLembrete(item, acao, chave) {
+  if (item === 'resumo') { if (acao === 'confirmar') return confirmarAmanhaSheet(); agData = todayISO(1); setAgVisao('dia'); return go('ag'); }
+  if (acao === 'adiar') return adiarLembrete(item, chave);
+  const [k, id] = String(item || '').split(':'); if (k && +id) abrirItemAgenda(k, +id);
+}
+
+// ---------- mensagens prontas ----------
+const CONTEXTOS_MSG = [['visita', 'Visita'], ['compromisso', 'Compromisso'], ['pessoa', 'Pessoa'], ['geral', 'Qualquer conversa']];
+const MENSAGENS_PADRAO = [
+  ['visita', 'Confirmar visita', 'Oi {nome}! Aqui é {corretor}. Confirmando nossa visita {dia} às {hora} — {imovel}. Tudo certo?'],
+  ['visita', 'Estou a caminho', 'Oi {nome}! Aqui é {corretor}, estou a caminho da nossa visita ({imovel}). Chego em uns 15 minutos.'],
+  ['visita', 'Obrigado pela visita', 'Oi {nome}! Obrigado pela visita {dia} ({imovel}). O que achou? Fico à disposição pra qualquer dúvida.'],
+  ['compromisso', 'Confirmar', 'Oi {nome}! Aqui é {corretor}. Confirmando {compromisso} {dia} às {hora} — {local}. Tudo certo?'],
+  ['compromisso', 'Pedir pra remarcar', 'Oi {nome}! Aqui é {corretor}. Surgiu um imprevisto: podemos remarcar {compromisso} de {dia} às {hora}?'],
+  ['pessoa', 'Retomar contato', 'Oi {nome}! Aqui é {corretor}. Passando pra saber se você ainda está procurando imóvel. Posso te mandar umas opções novas?'],
+  ['pessoa', 'Horários livres', 'Oi {nome}! Aqui é {corretor}. Tenho estes horários: {horarios}. Qual fica melhor pra você?'],
+  ['pessoa', 'Pedir documentos', 'Oi {nome}! Aqui é {corretor}. Pra seguir, preciso de RG e CPF, comprovante de residência e comprovante de renda. Pode mandar por aqui mesmo.'],
+  ['geral', 'Parabéns pelo negócio', 'Oi {nome}! Parabéns pelo imóvel novo! Foi um prazer trabalhar com você. Se precisar de qualquer coisa, conte comigo.']
+];
+const VARIAVEIS_MSG = [['nome', 'primeiro nome'], ['corretor', 'seu nome'], ['imovel', 'imóvel'], ['dia', 'dia'], ['hora', 'hora'], ['local', 'local'], ['compromisso', '"nossa reunião"…'], ['horarios', 'horários livres'], ['creci', 'CRECI']];
+function semearMensagensProntas(forcar) {
+  if (!forcar && cfg('msgs:semeadas')) return 0;
+  let n = 0;
+  MENSAGENS_PADRAO.forEach(([ctx, titulo, texto], i) => {
+    if (q('SELECT id FROM mensagem_pronta WHERE titulo=? AND contexto=?', [titulo, ctx]).length) return;
+    db.run('INSERT INTO mensagem_pronta (titulo, texto, contexto, ordem, padrao) VALUES (?,?,?,?,1)', [titulo, texto, ctx, i]); n++;
+  });
+  db.run('INSERT OR REPLACE INTO config (chave, valor) VALUES (?, ?)', ['msgs:semeadas', '1']);
+  return n;
+}
+function preencherMensagem(texto, vars) {
+  let s = String(texto || '').replace(/\{(\w+)\}/g, (m, k) => (vars && vars[k] != null && String(vars[k]).trim() !== '') ? String(vars[k]) : '');
+  // variável vazia não pode deixar pontuação solta: "às ." , "— ." , "()"
+  s = s.replace(/\(\s*\)/g, '').replace(/\s+[—–-]\s*(?=[.!?,]|$)/g, '').replace(/(^|\s)às\s*(?=[.!?,—]|$)/g, '$1').replace(/\s+([,.!?;:])/g, '$1')
+    .replace(/,\s*([.!?])/g, '$1').replace(/ {2,}/g, ' ').trim();
+  return s;
+}
+function varsPessoa(p) {
+  return { nome: String(p && p.nome || '').split(' ')[0], corretor: nomeCorretor(), creci: cfg('creci') };
+}
+function varsItem(it, p) {
+  return Object.assign(varsPessoa(p), { imovel: it.k === 'visita' ? (it.bruto.imovel_nome || it.imovel_nome) : it.imovel_nome, dia: rotuloDia(it.data).toLowerCase(),
+    hora: it.diaInteiro ? '' : horaFalada(it.hora), local: it.bruto.local || (it.k === 'visita' ? '' : it.local), compromisso: (TIPOS_AGENDA[it.tipo] || {}).aviso || 'nosso compromisso' });
+}
+function escolherMensagem(ctx) {
+  window.__msgCtx = ctx;
+  const lista = q(`SELECT * FROM mensagem_pronta WHERE contexto IN (?, 'geral') ORDER BY CASE contexto WHEN ? THEN 0 ELSE 1 END, ordem, id`, [ctx.contexto, ctx.contexto]);
+  openSheet(`<h2 class="sheet__title" id="sheet-title">WhatsApp pra ${esc((ctx.vars.nome || 'o contato'))}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Abre o WhatsApp com o texto escrito — dá pra mexer lá antes de mandar.</p>
+    <button class="card card--tap row" onclick="mandarMensagem(0)"><span class="row__ico">${ico('conversa')}</span>
+      <span class="row__main"><span class="row__t">Mensagem em branco</span></span>${ico('chevron', 'row__chev')}</button>
+    ${lista.map(m => `<button class="card card--tap row" onclick="mandarMensagem(${m.id})"><span class="row__main"><span class="row__t">${esc(m.titulo)}</span>
+      <span class="row__s">${esc(preencherMensagem(m.texto, ctx.vars).slice(0, 120))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')}
+    <button class="btn btn--ghost btn--block" onclick="go('msgs')">${ico('editar')}Editar mensagens prontas</button>
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">Fechar</button>`, { foco: false, chave: 'msg:' + (ctx.pessoa || ctx.tel) });
+}
+function mandarMensagem(id) {
+  const c = window.__msgCtx; if (!c) return;
+  const m = id ? q('SELECT texto FROM mensagem_pronta WHERE id=?', [id])[0] : null;
+  abrirWhats(c.tel, m ? preencherMensagem(m.texto, c.vars) : '', c.pessoa);
+}
+function mensagemPessoa(pessoaTxt, tel) {
+  const p = parsePessoa(pessoaTxt);
+  const telefone = tel || (p && (q(`SELECT telefone FROM ${TABELA_PESSOA[p.tipo]} WHERE id=?`, [p.id])[0] || {}).telefone);
+  if (!telefone) return showToastErr('Sem telefone cadastrado.');
+  escolherMensagem({ contexto: 'pessoa', vars: varsPessoa(p || { nome: '' }), tel: telefone, pessoa: pessoaTxt || '' });
+}
+function renderMensagens() {
+  const box = document.getElementById('msgs-list'); if (!box) return;
+  const exemplo = { nome: 'Lúcia', corretor: nomeCorretor(), imovel: 'Casa 12', dia: 'amanhã', hora: '14h', local: 'Cartório', compromisso: 'nossa reunião', horarios: 'sáb 20/9 às 10h ou seg 22/9 às 14h', creci: cfg('creci') };
+  box.innerHTML = CONTEXTOS_MSG.map(([k, rot]) => {
+    const ms = q('SELECT * FROM mensagem_pronta WHERE contexto=? ORDER BY ordem, id', [k]);
+    return `<h2 class="blk-title">${rot}</h2>` + (ms.length ? ms.map(m => `<button class="card card--tap row" onclick="editarMensagem(${m.id})">
+      <span class="row__main"><span class="row__t">${esc(m.titulo)}</span><span class="row__s">${esc(preencherMensagem(m.texto, exemplo))}</span></span>${ico('chevron', 'row__chev')}</button>`).join('')
+      : `<p class="muted" style="margin:0 0 var(--s2)">Nenhuma.</p>`);
+  }).join('') + `<button class="btn btn--ghost btn--block" style="margin-top:var(--s3)" onclick="recolocarMensagensPadrao()">${ico('reset')}Recolocar as mensagens que vieram com o app</button>`;
+}
+function recolocarMensagensPadrao() { const n = semearMensagensProntas(true); persist(); renderMensagens(); showToast(n ? plural(n, 'mensagem de volta', 'mensagens de volta') + '.' : 'Todas já estavam aqui.'); }
+function editarMensagem(id) {
+  const m = id ? q('SELECT * FROM mensagem_pronta WHERE id=?', [id])[0] : { titulo: '', texto: '', contexto: 'pessoa' };
+  if (!m) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">${id ? 'Mensagem pronta' : 'Nova mensagem'}</h2>
+    <form id="form-msg" onsubmit="event.preventDefault();salvarMensagem(${id || 0})" novalidate>
+      ${campo('fm-titulo', 'Nome', `<input id="fm-titulo" autocomplete="off" value="${esc(m.titulo)}" placeholder="Ex.: Mandar fotos">`)}
+      <input type="hidden" id="fm-contexto" value="${esc(m.contexto)}">
+      <div class="field"><label>Aparece em</label>${chipsHTML('fm-contexto', CONTEXTOS_MSG, false)}</div>
+      ${campo('fm-texto', 'Texto', `<textarea id="fm-texto" rows="4">${esc(m.texto)}</textarea>`)}
+      <div class="eyebrow" style="color:var(--text-3)">Toque pra pôr no texto</div>
+      <div class="chip-row chip-row--wrap">${VARIAVEIS_MSG.map(([k, r]) => `<button type="button" class="chip" onclick="inserirVariavel('${k}')">{${k}} · ${esc(r)}</button>`).join('')}</div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>
+    ${id ? `<button class="btn btn--ghost btn--block" style="color:var(--danger);margin-top:var(--s3)" onclick="apagarMensagem(${id})">${ico('lixeira')}Apagar mensagem</button>` : ''}`, { chave: 'form-msg:' + (id || 'nova') });
+  marcarChips('fm-contexto');
+  const form = document.getElementById('form-msg'); prepararEnter(form);
+  ligarRascunho('msg:' + (id || 'nova'), form, () => marcarChips('fm-contexto'));
+}
+function inserirVariavel(k) {
+  const ta = document.getElementById('fm-texto'); if (!ta) return;
+  const a = ta.selectionStart != null ? ta.selectionStart : ta.value.length, b = ta.selectionEnd != null ? ta.selectionEnd : a;
+  ta.value = ta.value.slice(0, a) + '{' + k + '}' + ta.value.slice(b);
+  ta.focus(); ta.selectionStart = ta.selectionEnd = a + k.length + 2;
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+}
+function salvarMensagem(id) {
+  const titulo = val('fm-titulo'), texto = document.getElementById('fm-texto').value.trim(), ctx = val('fm-contexto') || 'geral';
+  if (!titulo) return erroCampo('fm-titulo', 'Dê um nome pra achar depois.');
+  if (!texto) return erroCampo('fm-texto', 'Escreva o texto.');
+  if (id) run('UPDATE mensagem_pronta SET titulo=?, texto=?, contexto=? WHERE id=?', [titulo, texto, ctx, id]);
+  else run('INSERT INTO mensagem_pronta (titulo, texto, contexto, ordem) VALUES (?,?,?,?)', [titulo, texto, ctx, 999]);
+  limparRascunho(); closeSheet(); renderMensagens(); showToast('Mensagem salva.');
+}
+function apagarMensagem(id) {
+  const m = q('SELECT * FROM mensagem_pronta WHERE id=?', [id])[0]; if (!m) return;
+  run('DELETE FROM mensagem_pronta WHERE id=?', [id]);
+  closeSheet(); renderMensagens();
+  showToast('Mensagem apagada.', { label: 'Desfazer', fn: () => { inserirLinha('mensagem_pronta', m); persist(); renderMensagens(); } });
+}
+
+// ---------- visão Mês ----------
+function agMesHTML(ymd) {
+  const hoje = todayISO(0), d = dataLocal(ymd);
+  const ini = localYMD(new Date(d.getFullYear(), d.getMonth(), 1)), fimMes = localYMD(new Date(d.getFullYear(), d.getMonth() + 1, 0));
+  const g0 = inicioSemana(ini), g1 = somarDias(inicioSemana(fimMes), 6);
+  const itens = filtrarAg(itensDaAgenda(g0, g1));
+  const tarefasPorDia = {};
+  if (!filtroAtivo()) q('SELECT data, COUNT(*) c FROM tarefa WHERE feito_em IS NULL AND data>=? AND data<=? GROUP BY data', [g0, g1]).forEach(r => { tarefasPorDia[r.data] = r.c; });
+  let cels = '';
+  for (let x = g0; x <= g1; x = somarDias(x, 1)) {
+    const doDia = itens.filter(it => it.data === x), fora = x.slice(0, 7) !== ymd.slice(0, 7);
+    cels += `<button class="ag-md ${x === ymd ? 'on' : ''} ${x === hoje ? 'is-hoje' : ''} ${fora ? 'is-fora' : ''}" onclick="escolherDiaSemana('${x}')"
+        aria-label="${esc(fmtDataCurta(x))}: ${plural(doDia.length, 'compromisso', 'compromissos')}${tarefasPorDia[x] ? ', ' + plural(tarefasPorDia[x], 'tarefa', 'tarefas') : ''}">
+      <span class="ag-md__n">${dataLocal(x).getDate()}</span>
+      <span class="ag-dots">${doDia.slice(0, 3).map(it => `<span class="ag-dot" data-cor="${it.destaque}"></span>`).join('')}${doDia.length > 3 ? '<span class="ag-mais">+</span>' : ''}${tarefasPorDia[x] ? '<span class="ag-dot ag-dot--tarefa"></span>' : ''}</span></button>`;
+  }
+  const doDia = itens.filter(it => it.data === ymd), follow = filtroAtivo() ? [] : followUpsDe(ymd), tarefas = filtroAtivo() ? [] : tarefasDoDia(ymd);
+  return `<div class="ag-mes-cab">${['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom'].map(s => `<span>${s}</span>`).join('')}</div>
+    <div class="ag-mes" role="group" aria-label="Dias do mês">${cels}</div>
+    <h2 class="blk-title">${esc(rotuloDia(ymd))}${ymd === hoje || ymd === todayISO(1) ? ' · ' + esc(fmtDataCurta(ymd).split(', ')[1]) : ''}
+      <button class="jump" onclick="novoAgendaSheet('${ymd}')">+ marcar</button></h2>
+    ${doDia.map(it => cartaoItemAgenda(it)).join('') + tarefas.map(tarefaHTML).join('') + follow.map(linhaFollowUpHTML).join('')
+      || `<div class="empty">${ico('agenda')}<p>${filtroAtivo() ? 'Nada com esse filtro neste dia.' : 'Nada marcado neste dia.'}</p></div>`}`;
+}
+
+// ---------- Mais › Agenda e avisos: duração e lembretes por tipo, expediente, deslocamento ----------
+function tipoPadraoSheet(tipo) {
+  const tp = TIPOS_AGENDA[tipo]; if (!tp) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">${esc(tp.t)}</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">Vale pra tudo desse tipo marcado daqui pra frente, e pro que não tiver lembrete escolhido à mão.</p>
+    <input type="hidden" id="tp-dur" value="${duracaoPadrao(tipo)}"><input type="hidden" id="tp-lemb" value="${esc(JSON.stringify(lembretesPadrao(tipo)))}">
+    <div class="field"><label>Duração</label>${chipsHTML('tp-dur', DURACOES, false)}</div>
+    <div class="field"><label>Lembretes</label>${chipsHTML('tp-lemb', OPCOES_LEMBRETE, true)}</div>
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" onclick="salvarTipoPadrao('${tipo}')">${ico('check')}Salvar</button>
+      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+    </div>`, { foco: false, chave: 'tipo-padrao:' + tipo });
+  marcarChips('tp-dur'); marcarChips('tp-lemb');
+}
+function salvarTipoPadrao(tipo) {
+  let lemb = []; try { lemb = JSON.parse(val('tp-lemb') || '[]'); } catch (e) { /* vazio */ }
+  setCfg('agenda:duracao:' + tipo, val('tp-dur')); setCfg('agenda:lembretes:' + tipo, JSON.stringify(lemb));
+  closeSheet(); renderAgendaCfg(); verificarLembretes();
+  showToast(TIPOS_AGENDA[tipo].t + ': ' + fmtAntecedencia(+val('tp-dur') || duracaoPadrao(tipo)) + ' · ' + textoLembretes(lemb) + '.');
+  pedirAvisosUmaVez(lemb);
+}
+function expedienteSheet() {
+  const exp = expediente();
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Expediente</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">É dentro dele que "Encontrar horário livre" procura.</p>
+    <div class="field-grid">
+      ${campo('ex-ini', 'Começa', `<input id="ex-ini" type="time" value="${hhmm(exp.ini)}">`)}
+      ${campo('ex-fim', 'Termina', `<input id="ex-fim" type="time" value="${hhmm(exp.fim)}">`)}
+    </div>
+    <input type="hidden" id="ex-dias" value="${exp.dias}">
+    <div class="field"><label>Dias</label>${chipsHTML('ex-dias', DIAS_EXPEDIENTE, false)}</div>
+    <div class="btn-row sheet__acts">
+      <button class="btn btn--primary btn--grow" onclick="salvarExpediente()">${ico('check')}Salvar</button>
+      <button class="btn btn--grow" onclick="closeSheet()">Cancelar</button>
+    </div>`, { foco: false, chave: 'expediente' });
+  marcarChips('ex-dias');
+}
+function salvarExpediente() {
+  const ini = val('ex-ini'), fim = val('ex-fim');
+  if (!ini || !fim || minDe(fim) <= minDe(ini)) return erroCampo('ex-fim', 'O fim precisa ser depois do começo.');
+  setCfg('agenda:exp_ini', ini); setCfg('agenda:exp_fim', fim); setCfg('agenda:exp_dias', val('ex-dias') || 'seg-sab');
+  closeSheet(); renderAgendaCfg(); showToast('Expediente salvo.');
+}
+
+// ---------- auxiliares do formulário (repetição, série, mensagens da visita) ----------
+function textoSerieForm() {
+  const rep = val('fco-rep'), box = document.getElementById('fco-rep-ate-box'), help = document.getElementById('fco-rep-help'); if (!box || !help) return;
+  box.hidden = !rep;
+  if (!rep) { help.textContent = ''; return; }
+  const ate = document.getElementById('fco-rep-ate'), data = val('fco-data') || todayISO(0);
+  if (!ate.value || ate.value < data) ate.value = ateSugerido(data, rep);
+  const datas = datasDaSerie(data, rep, ate.value);
+  help.textContent = 'Cria ' + plural(datas.length, 'compromisso', 'compromissos') + ', o último ' + diaCurto(datas[datas.length - 1]) + (datas.length >= REP_MAX ? ' (máximo de ' + REP_MAX + ')' : '') + '.';
+}
+function pedirModoSerie(n) {
+  const box = document.getElementById('form-conflito'); if (!box) return;
+  box.innerHTML = `<div class="aviso-conflito" role="alert"><p>Este compromisso se repete: ${n === 1 ? 'tem mais um' : 'tem mais ' + n} depois dele. Aplicar a mudança em:</p>
+    <div class="btn-row" style="margin-top:var(--s2)">
+      <button type="button" class="btn btn--sm btn--grow" onclick="window.__serieModo='este';document.getElementById('form-comp').requestSubmit()">Só este</button>
+      <button type="button" class="btn btn--sm btn--primary btn--grow" onclick="window.__serieModo='proximos';document.getElementById('form-comp').requestSubmit()">Este e os próximos</button>
+    </div></div>`;
+  box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+function mensagensDaVisita(id) {
+  const it = itemAgenda('visita', id); if (!it) return;
+  if (!it.telefone) return showToastErr('Esta visita não tem telefone de contato.');
+  const p = it.pessoas.find(x => x.principal) || it.pessoas[0] || { nome: '' };
+  escolherMensagem({ contexto: 'visita', vars: varsItem(it, p), tel: it.telefone, pessoa: p.tipo ? p.tipo + ':' + p.id : '' });
+}
+
 function renderAll() {
   renderHJ(); renderAG(); renderCR(); renderVI(); renderNT(); renderCART(); renderCLI();
   renderCalcImovelSelect(); cCalcFin(); cCalcCom(); cCalcITBI(); renderCamLinkSelects(); renderInstallBox(); marcarMapaApp();
@@ -7133,10 +8036,7 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     // toque na notificação da visita (B15): o worker foca esta aba e manda a ação
     if (evento.data && evento.data.tipo === 'acao' && evento.data.acao) executarAtalho('?acao=' + encodeURIComponent(evento.data.acao));
     // lembrete da agenda (rodada 36): Adiar 10 min ou Abrir
-    if (evento.data && evento.data.tipo === 'lembrete' && db) {
-      if (evento.data.acao === 'adiar') adiarLembrete(evento.data.item, evento.data.chave);
-      else { const [k, id] = String(evento.data.item || '').split(':'); if (k && +id) abrirItemAgenda(k, +id); }
-    }
+    if (evento.data && evento.data.tipo === 'lembrete' && db) acaoLembrete(evento.data.item, evento.data.acao, evento.data.chave);
   });
 
   navigator.serviceWorker.addEventListener('controllerchange', () => {
