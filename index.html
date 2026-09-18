@@ -1711,7 +1711,26 @@ const SCHEMA_MIGRATIONS = [
   `CREATE TABLE IF NOT EXISTS tarefa (id INTEGER PRIMARY KEY AUTOINCREMENT, texto TEXT, data TEXT, feito_em TEXT, pessoa_tipo TEXT, pessoa_id INTEGER, imovel_id INTEGER, destaque INTEGER DEFAULT 0, criado_em TEXT)`,
   `CREATE TABLE IF NOT EXISTS mensagem_pronta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, contexto TEXT, ordem INTEGER, padrao INTEGER DEFAULT 0)`,
   // Rodada 36 (lote C4) — modelo "o que levar" da vistoria, guardado por compromisso
-  `ALTER TABLE compromisso ADD COLUMN checklist TEXT`
+  `ALTER TABLE compromisso ADD COLUMN checklist TEXT`,
+  // Rodada 36 (lote P0, plano-portal-web.md §2) — schema único com o portal: as tabelas que
+  // só o portal tinha entram aqui vazias (custo zero; o campo não usa nenhuma delas ainda), e
+  // lead ganha as quatro colunas que só existiam no portal. É o que faz o mesmo .sqlite abrir
+  // nos dois apps.
+  `ALTER TABLE lead ADD COLUMN padrao TEXT`,
+  `ALTER TABLE lead ADD COLUMN restricoes TEXT`,
+  `ALTER TABLE lead ADD COLUMN objecao TEXT`,
+  `ALTER TABLE lead ADD COLUMN spin_estagio TEXT`,
+  `CREATE TABLE IF NOT EXISTS canal_externo (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER REFERENCES imovel(id), portal TEXT, url TEXT)`,
+  `CREATE TABLE IF NOT EXISTS documento (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER REFERENCES imovel(id), lead_id INTEGER REFERENCES lead(id), tipo TEXT, status TEXT DEFAULT 'rascunho', partes_extra TEXT, atualizado_em TEXT DEFAULT CURRENT_TIMESTAMP)`,
+  `CREATE TABLE IF NOT EXISTS proposta (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER REFERENCES lead(id), imovel_id INTEGER REFERENCES imovel(id), valor REAL, condicoes TEXT, status TEXT DEFAULT 'enviada', documento_id INTEGER REFERENCES documento(id), criado_em TEXT DEFAULT CURRENT_TIMESTAMP, atualizado_em TEXT)`,
+  `CREATE TABLE IF NOT EXISTS clausula (id INTEGER PRIMARY KEY AUTOINCREMENT, documento_id INTEGER REFERENCES documento(id), nome TEXT, texto TEXT, obrigatoria INTEGER DEFAULT 0, ativa INTEGER DEFAULT 1, ordem INTEGER)`,
+  `CREATE TABLE IF NOT EXISTS cartorial_pendencia (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER REFERENCES imovel(id), tipo TEXT, responsavel TEXT, status TEXT, prazo_dias INTEGER)`,
+  `CREATE TABLE IF NOT EXISTS comissao (id INTEGER PRIMARY KEY AUTOINCREMENT, documento_id INTEGER REFERENCES documento(id), imovel_id INTEGER REFERENCES imovel(id), percentual REAL, parceria TEXT, status TEXT DEFAULT 'pendente')`,
+  `CREATE TABLE IF NOT EXISTS campanha (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, imovel_id INTEGER REFERENCES imovel(id), orcamento REAL, gasto REAL DEFAULT 0, leads INTEGER DEFAULT 0, status TEXT DEFAULT 'ativa')`,
+  `CREATE TABLE IF NOT EXISTS resposta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, canal TEXT, usos INTEGER DEFAULT 0)`,
+  `CREATE TABLE IF NOT EXISTS pos_venda_evento (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER REFERENCES lead(id), marco TEXT, descricao TEXT, status TEXT DEFAULT 'agendado')`,
+  `CREATE TABLE IF NOT EXISTS conteudo (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER REFERENCES imovel(id), formato TEXT, texto TEXT, status TEXT DEFAULT 'pendente', atualizado_em TEXT)`,
+  `CREATE TABLE IF NOT EXISTS config_vitrine (id INTEGER PRIMARY KEY, corretor_nome TEXT, creci TEXT, cor_destaque TEXT, dominio TEXT, mostrar_preco INTEGER DEFAULT 1)`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1854,28 +1873,55 @@ function esc(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+// nucleo:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js — NÃO editar aqui
 function fmtBRL(n) {
   n = Number(n) || 0;
   return 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 }
+
+// ---------- datas, sempre no fuso local ----------
+// new Date().toISOString() é UTC: no Brasil, das 21h em diante "hoje" virava o dia seguinte.
 function localYMD(d) {
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 function todayISO(offsetDays) {
-  // Data LOCAL. Antes usava toISOString() (UTC): no Brasil, das 21h em diante "hoje"
-  // virava o dia seguinte — visitas da noite sumiam da Central Hoje.
   const d = new Date();
   d.setDate(d.getDate() + (offsetDays || 0));
   return localYMD(d);
 }
-// criado_em vem do SQLite como 'AAAA-MM-DD HH:MM:SS' em UTC (CURRENT_TIMESTAMP); o seed
-// grava só a data, já local. Converte o primeiro caso pra data local antes de comparar.
+function dataLocal(ymd) { const [y, m, d] = String(ymd).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); }
+// criado_em pode vir de três formas: só a data (seed, já local); "AAAA-MM-DD HH:MM:SS", que é
+// o CURRENT_TIMESTAMP do próprio SQLite — sempre UTC, precisa virar local antes de comparar
+// com "hoje"; e "AAAA-MM-DD HH:MM" (sem segundos), a forma de agoraISO() — essa já é local, e
+// tratá-la como UTC subtraía 3 horas de novo, fazendo algo gravado de madrugada aparecer como
+// "ontem" um minuto depois de criado (achado testando o núcleo único, P0 do portal, 2026-09-18).
+// Só a forma com segundos é, de fato, UTC — é a única marca que distingue as duas.
 function localDateOf(v) {
   const s = String(v);
   if (s.length <= 10) return s.slice(0, 10);
-  const d = new Date(s.replace(' ', 'T') + (/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? '' : 'Z'));
+  if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s)) return s.slice(0, 10);
+  const d = new Date(s.replace(' ', 'T') + 'Z');
   return isNaN(d) ? s.slice(0, 10) : localYMD(d);
 }
+function horaAgora() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+function agoraISO() { return localYMD(new Date()) + ' ' + horaAgora(); }
+function minDe(hora) { const [h, m] = String(hora || '').split(':').map(Number); return isNaN(h) ? null : h * 60 + (m || 0); }
+function hhmm(min) { min = ((Math.round(min) % 1440) + 1440) % 1440; return String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'); }
+
+// ---------- português ----------
+// "0 visita(s)", datas ISO cruas e "2.3 km" na tela; e new Date('2026-09-18') é meia-noite
+// UTC — no fuso de Brasília vira 21h do dia anterior e o dia da semana erra.
+function plural(n, um, varios) { return (n === 1 ? '1 ' + um : n + ' ' + varios); }
+const DIAS_SEM = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const MESES_LONGO = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+function fmtDataCurta(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ', ' + d.getDate() + ' ' + MESES[d.getMonth()]; }
+function diaCurto(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth() + 1); }
+function horaFalada(hora) { const [h, m] = String(hora).split(':').map(Number); return h + 'h' + (m ? String(m).padStart(2, '0') : ''); }
 function fmtRelDate(iso) {
   if (!iso) return '';
   const d = localDateOf(iso);
@@ -1884,21 +1930,34 @@ function fmtRelDate(iso) {
   const dias = Math.round((dataLocal(todayISO(0)) - dataLocal(d)) / 86400000);
   return dias >= 0 ? dias + ' dias atrás' : fmtDataCurta(d);
 }
-function horaAgora() {
-  const d = new Date();
-  return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-}
-function agoraISO() { return localYMD(new Date()) + ' ' + horaAgora(); }
+function fmtKm(km) { return km == null ? '' : (km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1).replace('.', ',') + ' km'); }
 function nomeImovel(r) { return (r.codigo ? r.codigo + ' · ' : '') + (r.nome || r.imovel_nome || ''); }
 
-// ---------- português ----------
-// Rodada 33: "0 visita(s)", datas ISO cruas e "2.3 km" saíam na tela. E new Date('2026-09-18')
-// é meia-noite UTC — no fuso de Brasília vira 21h do dia anterior e o dia da semana erra.
-function plural(n, um, varios) { return (n === 1 ? '1 ' + um : n + ' ' + varios); }
-const DIAS_SEM = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
-const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-function dataLocal(ymd) { const [y, m, d] = String(ymd).slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); }
-function fmtDataCurta(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ', ' + d.getDate() + ' ' + MESES[d.getMonth()]; }
+// ---------- dinheiro em português ----------
+// "1.050.000", "1,05 mi", "850 mil" — parseFloat sozinho lê só até o primeiro ponto e
+// devolve 1.05. Interpreta ponto de milhar x separador decimal pela posição do último,
+// e "mil"/"mi"/"milhão"/"k" como multiplicador.
+function numeroBR(txt) {
+  let t = String(txt == null ? '' : txt).toLowerCase().replace(/r\$/g, '').trim();
+  if (!t) return null;
+  let mult = 1;
+  const m = t.match(/(milh(?:ão|ao|ões|oes)|mil|mi|k)\s*$/);
+  if (m) { mult = (m[1] === 'mil' || m[1] === 'k') ? 1e3 : 1e6; t = t.slice(0, m.index); }
+  t = t.replace(/\s/g, '');
+  if (!/^\d[\d.,]*$/.test(t)) return NaN;
+  const ponto = t.includes('.'), virg = t.includes(',');
+  let n;
+  if (ponto && virg) {
+    const dec = t.lastIndexOf('.') > t.lastIndexOf(',') ? '.' : ',';
+    n = parseFloat(t.split(dec === '.' ? ',' : '.').join('').replace(dec, '.'));
+  } else if (ponto) n = /^\d{1,3}(\.\d{3})+$/.test(t) ? parseFloat(t.replace(/\./g, '')) : parseFloat(t);
+  else if (virg) n = /^\d{1,3}(,\d{3})+$/.test(t) ? parseFloat(t.replace(/,/g, '')) : parseFloat(t.replace(',', '.'));
+  else n = parseFloat(t);
+  return isNaN(n) ? NaN : n * mult;
+}
+function precoBR(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? n : Math.round(n); }
+function numOuZero(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? 0 : n; }
+// nucleo:fim
 function fmtDuracao(ini, fim) {
   if (!ini || !fim) return '—';
   const a = new Date(String(ini).replace(' ', 'T')), b = new Date(String(fim).replace(' ', 'T'));
@@ -2337,29 +2396,7 @@ function inp(id, ph, tipo, extra) {
   return `<input id="${id}" placeholder="${ph || ''}" ${tipo ? 'type="' + tipo + '"' : ''}${im} autocomplete="off" ${extra || ''}>`;
 }
 // ---------- número em português ----------
-// Rodada 33: type="number" apagava "1.050.000" e parseFloat(...)||0 gravava o imóvel com
-// valor ZERO sem avisar — no cadastro e nas calculadoras. Aqui o campo é texto com teclado
-// decimal, e a leitura segue o jeito brasileiro de escrever.
-function numeroBR(txt) {
-  let t = String(txt == null ? '' : txt).toLowerCase().replace(/r\$/g, '').trim();
-  if (!t) return null;
-  let mult = 1;
-  const m = t.match(/(milh(?:ão|ao|ões|oes)|mil|mi|k)\s*$/);
-  if (m) { mult = (m[1] === 'mil' || m[1] === 'k') ? 1e3 : 1e6; t = t.slice(0, m.index); }
-  t = t.replace(/\s/g, '');
-  if (!/^\d[\d.,]*$/.test(t)) return NaN;
-  const ponto = t.includes('.'), virg = t.includes(',');
-  let n;
-  if (ponto && virg) {
-    const dec = t.lastIndexOf('.') > t.lastIndexOf(',') ? '.' : ',';
-    n = parseFloat(t.split(dec === '.' ? ',' : '.').join('').replace(dec, '.'));
-  } else if (ponto) n = /^\d{1,3}(\.\d{3})+$/.test(t) ? parseFloat(t.replace(/\./g, '')) : parseFloat(t);
-  else if (virg) n = /^\d{1,3}(,\d{3})+$/.test(t) ? parseFloat(t.replace(/,/g, '')) : parseFloat(t.replace(',', '.'));
-  else n = parseFloat(t);
-  return isNaN(n) ? NaN : n * mult;
-}
-function precoBR(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? n : Math.round(n); }
-function numOuZero(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? 0 : n; }
+// numeroBR/precoBR/numOuZero moraram aqui — agora vêm do núcleo compartilhado (P0).
 function campoPreco(id, ph) {
   return `<input id="${id}" type="text" inputmode="decimal" autocomplete="off" placeholder="${ph || 'Ex.: 1.050.000 ou 1,05 mi'}" oninput="mostrarPrecoLido(this)">
     <div class="btn-row" style="margin-top:var(--s2);align-items:center">
@@ -4629,8 +4666,6 @@ function marcarDistancias(lista, origem) {
   });
   return lista;
 }
-function fmtKm(km) { return km == null ? '' : (km < 1 ? Math.round(km * 1000) + ' m' : km.toFixed(1).replace('.', ',') + ' km'); }
-
 // A agenda manda: visita tem hora marcada com cliente do outro lado, então a ordem padrão
 // é a do relógio. A ordem mais curta é oferecida como sugestão, com o ganho em km escrito
 // e o aviso de que seguir por ela significa remarcar horário — nunca aplicada sozinha.
@@ -5912,8 +5947,7 @@ const PAPEIS = ['', 'cliente', 'cônjuge', 'proprietário', 'corretor parceiro',
 const VELOCIDADE_KMH = 30;   // padrão; o valor em uso vem de velocidadeKmh() (Mais › Agenda e avisos)
 
 // ---------- datas e horas ----------
-function minDe(hora) { const [h, m] = String(hora || '').split(':').map(Number); return isNaN(h) ? null : h * 60 + (m || 0); }
-function hhmm(min) { min = ((Math.round(min) % 1440) + 1440) % 1440; return String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'); }
+// minDe/hhmm vêm do núcleo compartilhado (P0)
 function dataHora(ymd, hora) { const d = dataLocal(ymd); const m = minDe(hora); if (m != null) d.setHours(Math.floor(m / 60), m % 60, 0, 0); return d; }
 function somarDias(ymd, n) { const d = dataLocal(ymd); d.setDate(d.getDate() + n); return localYMD(d); }
 function inicioSemana(ymd) { const d = dataLocal(ymd); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return localYMD(d); }
@@ -7381,15 +7415,13 @@ function expediente() {
     diasSemana: dias === 'seg-sex' ? [1, 2, 3, 4, 5] : dias === 'todos' ? [0, 1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6] };
 }
 const DIAS_EXPEDIENTE = [['seg-sex', 'seg a sex'], ['seg-sab', 'seg a sáb'], ['todos', 'todo dia']];
-const MESES_LONGO = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 function somarMeses(ymd, n) {
   const d = dataLocal(ymd), dia = d.getDate();
   const alvo = new Date(d.getFullYear(), d.getMonth() + n, 1);
   alvo.setDate(Math.min(dia, new Date(alvo.getFullYear(), alvo.getMonth() + 1, 0).getDate()));
   return localYMD(alvo);
 }
-function diaCurto(ymd) { const d = dataLocal(ymd); return DIAS_SEM[d.getDay()] + ' ' + d.getDate() + '/' + (d.getMonth() + 1); }
-function horaFalada(hora) { const [h, m] = String(hora).split(':').map(Number); return h + 'h' + (m ? String(m).padStart(2, '0') : ''); }
+// diaCurto/horaFalada/MESES_LONGO vêm do núcleo compartilhado (P0)
 
 // ---------- repetição ----------
 // Cada ocorrência vira uma linha própria, ligada pela série: concluir, remarcar ou
