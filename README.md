@@ -25,9 +25,12 @@ Depois de instalado, funciona sem internet.
 - Calculadoras: financiamento, comissão e CMA (comparando com o próprio portfólio)
 - Exportar/importar o banco (`.sqlite`) pra levar os dados de um aparelho a outro
 
-## Dados são fictícios
+## O que é inventado e o que é real
 
-Imóveis, clientes, leads e telefones que vêm carregados são **inventados**, só pra dar o que ver na primeira abertura. Use **Mais › Recomeçar do zero** pra limpar e cadastrar os seus.
+- **Inventados:** o portfólio próprio (os imóveis com código curto, como `V1` e `R2`), os clientes, os leads e os telefones. Existem só pra dar o que ver na primeira abertura.
+- **Reais:** os imóveis com código **`MK-`** são uma **amostra de mercado** — 59 anúncios públicos de imóveis à venda no DF, de uma rede de imobiliárias, recebidos em 14/09/2026. Estão aqui para testar a ferramenta com volume e com preço de verdade. **Não são captação nossa**, e cada um diz isso na própria ficha. Nenhum nome ou telefone de corretor foi transcrito.
+
+Use **Mais › Recomeçar do zero** pra limpar tudo e cadastrar os seus.
 
 ## Limitações desta versão
 

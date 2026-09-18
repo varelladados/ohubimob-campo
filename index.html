@@ -1188,7 +1188,7 @@ a { color: inherit; text-decoration: none; }
           <svg class="ic" aria-hidden="true"><use href="#i-lixeira"/></svg>Apagar todos os dados deste aparelho
         </button>
         <div class="foot-count" id="foot-count"></div>
-        <div class="foot-count" style="margin-top:6px;line-height:1.5">Versão de demonstração — imóveis, clientes e telefones são <b>fictícios</b>. Use “Recomeçar do zero” e cadastre os seus.</div>
+        <div class="foot-count" style="margin-top:6px;line-height:1.5">Versão de demonstração — o portfólio, os clientes e os telefones são <b>fictícios</b>. Os imóveis com código <b>MK-</b> são <b>anúncios públicos reais</b> de terceiros (DF, 14/09/2026), usados só como amostra de mercado para teste — não são captação nossa. Use “Recomeçar do zero” e cadastre os seus.</div>
       </div>
     </section>
 
@@ -2762,6 +2762,74 @@ function seedDatabase() {
     db.run(`INSERT INTO imovel (codigo,nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro) VALUES (?,?,?,?,?,?,?,'ativo',?)`,
       [codigo, nome, tipo, valor, prioridade, probabilidade, estrategia, bairro]);
   });
+  // ---- amostra de mercado: gerado por gerar-amostra-mercado.py, não edite à mão ----
+  // Ver o porquê em gerar-amostra-mercado.py. Regerar: python gerar-amostra-mercado.py
+  const amostraMercado = [
+    ['MK-SAN118296', 'Cobertura Asa Norte - SQN 109 — 3 qts (1 suíte) · 220,8 m² · 2 vg', 'Cobertura', 2640000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Asa Norte', 'Asa Norte - SQN 109'],
+    ['MK-1185545', 'Vogue (Villela e Carvalho) — 2 qts (1 suíte) · 78,62 m² · 2 vg', 'Apartamento', 1550000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Noroeste', 'Noroeste - SQNW 106'],
+    ['MK-S003', 'Maison Taguatinga — 3 qts (2 suíte) · 90 m² · 1 vg', 'Apartamento', 680000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Taguatinga Sul', ''],
+    ['MK-1169249', 'Apartamento Areal - QS 11 — 3 qts (1 suíte) · 147 m² · 3 vg', 'Apartamento', 450000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Areal', 'Areal - QS 11'],
+    ['MK-1168947', 'Edifício Via Naturale — 3 qts (1 suíte) · 118 m² · 2 vg', 'Apartamento', 1160000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Não informado', ''],
+    ['MK-1168427', 'Bella Vida — 3 qts (1 suíte) · 70 m² · 1 vg', 'Apartamento', 579000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-SAN1176983', 'Apartamento Samambaia — 2 qts · 97 m²', 'Apartamento', 760000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Samambaia', ''],
+    ['MK-1183268', 'Residencial Solar do Cerrado — 2 qts (1 suíte) · 45 m² · 1 vg', 'Apartamento', 299900, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Ceilândia Norte', ''],
+    ['MK-SAN726812', 'Comercial Águas Claras — 46,1 m²', 'Comercial', 460000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-SAN1168996', 'Apartamento Asa Sul - SQS 414 — 3 qts · 62 m²', 'Apartamento', 736000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 414'],
+    ['MK-S011', 'Apartamento Asa Norte - 311 — 2 qts (2 suíte) · 123 m² · 1 vg', 'Apartamento', 1750000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Norte', 'Asa Norte - 311'],
+    ['MK-SAN1185983', 'The Point — 2 qts', 'Apartamento', 610000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-SAN11973', 'Boulevard das Palmeiras — 2 qts', 'Apartamento', 420000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Samambaia', ''],
+    ['MK-SAN11742', 'Acapulco — 3 qts (1 suíte) · 60 m²', 'Apartamento', 420000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Taguatinga', ''],
+    ['MK-11839', 'Apartamento Asa Norte - SQN 403 — 3 qts (1 suíte) · 78,5 m² · 0 vg', 'Apartamento', 1050000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Asa Norte', 'Asa Norte - SQN 403'],
+    ['MK-1184338', 'Apartamento Asa Sul - SQS 414 — 3 qts · 89 m²', 'Apartamento', 790000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 414'],
+    ['MK-1169023', 'Apartamento Asa Sul - SQS 205 — 3 qts (1 suíte) · 100,55 m²', 'Apartamento', 1250000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 205'],
+    ['MK-SAN1167562', 'Vitali — 2 qts · 64 m² · 1 vg', 'Apartamento', 585000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-11859', 'Apartamento Asa Norte - SQN 406 — 3 qts · 78,5 m² · 0 vg', 'Apartamento', 850000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Asa Norte', 'Asa Norte - SQN 406'],
+    ['MK-SAN1187', 'Bercy Village — 1 qts · 66 m²', 'Duplex', 630000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-S021', 'Apartamento Asa Sul - SQS 307 — 4 qts · 155 m² · 1 vg', 'Apartamento', 1990000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Asa Sul', 'Asa Sul - SQS 307'],
+    ['MK-1160783', 'Le Premier — 378 m²', 'Lote', 279000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Tororó', ''],
+    ['MK-S023', 'Residencial Le Ciel — 4 qts (4 suíte) · 270 m²', 'Cobertura', 2590000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-652071', 'Duplex Águas Claras — 3 qts (1 suíte) · 132 m² · 2 vg', 'Duplex', 850000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-1186041', 'V&C Studios — 1 qts · 35,6 m² · 1 vg', 'Studio', 690000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Noroeste', ''],
+    ['MK-1107096', 'Casa Vicente Pires - Jockey Club — 4 qts (4 suíte) · 402 m²', 'Casa', 1900000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Vicente Pires', 'Vicente Pires - Jockey Club'],
+    ['MK-1166708', 'Casa Vicente Pires - Jockey Club — 3 qts (2 suíte) · 211 m²', 'Casa', 1490000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Vicente Pires', 'Vicente Pires - Jockey Club'],
+    ['MK-1168212', 'Casa Vicente Pires - Rua 12/10 — 3 qts (3 suíte) · 450 m²', 'Casa', 1020000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Vicente Pires', 'Vicente Pires - Rua 12/10'],
+    ['MK-SAN1185769', 'Venice Park Sul — 1 qts · 26 m² · 1 vg', 'Studio', 449000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Park Sul', ''],
+    ['MK-11728', 'Paineiras — 3 qts (1 suíte) · 129 m² · 1 vg', 'Apartamento', 920000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-1177369', 'Residencial Contemplar — 1 qts (1 suíte) · 57 m² · 1 vg', 'Apartamento', 718000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Guará II', ''],
+    ['MK-1182674', 'Residencial Blend — 1 qts · 34 m² · 1 vg', 'Kitnet', 380000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Não informado', ''],
+    ['MK-SAN1125729', 'Cond. Bernardo Sayão — 3 qts (3 suíte) · 360 m²', 'Casa', 1500000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Guará II', ''],
+    ['MK-1159422', 'Apartamento Asa Sul - SQS 410 — 3 qts', 'Apartamento', 850000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 410'],
+    ['MK-SAN1186417', 'Via Terrazzo — 4 qts (4 suíte) · 188 m² · 3 vg', 'Apartamento', 1750000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-1147', 'Spot — 1 qts · 32,3 m² · 1 vg', 'Studio', 305000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-896321', 'Apartamento Taguatinga - CNB 14 — 3 qts (1 suíte) · 67,7 m²', 'Apartamento', 385000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Taguatinga', 'Taguatinga - CNB 14'],
+    ['MK-SAN11749', 'Oásis Design — 4 qts (4 suíte) · 174,55 m² · 3 vg', 'Apartamento', 2050000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-SAN1173535', 'Residencial San Lorenzo — 2 qts · 67 m² · 2 vg', 'Apartamento', 645000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Não informado', ''],
+    ['MK-1185932', 'Residencial Contemplar — 2 qts (1 suíte) · 56 m² · 2 vg', 'Apartamento', 790000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Guará II', ''],
+    ['MK-SAN1178456', 'Kitnet Sudoeste - QRSW 04 — 1 qts · 40,38 m² · 1 vg', 'Kitnet', 450000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Sudoeste', 'Sudoeste - QRSW 04'],
+    ['MK-SAN1185765', 'Residencial Villa Olímpica — 2 qts · 1 vg', 'Apartamento', 240000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Samambaia', ''],
+    ['MK-1187125', 'Apartamento Samambaia — 1 qts · 33 m² · 1 vg', 'Apartamento', 230000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Samambaia', ''],
+    ['MK-1179163', 'Edifício Atenas — 2 qts · 45 m² · 1 vg', 'Apartamento', 308000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-1186931', 'Residencial Michigan — 1 qts · 44 m² · 1 vg', 'Apartamento', 425000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', ''],
+    ['MK-SAN1174753', 'Cond. Solar de Brasília — 4 qts (3 suíte) · 352 m² · 2 vg', 'Casa', 3045000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Jardim Botânico', ''],
+    ['MK-SAN1161867', 'Casa Jardim Botânico III — 4 qts (4 suíte) · 300 m² · 4 vg', 'Casa', 2850000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Jardim Botânico III', ''],
+    ['MK-SAN1189074', 'Apartamento Águas Claras - Rua 8 — 2 qts (1 suíte) · 1 vg', 'Apartamento', 720000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Águas Claras', 'Águas Claras - Rua 8'],
+    ['MK-SAN1032326', 'Cond. Parque do Mirante — 4 qts (3 suíte) · 287 m² · 4 vg', 'Casa', 1430000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Jardim Botânico', ''],
+    ['MK-SAN1158872', 'Casa Lago Sul - SHIS QI 15 — 6 qts (5 suíte) · 1087 m² · 5 vg', 'Casa', 5500000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Lago Sul', 'Lago Sul - SHIS QI 15'],
+    ['MK-SAN1158172', 'Casa Vicente Pires - Rua 3 — 4 qts (3 suíte) · 498 m²', 'Casa', 1190000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Vicente Pires', 'Vicente Pires - Rua 3'],
+    ['MK-SAN1190277', 'Apartamento Asa Sul - SQS 213 — 4 qts (1 suíte) · 210,6 m² · 2 vg', 'Apartamento', 3450000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 213'],
+    ['MK-SAN884664', 'Apartamento Asa Sul - SQS 214 — 122,77 m²', 'Apartamento', 1710000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Asa Sul', 'Asa Sul - SQS 214'],
+    ['MK-SAN11687', 'Apartamento Águas Claras — 2 qts (1 suíte) · 82 m²', 'Apartamento', 558000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-San1194243', 'Apartamento Guará I - QI 11 — 3 qts (2 suíte) · 61,13 m²', 'Apartamento', 420000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Guará I', 'Guará I - QI 11'],
+    ['MK-SAN11890', 'Villa Borghese — 2 qts · 1 vg', 'Apartamento', 280000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Samambaia', ''],
+    ['MK-San1198125', 'Park Studio — 2 qts · 38 m² · 1 vg', 'Apartamento', 475000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Park Sul', ''],
+    ['MK-SAN8687', 'Cobertura Águas Claras — 3 qts (2 suíte) · 224 m²', 'Cobertura', 2850000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa · dado lido com dúvida, conferir', 'Águas Claras', ''],
+    ['MK-San1177882', 'Apartamento Samambaia Sul — 3 qts (1 suíte) · 75 m² · 1 vg', 'Apartamento', 465000, 'Amostra real de mercado — anúncio público de terceiro (14/09/2026); não é captação nossa', 'Samambaia Sul', ''],
+  ];
+  amostraMercado.forEach(([codigo, nome, tipo, valor, estrategia, bairro, endereco]) => {
+    db.run(`INSERT INTO imovel (codigo,nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro,endereco) VALUES (?,?,?,?,NULL,NULL,?,'ativo',?,?)`,
+      [codigo, nome, tipo, valor, estrategia, bairro, endereco || null]);
+  });
+  // ---- fim da amostra de mercado ----
   db.run(`UPDATE imovel SET semente=1 WHERE codigo='B3'`);
   // Coordenadas FICTÍCIAS, só nesta build de demonstração: é o que torna a Rota do dia
   // navegável pra quem abre o link. No app real lat/lng nascem vazios de propósito —
