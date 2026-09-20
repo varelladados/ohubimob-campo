@@ -18,7 +18,7 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v19';  // v19: lote P0 do portal — núcleo compartilhado (data/preço/telefone) e schema único com o portal, mesmo .sqlite abrindo nos dois
+const CACHE = 'ohubimob-campo-v20';  // v20: lote P1 do portal — núcleo ganha as seções backup e pessoas (qualificação de leads chega no portal), captacao_lp reconciliada entre os dois apps
 // v18 anterior: agenda C4 — arrastar pra remarcar, primeiro uso, transição de tela, ações em lote, ficha em imagem, o que levar
 // v17 anterior: agenda C3 — aviso com o app fechado (push por um serviço mínimo, camada 3)
 // v16 anterior: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)

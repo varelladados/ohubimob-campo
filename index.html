@@ -1730,7 +1730,15 @@ const SCHEMA_MIGRATIONS = [
   `CREATE TABLE IF NOT EXISTS resposta (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, texto TEXT, canal TEXT, usos INTEGER DEFAULT 0)`,
   `CREATE TABLE IF NOT EXISTS pos_venda_evento (id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id INTEGER REFERENCES lead(id), marco TEXT, descricao TEXT, status TEXT DEFAULT 'agendado')`,
   `CREATE TABLE IF NOT EXISTS conteudo (id INTEGER PRIMARY KEY AUTOINCREMENT, imovel_id INTEGER REFERENCES imovel(id), formato TEXT, texto TEXT, status TEXT DEFAULT 'pendente', atualizado_em TEXT)`,
-  `CREATE TABLE IF NOT EXISTS config_vitrine (id INTEGER PRIMARY KEY, corretor_nome TEXT, creci TEXT, cor_destaque TEXT, dominio TEXT, mostrar_preco INTEGER DEFAULT 1)`
+  `CREATE TABLE IF NOT EXISTS config_vitrine (id INTEGER PRIMARY KEY, corretor_nome TEXT, creci TEXT, cor_destaque TEXT, dominio TEXT, mostrar_preco INTEGER DEFAULT 1)`,
+  // Rodada 36 (lote P1 do portal) — captacao_lp também divergia entre os dois apps (o
+  // portal grava tipo/imovel_id/mensagem, vindos das landing pages; o campo grava
+  // endereco/tipo_imovel/motivo/status, vindos do cadastro manual). Nenhum dos dois lado
+  // apaga dado do outro — as colunas do portal chegam aqui vazias, prontas pro mesmo
+  // .sqlite abrir nos dois sem perder captação nenhuma.
+  `ALTER TABLE captacao_lp ADD COLUMN tipo TEXT`,
+  `ALTER TABLE captacao_lp ADD COLUMN imovel_id INTEGER`,
+  `ALTER TABLE captacao_lp ADD COLUMN mensagem TEXT`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
@@ -1873,8 +1881,8 @@ function esc(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-// nucleo:inicio
-// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js — NÃO editar aqui
+// nucleo-base:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js (seção base) — NÃO editar aqui
 function fmtBRL(n) {
   n = Number(n) || 0;
   return 'R$ ' + n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
@@ -1957,7 +1965,7 @@ function numeroBR(txt) {
 }
 function precoBR(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? n : Math.round(n); }
 function numOuZero(txt) { const n = numeroBR(txt); return (n == null || isNaN(n)) ? 0 : n; }
-// nucleo:fim
+// nucleo-base:fim
 function fmtDuracao(ini, fim) {
   if (!ini || !fim) return '—';
   const a = new Date(String(ini).replace(' ', 'T')), b = new Date(String(fim).replace(' ', 'T'));
@@ -2992,9 +3000,12 @@ function exportDb() {
   showToast('Banco exportado.');
 }
 
+// nucleo-backup:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js (seção backup) — NÃO editar aqui
 // Backup: os dados só existem neste aparelho. "Alterado" é marcado por persist() fora da
-// semente; o aviso no Hoje aparece 1 dia depois da primeira alteração sem nenhum backup,
-// ou 7 dias depois do último, e "Depois" cala por 3 dias.
+// semente; o aviso aparece 1 dia depois da primeira alteração sem nenhum backup, ou 7 dias
+// depois do último, e "Depois" cala por 3 dias. `semeando` é o que impede a própria carga da
+// semente de contar como "alteração" — cada app liga/desliga em volta do próprio seedDatabase().
 let semeando = false;
 function marcarAlteracao() {
   if (semeando) return;
@@ -3021,6 +3032,7 @@ function precisaBackup() {
     return Date.now() - base > (ult ? 7 : 1) * 86400000;
   } catch (e) { return false; }
 }
+// nucleo-backup:fim
 function renderBackup() {
   const info = document.getElementById('backup-info'); if (info) info.textContent = textoUltimoBackup();
   const box = document.getElementById('hj-backup'); if (!box) return;
@@ -5113,32 +5125,6 @@ async function apagarAparelho() {
 // LOTE B (rodada 33) — pessoas, contato e linha do tempo
 // =============================================================================
 let contatoPendente = null;   // { tipo: 'ligacao'|'whatsapp', pessoa, texto, t, saiu }
-const TABELA_PESSOA = { lead: 'lead', cliente: 'cliente', captacao: 'captacao_lp' };
-const COLUNA_PESSOA = { lead: 'lead_id', cliente: 'cliente_id', captacao: 'captacao_id' };
-function parsePessoa(txt) {
-  const [tipo, id] = String(txt || '').split(':');
-  if (!TABELA_PESSOA[tipo] || !+id) return null;
-  const r = q(`SELECT id, nome FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [+id])[0];
-  return r ? { tipo, id: r.id, nome: r.nome } : null;
-}
-// Sem a pessoa explícita (ex.: botão de ligar do Hoje), acha pelo telefone: comprador,
-// depois cliente, depois captação. Compara os 8 últimos dígitos.
-function pessoaPorTelefone(tel) {
-  const d = String(tel || '').replace(/\D/g, '').slice(-8); if (d.length < 8) return null;
-  for (const tipo of ['lead', 'cliente', 'captacao']) {
-    const r = q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[tipo]}`).find(x => String(x.telefone || '').replace(/\D/g, '').slice(-8) === d);
-    if (r) return { tipo, id: r.id, nome: r.nome };
-  }
-  return null;
-}
-function registrarInteracao(p, tipo, resultado, texto, extra) {
-  extra = extra || {};
-  let imovelId = extra.imovel_id || null;
-  if (!imovelId && p.tipo === 'lead') { const l = q('SELECT imovel_id FROM lead WHERE id=?', [p.id])[0]; imovelId = l ? l.imovel_id : null; }
-  return insertAndGetId(`INSERT INTO interacao (${COLUNA_PESSOA[p.tipo]}, tipo, resultado, texto, humor, sinais, impressao, imovel_id, visita_id, criado_em) VALUES (?,?,?,?,?,?,?,?,?,?)`,
-    [p.id, tipo, resultado || null, texto || null, extra.humor == null ? null : extra.humor,
-     extra.sinais && extra.sinais.length ? JSON.stringify(extra.sinais) : null, extra.impressao || null, imovelId, extra.visita_id || null, agoraISO()]);
-}
 document.addEventListener('visibilitychange', () => {
   const c = contatoPendente; if (!c || !db) return;
   if (document.visibilityState === 'hidden') { c.saiu = true; return; }
@@ -5267,6 +5253,36 @@ function salvarComoFoi(pessoaTxt) {
 // sem justificativa é caixa-preta, e o corretor precisa saber o que perguntar a seguir.
 // A mesma entrada (o dossiê) e a mesma saída (pontos, faixa, motivos, o que falta) são
 // o contrato pra um modelo externo assumir o cálculo depois — ver QUALIFICADOR.
+// nucleo-pessoas:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js (seção pessoas) — NÃO editar aqui
+// Pessoas (lead, cliente, captacao) e a qualificação determinística (rodada 35): tudo aqui
+// só lê/grava banco, nada de tela — a folha/formulário de cada app fica no próprio app.
+const TABELA_PESSOA = { lead: 'lead', cliente: 'cliente', captacao: 'captacao_lp' };
+const COLUNA_PESSOA = { lead: 'lead_id', cliente: 'cliente_id', captacao: 'captacao_id' };
+function parsePessoa(txt) {
+  const [tipo, id] = String(txt || '').split(':');
+  if (!TABELA_PESSOA[tipo] || !+id) return null;
+  const r = q(`SELECT id, nome FROM ${TABELA_PESSOA[tipo]} WHERE id=?`, [+id])[0];
+  return r ? { tipo, id: r.id, nome: r.nome } : null;
+}
+// Sem a pessoa explícita (ex.: botão de ligar do Hoje), acha pelo telefone: comprador,
+// depois cliente, depois captação. Compara os 8 últimos dígitos.
+function pessoaPorTelefone(tel) {
+  const d = String(tel || '').replace(/\D/g, '').slice(-8); if (d.length < 8) return null;
+  for (const tipo of ['lead', 'cliente', 'captacao']) {
+    const r = q(`SELECT id, nome, telefone FROM ${TABELA_PESSOA[tipo]}`).find(x => String(x.telefone || '').replace(/\D/g, '').slice(-8) === d);
+    if (r) return { tipo, id: r.id, nome: r.nome };
+  }
+  return null;
+}
+function registrarInteracao(p, tipo, resultado, texto, extra) {
+  extra = extra || {};
+  let imovelId = extra.imovel_id || null;
+  if (!imovelId && p.tipo === 'lead') { const l = q('SELECT imovel_id FROM lead WHERE id=?', [p.id])[0]; imovelId = l ? l.imovel_id : null; }
+  return insertAndGetId(`INSERT INTO interacao (${COLUNA_PESSOA[p.tipo]}, tipo, resultado, texto, humor, sinais, impressao, imovel_id, visita_id, criado_em) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    [p.id, tipo, resultado || null, texto || null, extra.humor == null ? null : extra.humor,
+     extra.sinais && extra.sinais.length ? JSON.stringify(extra.sinais) : null, extra.impressao || null, imovelId, extra.visita_id || null, agoraISO()]);
+}
 const HUMORES = [
   { v: 2, t: 'Empolgado' }, { v: 1, t: 'Receptivo' }, { v: 0, t: 'Neutro' }, { v: -1, t: 'Reticente' }, { v: -2, t: 'Irritado' }
 ];
@@ -5461,6 +5477,7 @@ function pillFaixaHTML(tipo, id) {
   const r = qualificar(tipo, id); if (!r || r.fechado) return '';
   return `<span class="pill ${r.faixaCls}">${r.faixa.toLowerCase()} · ${r.pontos}</span>`;
 }
+// nucleo-pessoas:fim
 function blocoFaltaSaberHTML(tipo, id, titulo) {
   const r = qualificar(tipo, id); if (!r) return '';
   const itens = r.faltando.filter(f => f.pergunta).slice(0, 3);
