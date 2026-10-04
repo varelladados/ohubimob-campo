@@ -2926,6 +2926,119 @@ function seedDatabase() {
   db.run(`INSERT INTO documento_carteira (nome,categoria,ocr_texto,ocr_simulado,criado_em) VALUES (?,?,?,1,?)`, ['RG do cliente — Marcelo Dias', 'negociacao', OCR_SIMULADO[1], todayISO(0)]);
   db.run(`INSERT INTO documento_carteira (nome,categoria,ocr_texto,ocr_simulado,criado_em) VALUES (?,?,?,1,?)`, ['Comprovante de renda', 'negociacao', OCR_SIMULADO[2], todayISO(0)]);
 
+  // rodada 37 — massa de demonstração: leads de venda, captações e mais leads de compra,
+  // diversificados nos 10 imóveis reais do portfólio (inclusive os 5 que ainda não tinham
+  // nenhum lead: A1, A3+A4, C3, C4, A2), cobrindo todos os estágios do funil, canais de
+  // origem variados, qualificação (respostas, sinais e humor) dos dois lados — comprador e
+  // proprietário —, todos os status de visita e follow-up atrasado/em dia/feito. Pedido
+  // explícito do usuário pra exercitar a demonstração completa das funcionalidades.
+  const captacoes = [
+    ['Marcelo Duarte', TEST_PHONES[7 % 3], 'Vista Verde - Alameda 3', 'Apartamento', 'Mudança de cidade — vai pro Rio a trabalho', 'contato', todayISO(-5)],
+    ['Lúcia Prado', TEST_PHONES[8 % 3], 'Lagoa Serena - Quadra 9', 'Casa', 'Herança — os herdeiros querem liquidez', 'contato', todayISO(-8)],
+    ['Construtora Rios & Filhos', TEST_PHONES[9 % 3], 'Rota Norte - Lote 12', 'Galpão', 'Troca — vai centralizar a operação num galpão maior', 'novo', todayISO(-3)],
+    ['Patrícia Lemos', TEST_PHONES[10 % 3], 'Céu Aberto - Rua 34', 'Cobertura', 'Investimento — quer reinvestir em outro ativo', 'novo', todayISO(-1)],
+    ['Diego Farias', TEST_PHONES[11 % 3], 'Mirante Sul - Bloco 11', 'Apartamento', 'Financeiro — atrasou o condomínio, precisa vender rápido', 'contato', todayISO(-2)],
+    ['Sônia Vasconcelos', TEST_PHONES[12 % 3], 'Bela Vista - Rua 8', 'Casa', 'Mudança — vai morar com a filha', 'novo', todayISO(-10)],
+    ['Ricardo e Ana Beatriz Klein', TEST_PHONES[13 % 3], 'Alto do Bosque - Condomínio Quintas', 'Lote', 'Não vai mais construir, prefere vender o lote', 'novo', todayISO(0)],
+    ['Tech Cerrado Soluções', TEST_PHONES[14 % 3], 'Eixo Central - Trecho 3', 'Comercial', 'Fechou a filial de Brasília', 'contato', todayISO(-12)]
+  ];
+  captacoes.forEach(row => db.run(`INSERT INTO captacao_lp (nome,telefone,endereco,tipo_imovel,motivo,status,criado_em) VALUES (?,?,?,?,?,?,?)`, row));
+  const captBy = nome => q('SELECT id FROM captacao_lp WHERE nome=?', [nome])[0].id;
+
+  const a1 = idBy('C9'), a3a4 = idBy('G6'), c3 = idBy('L7'), c4 = idBy('T8'), a2 = idBy('E10');
+  const leads2 = [
+    ['Henrique Bastos', TEST_PHONES[15 % 3], a1, null, null, 'à vista, até R$ 3,2 mi', 'indicação', 'contato', 'quente', 'Cobertura para receber a família — decide com a esposa', 'Mandar mais fotos da vista e do pôr do sol', todayISO(-4)],
+    ['Lucas Andrade', TEST_PHONES[16 % 3], a3a4, 'Galpão logístico', null, null, 'site', 'novo', 'a qualificar', null, null, todayISO(-1)],
+    ['Fábio Noronha', TEST_PHONES[17 % 3], c3, null, null, null, 'whatsapp', 'visita', 'morno', 'Quer sair do apartamento, busca mais espaço pra família', 'Perguntar se já conversou com a esposa', todayISO(-6)],
+    ['Renata Colares', TEST_PHONES[18 % 3], c4, null, null, null, 'instagram', 'contato', 'morno', 'Achou pelo Reels — achou o valor acima do esperado', null, todayISO(-2)],
+    ['Overseas Cargo Participações', TEST_PHONES[19 % 3], a2, null, null, null, 'parceria', 'proposta', 'quente', 'Expansão do escritório regional — decide em comitê', 'Aguardar retorno da diretoria até sexta', todayISO(-9)],
+    ['Juliana Kramer', TEST_PHONES[20 % 3], null, 'Apartamento', 'Bela Vista', 'até R$ 750 mil', 'google', 'novo', 'a qualificar', null, null, todayISO(0)],
+    ['Otávio Mendes', TEST_PHONES[21 % 3], null, 'Casa', 'Recanto das Águas', 'até R$ 1,4 mi', 'placa', 'contato', 'morno', 'Passou na frente do R2 e perguntou o valor', 'Confirmar orçamento — o Matching já aponta o R2', todayISO(-1)],
+    ['Priscila Andrade', TEST_PHONES[22 % 3], c2, null, null, null, 'evento', 'novo', 'a qualificar', 'Conheceu no feirão imobiliário do shopping', null, todayISO(0)],
+    ['Thiago Bezerra', TEST_PHONES[23 % 3], b3, null, null, null, 'whatsapp', 'contato', 'frio', 'Mandei duas mensagens, sumiu', null, todayISO(-15)],
+    ['Marcelo Vidigal', TEST_PHONES[24 % 3], c1, null, null, null, 'site', 'fechado', 'quente', 'Fechou rápido, já tinha o dinheiro separado', null, todayISO(-6)]
+  ];
+  leads2.forEach(row => db.run(`INSERT INTO lead (nome,telefone,imovel_id,tipo_interesse,bairro_interesse,orcamento,canal_origem,estagio,classificacao,motivacao,proximo_passo,criado_em) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`, row));
+
+  const henrique = leadBy('Henrique Bastos'), fabio = leadBy('Fábio Noronha'), renata = leadBy('Renata Colares'),
+    overseas = leadBy('Overseas Cargo Participações'), otavio = leadBy('Otávio Mendes'), priscila = leadBy('Priscila Andrade'),
+    thiago = leadBy('Thiago Bezerra');
+
+  // visitas com todos os status possíveis (pendente, confirmada futura, confirmada já
+  // realizada com desfecho, não compareceu, cancelada), pra exercitar a Agenda por completo
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,destaque) VALUES (?,?,?,?,?,?)`, [a1, henrique, todayISO(3), '11:00', 'confirmada', 1]);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, otavio, todayISO(2), '17:00', 'pendente']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,inicio,fim,desfecho,objecao,proximo_passo) VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    [c3, fabio, todayISO(-6), '15:00', 'confirmada', todayISO(-6) + 'T15:00', todayISO(-6) + 'T15:40', 'Gostou muito, quer levar a esposa numa segunda visita', 'Achou o quintal um pouco pequeno', 'Marcar segunda visita com a esposa']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [c2, priscila, todayISO(-3), '10:00', 'nao_compareceu', 'Não avisou, não atendeu depois']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [b3, thiago, todayISO(-14), '09:00', 'cancelada', 'Cancelou de última hora']);
+
+  // qualificação: respostas + interações dos dois lados (comprador e proprietário), com
+  // humor e sinais variados — do super quente ao frio de verdade, todos com chave/valor
+  // válidos no catálogo de PERGUNTAS e SINAIS, pra pontuar de verdade
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [henrique, 'whatsapp', 'Mandou mais fotos', 'perguntou sobre a documentação do terreno e se tem averbação', 2, '["a_vista","depende_de_outro"]', 'Muito interessado, só precisa alinhar com a esposa', a1, todayISO(-4) + 'T09:15']);
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [otavio, 'ligacao', 'Confirmou interesse', 'perguntou se dá pra negociar e se aceita financiamento pela Caixa', 1, '["comparando"]', 'Comparando com outro imóvel na região', b3, todayISO(-1) + 'T16:40']);
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [fabio, 'visita', 'Visitou', 'gostou da casa mas achou o quintal pequeno', 1, '["vai_trazer_alguem"]', 'Vai voltar com a esposa antes de decidir', c3, todayISO(-6) + 'T15:40']);
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [renata, 'whatsapp', 'Achou caro', 'disse que o valor está acima do que ela esperava pra região', -1, '["preco_objecao"]', 'Gosta do imóvel mas trava no preço', c4, todayISO(-2) + 'T11:20']);
+  db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
+    [thiago, 'whatsapp', 'Sem resposta', 'mandei duas mensagens perguntando se ainda tem interesse, nada', -1, '["nao_responde"]', 'Provavelmente desistiu ou já comprou em outro lugar', b3, todayISO(-13) + 'T10:00']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'prazo', 'ate6m', todayISO(-4) + 'T09:16']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'pagamento', 'a_vista', todayISO(-4) + 'T09:16']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'decisor', 'conjuge', todayISO(-4) + 'T09:16']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [otavio, 'prazo', 'ate3m', todayISO(-1) + 'T16:41']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [otavio, 'pagamento', 'vai_financiar', todayISO(-1) + 'T16:41']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [fabio, 'moradia_atual', 'aluguel', todayISO(-6) + 'T15:41']);
+  db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [fabio, 'ja_visitou', 'alguns', todayISO(-6) + 'T15:41']);
+
+  db.run(`INSERT INTO interacao (captacao_id,tipo,resultado,texto,humor,sinais,impressao,criado_em) VALUES (?,?,?,?,?,?,?,?)`,
+    [captBy('Marcelo Duarte'), 'ligacao', 'Quer fechar rápido', 'já separou os documentos e quer marcar a avaliação essa semana', 2, '["doc_ok","preco_realista","aceita_exclusividade"]', 'Super tranquilo, prioridade alta', todayISO(-5) + 'T14:00']);
+  db.run(`INSERT INTO interacao (captacao_id,tipo,resultado,texto,humor,sinais,impressao,criado_em) VALUES (?,?,?,?,?,?,?,?)`,
+    [captBy('Lúcia Prado'), 'whatsapp', 'Explicou a situação', 'o inventário ainda não terminou, os outros herdeiros ainda não assinaram nada', 0, '["doc_pendente","depende_de_outro"]', 'Só avança depois do inventário fechar', todayISO(-8) + 'T09:30']);
+  db.run(`INSERT INTO interacao (captacao_id,tipo,resultado,texto,humor,sinais,impressao,criado_em) VALUES (?,?,?,?,?,?,?,?)`,
+    [captBy('Diego Farias'), 'ligacao', 'Muito apreensivo', 'está com o condomínio atrasado há 3 meses e quer vender rápido', -1, '["urgencia","tem_onus"]', 'Ansioso, precisa de orientação sobre o ônus antes de anunciar', todayISO(-2) + 'T18:00']);
+  db.run(`INSERT INTO interacao (captacao_id,tipo,resultado,texto,humor,sinais,impressao,criado_em) VALUES (?,?,?,?,?,?,?,?)`,
+    [captBy('Tech Cerrado Soluções'), 'whatsapp', 'Já tem outra imobiliária', 'disse que já colocou com outra imobiliária mas topa conversar', -1, '["outros_corretores"]', 'Baixa prioridade, já comprometido com outro corretor', todayISO(-12) + 'T10:00']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Marcelo Duarte'), 'documentacao', 'em_dia', todayISO(-5) + 'T14:01']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Marcelo Duarte'), 'preco', 'realista', todayISO(-5) + 'T14:01']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Marcelo Duarte'), 'exclusividade', 'aceita', todayISO(-5) + 'T14:01']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Lúcia Prado'), 'motivo_venda', 'heranca', todayISO(-8) + 'T09:31']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Lúcia Prado'), 'documentacao', 'pendente', todayISO(-8) + 'T09:31']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Lúcia Prado'), 'decisor', 'herdeiros', todayISO(-8) + 'T09:31']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Diego Farias'), 'prazo', 'ja', todayISO(-2) + 'T18:01']);
+  db.run(`INSERT INTO qualificacao_resposta (captacao_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [captBy('Diego Farias'), 'onus', 'atrasados', todayISO(-2) + 'T18:01']);
+
+  // follow-up (Pendências): em dia, atrasado e já feito
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [otavio, 3, 'Ligação', 'Confirmar orçamento e mandar 2 opções no Recanto das Águas', 'agendado', todayISO(0)]);
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [fabio, 5, 'WhatsApp', 'Perguntar se já conversou com a esposa sobre a segunda visita', 'agendado', todayISO(2)]);
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [thiago, 10, 'WhatsApp', 'Última tentativa antes de arquivar', 'agendado', todayISO(-3)]);
+  db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [henrique, 2, 'WhatsApp', 'Mandar fotos da vista e do pôr do sol', 'feito', todayISO(-2)]);
+
+  // proposta em negociação — Overseas Cargo, oferta abaixo do valor pedido
+  db.run(`INSERT INTO proposta (lead_id,imovel_id,valor,condicoes,status,criado_em) VALUES (?,?,?,?,?,?)`,
+    [overseas, a2, 520000, 'Pagamento em 3 parcelas — entrada, na assinatura e na entrega das chaves', 'enviada', todayISO(-9)]);
+
+  // mais clientes de base — indicação, ex-cliente sem lead ativo e o fechamento de C1
+  db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Cláudia Ribeiro', TEST_PHONES[25 % 3], 'Contato geral', 'Amiga da Sônia Vasconcelos — pode indicar outros vendedores em Bela Vista', todayISO(0)]);
+  db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Fernando Costa', TEST_PHONES[26 % 3], 'Ex-cliente', 'Comprou com outro corretor antes de conhecer o Rafael; hoje só acompanha o mercado', todayISO(-90)]);
+  db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Vidigal', TEST_PHONES[24 % 3], 'Ex-cliente', 'Fechou P4 · Parque das Flores, há 6 dias', todayISO(-6)]);
+
+  // notas soltas — texto ligado a lead/imóvel, e uma de captação (contexto livre, a tabela
+  // nota não tem coluna própria pra captação ainda)
+  db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
+    ['texto', 'lead', 'Henrique Bastos', 'confirmou que topa fechar à vista se resolvermos a documentação do terreno até o fim do mês', '09:20', todayISO(-4), henrique, a1]);
+  db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em) VALUES (?,?,?,?,?,?)`,
+    ['texto', 'captacao', 'Marcelo Duarte', 'confirmou por WhatsApp que aceita placa e fotos profissionais, só pede discrição por conta dos vizinhos', '16:10', todayISO(-5)]);
+
+  // agenda: avaliação de captação e reunião B2B, mostrando os dois lados do funil
+  const avaliacao = novoComp('captacao', 'Avaliar apartamento do Marcelo Duarte', todayISO(2), '10:00', 60, 'Vista Verde - Alameda 3', null, 3);
+  db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'captacao',?,'proprietário')`, [avaliacao, captBy('Marcelo Duarte')]);
+  const reuniaoB2B = novoComp('reuniao', 'Reunião com a diretoria da Overseas Cargo', todayISO(4), '14:00', 90, 'Escritório', a2, 2);
+  db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'lead',?,NULL)`, [reuniaoB2B, overseas]);
+
   persist();
 }
 
