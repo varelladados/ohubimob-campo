@@ -18,7 +18,11 @@
 // pergunta a cada aba aberta se ela sabe se atualizar sozinha; quem não responder é
 // recarregado por fora (v6). Quem responder cuida do próprio reload — e só a página sabe
 // esperar a gravação pendente terminar e não atropelar um formulário sendo preenchido.
-const CACHE = 'ohubimob-campo-v21';  // v21: a demo pública ganha a massa de demonstração da rodada 37 em versão fictícia (2026-10-04); o app em si não muda
+const CACHE = 'ohubimob-campo-v34';  // v34: manifesto: cor de tema escura (a faixa de navegação do Android no app instalado usa essa cor, fixa, e ficava clara no tema escuro) e fundo da abertura igual ao do ícone (2026-11-25)
+// v33: títulos e negritos em peso 600 (2026-11-24)
+// v32: visual Leve em petróleo claro, ícone e atalhos novos (2026-11-24)
+// v31: armazenamento persistente pedido na primeira gravação; telefone de teste só no exemplo (revisão de 2026-11-24)
+// v30 anterior: busca por proximidade no Portfólio (rodada 54, 2026-10-18)
 // v18 anterior: agenda C4 — arrastar pra remarcar, primeiro uso, transição de tela, ações em lote, ficha em imagem, o que levar
 // v17 anterior: agenda C3 — aviso com o app fechado (push por um serviço mínimo, camada 3)
 // v16 anterior: agenda C2 (escrever como fala, horários livres, hora de sair, resumo de amanhã, repetição, Mês, mensagens prontas, tarefas)

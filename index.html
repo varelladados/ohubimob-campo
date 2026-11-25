@@ -12,7 +12,7 @@
 </script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3F5">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F7F7">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0E0F12">
 <title>OHubImob Campo</title>
 <link rel="manifest" href="manifest.json">
@@ -40,41 +40,43 @@
 /* ======================= visual padrão: LEVE ======================= */
 :root {
   /* ---- superfície ---- */
-  --bg: #F2F3F5;
+  --bg: #F4F7F7;
   --surface: #FFFFFF;
-  --surface-2: #E8EAEE;
+  --surface-2: #E6ECEC;
 
   /* ---- texto ---- */
-  --text: #14161B;
-  --text-2: #444954;
-  --text-3: #5A606C;
+  --text: #1F2A2E;
+  --text-2: #4A565A;
+  --text-3: #57646A;
 
   /* ---- linha ---- */
-  --border: #E1E3E8;
+  --border: #DFE6E6;
   --border-2: #7A808C;   /* borda de campo: 3:1 contra fundo e cartão (rodada 33) */
 
   /* ---- marca ----
-     --graphite é a tinta: fundo do boot e das superfícies escuras fixas.
-     --brand é o acento (rosa-ipê); --brand-fill é o botão principal (tinta). */
-  --graphite: #14161B;
-  --brand: #BD2F86;
-  --brand-text: #A82878;
-  --brand-fill: #14161B;
-  --on-brand: #FFFFFF;
-  --brand-tint: #F9E7F1;
+     --graphite é o petróleo profundo: fundo do boot e das superfícies escuras fixas
+     (levam texto claro por cima, então não pode clarear).
+     --brand é o acento (petróleo); --brand-fill é o botão principal (petróleo médio,
+     com texto escuro por cima). */
+  --graphite: #24484C;
+  --brand: #12858A;
+  --brand-text: #0B5F64;
+  --brand-fill: #7CC4C6;
+  --on-brand: #06383B;
+  --brand-tint: #E3F1F1;
 
   /* ---- semântica ---- */
   --ok: #17794A;      --ok-bg: #E2F3EA;
   --on-ok: #FFFFFF;   /* check e ícone sobre --ok cheio */
   --warn: #9E4F08;    --warn-bg: #FBEEDC;
   --danger: #BF2530;  --danger-bg: #FCE7E8;
-  --neutral: #444954; --neutral-bg: #E8EAEE;
+  --neutral: #4A565A; --neutral-bg: #E6ECEC;
 
   /* ---- elevação ---- */
   --shadow-1: 0 1px 2px rgba(20,22,27,0.06);
   --shadow-2: 0 -8px 32px rgba(20,22,27,0.16);
   --scrim: rgba(20,22,27,0.45);
-  --ring: #BD2F86;
+  --ring: #12858A;
 
   /* ---- componentes (rodada 36) ---- */
   --card-border: transparent;  --card-border-hover: transparent;
@@ -83,15 +85,15 @@
   --btn-border: transparent;       --btn-border-hover: transparent;
   --btn-text: var(--text);
   --chip-bg: rgba(20,22,27,0.055); --chip-border: transparent;
-  --chip-on-bg: #14161B;  --chip-on-text: #FFFFFF;
+  --chip-on-bg: #D6E9EA;  --chip-on-text: #0B5F64;
   --ico-bg: rgba(20,22,27,0.055);  --ico-fg: var(--text-2);
   --hero-border: transparent;
-  --live-bg: #14161B;     --live-text: #FFFFFF;  --live-label: #F28DC0;
-  --toast-bg: #14161B;    --toast-text: #FFFFFF; --toast-act: #F28DC0;
+  --live-bg: #DDEDEE;     --live-text: #1F2A2E;  --live-label: #0B5F64;
+  --toast-bg: #24484C;    --toast-text: #FFFFFF; --toast-act: #9FE0DC;
   --topbar-border: transparent;
-  --tab-on: var(--text);  --tab-ind: var(--brand);
-  --fab-shadow: 0 8px 24px rgba(20,22,27,0.24);
-  --on-ink-accent: #F28DC0;   /* acento como texto sobre a tinta (menu lateral do portal, boot): 6,6:1 */
+  --tab-on: var(--brand-text);  --tab-ind: var(--brand);
+  --fab-shadow: 0 4px 14px rgba(11,107,112,0.18);
+  --on-ink-accent: #9FE0DC;   /* acento como texto sobre o petróleo profundo (menu lateral do portal, boot) */
 
   /* ---- favorito (estrela) ----
      Reservado pra agenda (plano-agenda-campo.md §4.D). Uma estrela só: cada toque avança
@@ -149,11 +151,11 @@
     --text-3: #9DA2AC;
     --border: #2A2D34;
     --border-2: #6D737F;
-    --brand: #F07BB8;
-    --brand-text: #F28DC0;
-    --brand-fill: #EEEFF2;
-    --on-brand: #14161B;
-    --brand-tint: #33192A;
+    --brand: #5FC4BF;
+    --brand-text: #7FD0CC;
+    --brand-fill: #5FB5B7;
+    --on-brand: #06282A;
+    --brand-tint: #12302F;
     --ok: #5BC98A;      --ok-bg: #122A1D;
     --on-ok: #14161B;
     --warn: #F0A45B;    --warn-bg: #2E1F10;
@@ -162,14 +164,14 @@
     --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
     --shadow-2: 0 -8px 32px rgba(0,0,0,0.6);
     --scrim: rgba(0,0,0,0.60);
-    --ring: #F07BB8;
+    --ring: #5FC4BF;
     --card-shadow: none;
     --btn-bg: rgba(255,255,255,0.07);  --btn-bg-hover: rgba(255,255,255,0.11);
     --chip-bg: rgba(255,255,255,0.07);
-    --chip-on-bg: #EEEFF2;  --chip-on-text: #14161B;
+    --chip-on-bg: #1D3F40;  --chip-on-text: #9FE0DC;
     --ico-bg: rgba(255,255,255,0.07);
-    --live-bg: #262930;     --live-text: #EEEFF2;  --live-label: #F28DC0;
-    --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #A82878;
+    --live-bg: #1B3536;     --live-text: #EEEFF2;  --live-label: #9FE0DC;
+    --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #0B5F64;
     --fab-shadow: 0 8px 24px rgba(0,0,0,0.5);
   }
 }
@@ -182,11 +184,11 @@
   --text-3: #9DA2AC;
   --border: #2A2D34;
   --border-2: #6D737F;
-  --brand: #F07BB8;
-  --brand-text: #F28DC0;
-  --brand-fill: #EEEFF2;
-  --on-brand: #14161B;
-  --brand-tint: #33192A;
+  --brand: #5FC4BF;
+  --brand-text: #7FD0CC;
+  --brand-fill: #5FB5B7;
+  --on-brand: #06282A;
+  --brand-tint: #12302F;
   --ok: #5BC98A;      --ok-bg: #122A1D;
   --on-ok: #14161B;
   --warn: #F0A45B;    --warn-bg: #2E1F10;
@@ -195,14 +197,14 @@
   --shadow-1: 0 1px 2px rgba(0,0,0,0.5);
   --shadow-2: 0 -8px 32px rgba(0,0,0,0.6);
   --scrim: rgba(0,0,0,0.60);
-  --ring: #F07BB8;
+  --ring: #5FC4BF;
   --card-shadow: none;
   --btn-bg: rgba(255,255,255,0.07);  --btn-bg-hover: rgba(255,255,255,0.11);
   --chip-bg: rgba(255,255,255,0.07);
-  --chip-on-bg: #EEEFF2;  --chip-on-text: #14161B;
+  --chip-on-bg: #1D3F40;  --chip-on-text: #9FE0DC;
   --ico-bg: rgba(255,255,255,0.07);
-  --live-bg: #262930;     --live-text: #EEEFF2;  --live-label: #F28DC0;
-  --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #A82878;
+  --live-bg: #1B3536;     --live-text: #EEEFF2;  --live-label: #9FE0DC;
+  --toast-bg: #EEEFF2;    --toast-text: #14161B; --toast-act: #0B5F64;
   --fab-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
@@ -354,12 +356,15 @@ a { color: inherit; text-decoration: none; }
 .ic-xl { width: 28px; height: 28px; vertical-align: -6px; }
 
 /* ---- texto ---- */
+/* 2026-11-24: nada passa de 600. Título e negrito em 700 e 800 pesavam; a hierarquia
+   fica por tamanho e cor. Vale também para h1 a h4, b e strong sem classe. */
+h1, h2, h3, h4, b, strong { font-weight: 600; }
 .eyebrow {
   font-family: var(--font-body); font-weight: 600; font-size: var(--t-xs);
   letter-spacing: var(--track); text-transform: uppercase; color: var(--brand-text);
 }
-.h1 { font-family: var(--font-display); font-weight: 800; font-size: var(--t-2xl); letter-spacing: -0.01em; margin: 2px 0 var(--s3); }
-.h2 { font-family: var(--font-display); font-weight: 700; font-size: var(--t-lg); margin: 0 0 var(--s2); }
+.h1 { font-family: var(--font-display); font-weight: 600; font-size: var(--t-2xl); letter-spacing: -0.01em; margin: 2px 0 var(--s3); }
+.h2 { font-family: var(--font-display); font-weight: 600; font-size: var(--t-lg); margin: 0 0 var(--s2); }
 .blk-title {
   font-family: var(--font-body); font-weight: 600; font-size: var(--t-xs);
   letter-spacing: var(--track); text-transform: uppercase; color: var(--text-3);
@@ -540,7 +545,7 @@ a { color: inherit; text-decoration: none; }
   animation: sheet-down var(--dur-2) var(--ease);
 }
 .sheet__handle { width: 40px; height: 4px; border-radius: 3px; background: var(--border-2); margin: var(--s1) auto var(--s4); }
-.sheet__title { font-family: var(--font-display); font-weight: 700; font-size: var(--t-lg); margin: 0 0 var(--s3); }
+.sheet__title { font-family: var(--font-display); font-weight: 600; font-size: var(--t-lg); margin: 0 0 var(--s3); }
 .sheet__close { width: 100%; margin-top: var(--s3); }
 @keyframes sheet-up { from { transform: translateY(16px); opacity: 0.4; } to { transform: none; opacity: 1; } }
 @keyframes sheet-down { from { transform: translateY(-16px); opacity: 0.4; } to { transform: none; opacity: 1; } }
@@ -564,7 +569,7 @@ a { color: inherit; text-decoration: none; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
 .toast__msg { flex: 1; min-width: 0; }
-.toast__act { background: none; border: none; color: var(--toast-act); font: inherit; font-weight: 700; cursor: pointer; flex: none;
+.toast__act { background: none; border: none; color: var(--toast-act); font: inherit; font-weight: 600; cursor: pointer; flex: none;
   min-height: 44px; padding: 0 var(--s3); margin: -10px calc(var(--s3) * -1) -10px 0; }
 .toast--err { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
 .toast--err .toast__act { color: var(--danger); text-decoration: underline; }
@@ -577,7 +582,7 @@ a { color: inherit; text-decoration: none; }
   position: sticky; top: 0; z-index: var(--z-bar);
 }
 .topbar__mark { width: 24px; height: 24px; color: var(--brand-text); flex: none; }
-.topbar__title { font-family: var(--font-display); font-weight: 800; font-size: var(--t-lg); flex: 1; min-width: 0; }
+.topbar__title { font-family: var(--font-display); font-weight: 600; font-size: var(--t-lg); flex: 1; min-width: 0; }
 .topbar__state { font-size: var(--t-xs); color: var(--text-3); display: flex; align-items: center; gap: 5px; white-space: nowrap; }
 .topbar__state .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; }
 .topbar__state.is-off .dot { background: var(--warn); }
@@ -662,12 +667,12 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Hoje: cartão de próxima ação ---- */
   .hero { background: var(--surface); border: 1px solid var(--hero-border); box-shadow: var(--card-shadow); border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
-  .hero__when { display: flex; align-items: center; gap: 6px; color: var(--brand-text); font-weight: 700; font-size: var(--t-lg); font-variant-numeric: tabular-nums; }
-  .hero__what { font-family: var(--font-display); font-weight: 700; font-size: var(--t-xl); margin: var(--s1) 0 2px; line-height: 1.2; }
+  .hero__when { display: flex; align-items: center; gap: 6px; color: var(--brand-text); font-weight: 600; font-size: var(--t-lg); font-variant-numeric: tabular-nums; }
+  .hero__what { font-family: var(--font-display); font-weight: 600; font-size: var(--t-xl); margin: var(--s1) 0 2px; line-height: 1.2; }
   .hero__who { color: var(--text-2); font-size: var(--t-sm); margin-bottom: var(--s3); }
   .hero__acts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s2); }
   .hero__acts .btn--primary { grid-column: 1 / -1; }
-  .greet { font-family: var(--font-display); font-weight: 700; font-size: var(--t-xl); }
+  .greet { font-family: var(--font-display); font-weight: 600; font-size: var(--t-xl); }
   .greet + .muted { margin-bottom: var(--s4); display: block; }
 
   /* ---- Portfólio: área de foto ---- */
@@ -675,7 +680,7 @@ a { color: inherit; text-decoration: none; }
   /* sem foto o espaço 16:9 é um buraco: o marcador vazio ocupa só o necessário */
   .shot--empty { aspect-ratio: auto; height: 72px; display: flex; align-items: center; justify-content: center; color: var(--border-2); }
   .shot--empty .ic { width: 32px; height: 32px; }
-  .price { font-weight: 700; font-size: var(--t-lg); font-variant-numeric: tabular-nums; }
+  .price { font-weight: 600; font-size: var(--t-lg); font-variant-numeric: tabular-nums; }
 
   /* ---- Notas ---- */
   .compose { background: var(--surface); border: 1px dashed var(--border-2); border-radius: var(--r-md); padding: var(--s4); text-align: center; margin-bottom: var(--s3); }
@@ -690,12 +695,12 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Rota do dia ---- */
   .rota-step { display: flex; gap: var(--s3); align-items: flex-start; }
-  .rota-n { width: 26px; height: 26px; border-radius: 50%; background: var(--chip-on-bg); color: var(--chip-on-text); font-size: var(--t-xs); font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none; margin-top: 2px; }
+  .rota-n { width: 26px; height: 26px; border-radius: 50%; background: var(--chip-on-bg); color: var(--chip-on-text); font-size: var(--t-xs); font-weight: 600; display: flex; align-items: center; justify-content: center; flex: none; margin-top: 2px; }
   .rota-line { border-left: 2px dashed var(--border); margin: 0 0 0 12px; height: var(--s3); }
 
   /* ---- Modo Visita ---- */
   .live { background: var(--live-bg); color: var(--live-text); border-radius: var(--r-md); padding: var(--s4); margin-bottom: var(--s3); }
-  .live__t { font-size: var(--t-2xl); font-weight: 800; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+  .live__t { font-size: var(--t-2xl); font-weight: 600; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
   .live__l { font-size: var(--t-xs); letter-spacing: var(--track); text-transform: uppercase; color: var(--live-label); font-weight: 600; }
   .live a, .live .link { color: inherit; text-decoration-color: currentColor; }
   .roteiro { list-style: none; margin: 0; padding: 0; }
@@ -715,7 +720,7 @@ a { color: inherit; text-decoration: none; }
   .foot-count { font-size: var(--t-xs); color: var(--text-3); text-align: center; margin-top: var(--s2); font-variant-numeric: tabular-nums; }
 
   /* ---- calculadoras ---- */
-  .calc-hero { display: flex; justify-content: space-between; gap: var(--s2); font-weight: 700; color: var(--brand-text); font-variant-numeric: tabular-nums; }
+  .calc-hero { display: flex; justify-content: space-between; gap: var(--s2); font-weight: 600; color: var(--brand-text); font-variant-numeric: tabular-nums; }
   .calc-sub { display: flex; justify-content: space-between; gap: var(--s2); margin-top: var(--s1); font-size: var(--t-sm); color: var(--text-2); font-variant-numeric: tabular-nums; }
 
   /* ---- boot ---- */
@@ -729,7 +734,7 @@ a { color: inherit; text-decoration: none; }
   /* Rótulo em caixa baixa e 14px: caixa alta pequena com espaçamento é lida letra a
      letra. Fica aqui (não no componente) porque é legibilidade do app de campo. */
   .field > label { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; color: var(--text-2); }
-  .blk-title { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; font-weight: 700; color: var(--text-2); }
+  .blk-title { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--text-2); }
   .eyebrow { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; }
   .live__l, .note-tag, .data-box h4 { font-size: var(--t-sm); text-transform: none; letter-spacing: 0; }
   .btn--sm, .tab-btn, .tile__p, .foot-count, .app-btn { font-size: var(--t-sm); }
@@ -751,7 +756,7 @@ a { color: inherit; text-decoration: none; }
   .hero__late { color: var(--warn); font-weight: 600; font-size: var(--t-sm); margin: 0 0 var(--s3); }
 
   /* preço: valor interpretado ao vivo */
-  .preco-lido { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .preco-lido { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
   .preco-lido.aviso { color: var(--warn); }
   .chip-mini { min-height: 36px; }
 
@@ -778,7 +783,7 @@ a { color: inherit; text-decoration: none; }
   .trava[hidden] { display: none; }
   .trava__caixa { width: 100%; max-width: 320px; text-align: center; }
   .trava__marca { width: 52px; height: 52px; color: var(--brand); margin-bottom: var(--s3); }
-  .trava__titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--t-xl); margin: 0 0 var(--s4); }
+  .trava__titulo { font-family: var(--font-display); font-weight: 600; font-size: var(--t-xl); margin: 0 0 var(--s4); }
   .trava input { width: 100%; min-height: 52px; text-align: center; letter-spacing: 0.4em; font-size: var(--t-xl); margin-bottom: var(--s3);
     border: 1px solid var(--border-2); border-radius: var(--r-sm); background: var(--surface); color: var(--text); }
   .trava__erro { color: var(--danger); min-height: 1.5em; font-weight: 600; margin: var(--s2) 0; }
@@ -826,7 +831,7 @@ a { color: inherit; text-decoration: none; }
   .ag-visoes .chip { justify-content: center; }
   .ag-nav { display: flex; align-items: center; gap: var(--s2); margin-bottom: var(--s2); }
   .ag-nav[hidden] { display: none; }
-  .ag-nav__t { flex: 1; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ag-nav__t { flex: 1; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
   .ic-esq { transform: rotate(180deg); }
   .ag-filtro { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; margin-bottom: var(--s1); }
   .ag-item { display: flex; align-items: center; gap: var(--s1); padding-right: var(--s1); }
@@ -874,7 +879,7 @@ a { color: inherit; text-decoration: none; }
   .ag-sd { border: 0; background: var(--chip-bg); border-radius: var(--r-sm); padding: 6px 0 5px; min-height: 66px; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text-2); font: inherit; }
   .ag-sd__d { font-size: var(--t-xs); }
-  .ag-sd__n { font-weight: 700; font-size: var(--t-lg); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .ag-sd__n { font-weight: 600; font-size: var(--t-lg); font-variant-numeric: tabular-nums; line-height: 1.1; }
   .ag-sd.is-hoje .ag-sd__n { color: var(--brand-text); }
   .ag-sd.on { background: var(--chip-on-bg); color: var(--chip-on-text); }
   .ag-sd.on .ag-sd__n { color: inherit; }
@@ -911,7 +916,7 @@ a { color: inherit; text-decoration: none; }
   .ag-mes-cab span { text-align: center; font-size: var(--t-xs); color: var(--text-3); padding: 2px 0; }
   .ag-md { border: 0; background: var(--chip-bg); border-radius: var(--r-xs); min-height: 52px; padding: 5px 0 4px; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-2); font: inherit; min-width: 0; }
-  .ag-md__n { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ag-md__n { font-weight: 600; font-variant-numeric: tabular-nums; }
   .ag-md.is-fora { opacity: 0.45; }
   .ag-md.is-hoje .ag-md__n { color: var(--brand-text); }
   .ag-md.on { background: var(--chip-on-bg); color: var(--chip-on-text); }
@@ -1124,8 +1129,9 @@ a { color: inherit; text-decoration: none; }
       </button>
       <label class="search">
         <svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
-        <input id="vi-search" placeholder="Buscar imóvel..." oninput="renderVI()" aria-label="Buscar imóvel">
+        <input id="vi-search" placeholder="Ex.: casa 3 quartos até 1 milhão" oninput="renderVI()" aria-label="Buscar imóvel pelo código, nome ou do jeito que o cliente fala" autocomplete="off">
       </label>
+      <div id="vi-busca"></div>
       <div id="vi-list"></div>
     </section>
 
@@ -1176,8 +1182,9 @@ a { color: inherit; text-decoration: none; }
         <div class="btn-row" style="margin-bottom:var(--s2)">
           <button class="btn btn--sm btn--grow" onclick="exportDb()"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Exportar</button>
           <button class="btn btn--sm btn--grow" onclick="document.getElementById('import-file').click()"><svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg>Importar</button>
-          <input type="file" id="import-file" accept=".sqlite,.db" hidden onchange="importDb(event)">
+          <input type="file" id="import-file" accept=".zip,.sqlite,.db,application/zip" hidden onchange="importDb(event)">
         </div>
+        <p class="muted" style="margin:0 0 var(--s2)">O backup é um .zip com o banco e as fotos e áudios. Para abrir no portal: <button class="btn btn--sm" style="vertical-align:baseline" onclick="exportarSoBanco()">só o banco (.sqlite)</button></p>
         <button class="btn btn--sm btn--block" style="margin-bottom:var(--s2)" onclick="go('lixo')">
           <svg class="ic" aria-hidden="true"><use href="#i-lixeira"/></svg>Lixeira
         </button>
@@ -1738,14 +1745,28 @@ const SCHEMA_MIGRATIONS = [
   // .sqlite abrir nos dois sem perder captação nenhuma.
   `ALTER TABLE captacao_lp ADD COLUMN tipo TEXT`,
   `ALTER TABLE captacao_lp ADD COLUMN imovel_id INTEGER`,
-  `ALTER TABLE captacao_lp ADD COLUMN mensagem TEXT`
+  `ALTER TABLE captacao_lp ADD COLUMN mensagem TEXT`,
+  // Rodada 45 (FUN-DIG-001) — nota anexável a qualquer ficha: captação e compromisso
+  // passam a ter nota ligada, como lead, cliente, imóvel e visita já tinham.
+  `ALTER TABLE nota ADD COLUMN captacao_id INTEGER`,
+  `ALTER TABLE nota ADD COLUMN compromisso_id INTEGER`,
+  // Rodada 50 — lead descartado sai do funil com motivo e pode ser reaberto (núcleo: descartarLead)
+  `ALTER TABLE lead ADD COLUMN motivo_descarte TEXT`,
+  `ALTER TABLE lead ADD COLUMN descartado_em TEXT`,
+  `ALTER TABLE lead ADD COLUMN estagio_antes_descarte TEXT`,
+  // Rodada 51 — o anúncio do imóvel: texto, vídeo e tour 360°, que entram na qualidade do anúncio (núcleo)
+  `ALTER TABLE imovel ADD COLUMN descricao TEXT`,
+  `ALTER TABLE imovel ADD COLUMN video_url TEXT`,
+  `ALTER TABLE imovel ADD COLUMN tour_url TEXT`,
+  // Rodada 53 — o que o lead procura, em texto (núcleo: gravarInteresse)
+  `ALTER TABLE lead ADD COLUMN busca_interesse TEXT`
 ];
 function runMigrations() {
   SCHEMA_MIGRATIONS.forEach(sql => { try { db.run(sql); } catch (e) { /* coluna já existe — ok */ } });
   try { semearMensagensProntas(); } catch (e) { /* segue sem as mensagens padrão */ }
 }
 
-const STAGE_LABELS = { novo: 'Novo', contato: 'Contato', visita: 'Visita', proposta: 'Proposta', fechado: 'Fechado' };
+const STAGE_LABELS = { novo: 'Novo', contato: 'Contato', visita: 'Visita', proposta: 'Proposta', fechado: 'Fechado', descartado: 'Descartado' };
 const OCR_SIMULADO = [
   '(OCR simulado) texto ilustrativo — este POC ainda não roda OCR de verdade sobre a foto',
   '(OCR simulado) documento capturado em campo — conectar um motor de OCR real é próxima etapa',
@@ -1771,8 +1792,13 @@ let idbConn = null;
 function idbOpen() {
   if (idbConn) return Promise.resolve(idbConn);
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open('ohubimob-campo-local', 1);
-    req.onupgradeneeded = () => req.result.createObjectStore('kv');
+    // v2 (rodada 44): store 'midia' ao lado de 'kv' — foto e áudio saíram do banco
+    const req = indexedDB.open('ohubimob-campo-local', 2);
+    req.onupgradeneeded = () => {
+      const d = req.result;
+      if (!d.objectStoreNames.contains('kv')) d.createObjectStore('kv');
+      if (!d.objectStoreNames.contains('midia')) d.createObjectStore('midia');
+    };
     req.onsuccess = () => {
       idbConn = req.result;
       idbConn.onclose = () => { idbConn = null; };
@@ -1802,12 +1828,236 @@ async function idbSet(key, val) {
 }
 async function idbClear() {
   const conn = await idbOpen();
+  midiaEsquecerTudo();
   return new Promise((resolve, reject) => {
-    const tx = conn.transaction('kv', 'readwrite');
+    const tx = conn.transaction(['kv', 'midia'], 'readwrite');
     tx.objectStore('kv').clear();
+    tx.objectStore('midia').clear();
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
+}
+
+// ---------- mídia fora do banco (rodada 44) ----------
+// Até a rodada 43, foto e áudio iam em base64 dentro do SQLite: cada gravação reexportava o
+// banco inteiro com toda a mídia junto, e o backup era um .sqlite cada vez maior. Agora o
+// arquivo fica no store 'midia' e a coluna guarda só a referência "midia:<id>" (as colunas
+// mantêm o nome *_base64 pra não mexer no schema que o portal compartilha). Decisão do dono
+// em 2026-10-04: o backup é um .zip com o banco e a pasta de mídia.
+const MIDIA_COLUNAS = [['imovel', 'imagem_base64'], ['imovel_foto', 'imagem_base64'], ['documento_carteira', 'imagem_base64'], ['nota', 'imagem_base64'], ['nota', 'audio_base64']];
+const midiaUrls = new Map();   // ref -> URL de objeto, pra desenhar na tela
+const midiaFila = new Map();   // ref -> Blob ainda não gravado no aparelho
+function ehRefMidia(v) { return typeof v === 'string' && v.indexOf('midia:') === 0; }
+// o que vai no src="": a referência vira URL de objeto; dado antigo (data:) passa como está
+function midiaSrc(v) { return !v ? '' : ehRefMidia(v) ? (midiaUrls.get(v) || '') : v; }
+function dataUrlParaBlob(u) {
+  const m = /^data:([^;,]*)((?:;[^;,]*)*),([\s\S]*)$/.exec(u); if (!m) return null;
+  let bytes;
+  if (/;base64/i.test(m[2])) {
+    const bin = atob(m[3]); bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  } else bytes = new TextEncoder().encode(decodeURIComponent(m[3]));
+  return new Blob([bytes], { type: m[1] || 'application/octet-stream' });
+}
+function novoIdMidia() {
+  const r = crypto.getRandomValues(new Uint8Array(6));
+  return Date.now().toString(36) + '-' + Array.from(r, b => b.toString(16).padStart(2, '0')).join('');
+}
+// Síncrono de propósito: quem grava a linha não espera o IndexedDB. O arquivo entra na fila e
+// persistNow() grava a fila ANTES do banco — o banco salvo nunca aponta pra mídia que não está
+// no aparelho. Recebe data: URL e devolve a referência; referência ou vazio passam direto.
+function guardarMidia(v) {
+  if (!v) return null;
+  if (typeof v !== 'string' || v.indexOf('data:') !== 0) return v;
+  const blob = dataUrlParaBlob(v); if (!blob) return null;
+  const ref = 'midia:' + novoIdMidia();
+  midiaUrls.set(ref, URL.createObjectURL(blob));
+  midiaFila.set(ref, blob);
+  return ref;
+}
+// No IndexedDB vai { tipo, bytes } em vez do Blob: guardar Blob tem histórico de falha no
+// Safari do iPhone; ArrayBuffer não.
+async function paraGuardar(pares) {
+  return Promise.all(pares.map(async ([ref, b]) => [ref, { tipo: b.type || '', bytes: await b.arrayBuffer() }]));
+}
+function deGuardado(v) { return v instanceof Blob ? v : new Blob([v.bytes], { type: v.tipo || '' }); }
+function midiaTx(fazer) {
+  return idbOpen().then(conn => new Promise((resolve, reject) => {
+    const tx = conn.transaction('midia', 'readwrite');
+    fazer(tx.objectStore('midia'));
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error || new Error('transação abortada'));  // cota cheia
+  }));
+}
+async function midiaGravarFila() {
+  if (!midiaFila.size) return;
+  const lote = [...midiaFila];
+  const vals = await paraGuardar(lote);  // antes da transação: um await lá dentro a encerraria
+  await midiaTx(st => vals.forEach(([ref, v]) => st.put(v, ref)));
+  lote.forEach(([ref, b]) => { if (midiaFila.get(ref) === b) midiaFila.delete(ref); });
+}
+async function midiaLerTudo() {
+  const conn = await idbOpen();
+  return new Promise((resolve, reject) => {
+    const out = [], req = conn.transaction('midia', 'readonly').objectStore('midia').openCursor();
+    req.onsuccess = () => { const c = req.result; if (c) { out.push([c.key, deGuardado(c.value)]); c.continue(); } else resolve(out); };
+    req.onerror = () => reject(req.error);
+  });
+}
+// troca o store inteiro numa transação só: ou fica a mídia nova, ou a antiga intacta
+async function midiaSubstituirTudo(pares) {
+  const vals = await paraGuardar(pares);
+  await midiaTx(st => { st.clear(); vals.forEach(([ref, v]) => st.put(v, ref)); });
+}
+function midiaEsquecerTudo() {
+  midiaUrls.forEach(u => URL.revokeObjectURL(u));
+  midiaUrls.clear(); midiaFila.clear();
+}
+async function carregarMidia() {
+  (await midiaLerTudo()).forEach(([ref, b]) => { if (!midiaUrls.has(ref)) midiaUrls.set(ref, URL.createObjectURL(b)); });
+}
+// tudo que o banco ainda cita, inclusive o que está na lixeira (que pode ser restaurado)
+function refsEmUso() {
+  const usadas = new Set();
+  MIDIA_COLUNAS.forEach(([t, c]) => q(`SELECT ${c} AS v FROM ${t} WHERE ${c} LIKE 'midia:%'`).forEach(r => usadas.add(r.v)));
+  q("SELECT dados FROM lixeira WHERE dados LIKE '%midia:%'").forEach(r => (String(r.dados).match(/midia:[\w-]+/g) || []).forEach(x => usadas.add(x)));
+  return usadas;
+}
+// Banco salvo antes da rodada 44, ou .sqlite antigo importado: a mídia que está dentro sai pro
+// store. A mesma foto em dois lugares (capa e galeria) vira um arquivo só. Devolve quantas moveu.
+function tirarMidiaDoBanco() {
+  const visto = new Map();
+  const mover = v => { if (!visto.has(v)) visto.set(v, guardarMidia(v)); return visto.get(v); };
+  let movidas = 0;
+  MIDIA_COLUNAS.forEach(([t, c]) => q(`SELECT rowid AS rid, ${c} AS v FROM ${t} WHERE ${c} LIKE 'data:%'`).forEach(r => {
+    const ref = mover(r.v); if (ref) { db.run(`UPDATE ${t} SET ${c}=? WHERE rowid=?`, [ref, r.rid]); movidas++; }
+  }));
+  q("SELECT id, dados FROM lixeira WHERE dados LIKE '%data:%'").forEach(r => {
+    let p; try { p = JSON.parse(r.dados); } catch (e) { return; }
+    let mudou = false;
+    const andar = o => {
+      if (Array.isArray(o)) return o.forEach(andar);
+      if (!o || typeof o !== 'object') return;
+      Object.keys(o).forEach(k => {
+        if (typeof o[k] === 'string' && /^data:(image|audio)\//.test(o[k])) { o[k] = mover(o[k]); mudou = true; movidas++; }
+        else andar(o[k]);
+      });
+    };
+    andar(p);
+    if (mudou) db.run('UPDATE lixeira SET dados=? WHERE id=?', [JSON.stringify(p), r.id]);
+  });
+  return movidas;
+}
+// Arquivo que nada mais cita (a lixeira venceu, o banco foi trocado) sai do aparelho. Só roda
+// no boot, depois da tela pronta; o que ainda está na fila nunca é apagado.
+async function limparMidiaSolta() {
+  const usadas = refsEmUso();
+  const conn = await idbOpen();
+  const chaves = await new Promise((resolve, reject) => {
+    const r = conn.transaction('midia', 'readonly').objectStore('midia').getAllKeys();
+    r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error);
+  });
+  const soltas = chaves.filter(k => !usadas.has(k) && !midiaFila.has(k));
+  if (!soltas.length) return 0;
+  await midiaTx(st => soltas.forEach(k => st.delete(k)));
+  soltas.forEach(k => { const u = midiaUrls.get(k); if (u) URL.revokeObjectURL(u); midiaUrls.delete(k); });
+  return soltas.length;
+}
+
+// ---------- backup em .zip (rodada 44) ----------
+// .zip sem compressão (foto e áudio já vêm comprimidos), escrito à mão: o app não carrega
+// biblioteca nenhuma. Dentro: ohubimob-campo.sqlite, manifesto.json e midia/<id>.<ext>.
+const MIDIA_EXT = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp', 'image/gif': '.gif',
+  'audio/webm': '.webm', 'audio/ogg': '.ogg', 'audio/mp4': '.m4a', 'audio/mpeg': '.mp3', 'audio/wav': '.wav' };
+function extensaoMidia(tipo) { return MIDIA_EXT[String(tipo || '').split(';')[0].trim()] || '.bin'; }
+function tipoPorExtensao(nome) {
+  const ext = (nome.match(/\.[^.\/]+$/) || [''])[0].toLowerCase();
+  return Object.keys(MIDIA_EXT).find(t => MIDIA_EXT[t] === ext) || (ext === '.jpeg' ? 'image/jpeg' : '');
+}
+const CRC_TAB = (() => {
+  const t = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[i] = c >>> 0; }
+  return t;
+})();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_TAB[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipSemCompressao(arquivos) {
+  const enc = new TextEncoder(), partes = [], central = [];
+  const d = new Date();
+  const hora = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  const dia = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  let off = 0;
+  arquivos.forEach(({ nome, dados }) => {
+    const n = enc.encode(nome), crc = crc32(dados), tam = dados.length;
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);  // 0x0800: nome em UTF-8
+    lh.setUint16(10, hora, true); lh.setUint16(12, dia, true); lh.setUint32(14, crc, true);
+    lh.setUint32(18, tam, true); lh.setUint32(22, tam, true); lh.setUint16(26, n.length, true);
+    partes.push(new Uint8Array(lh.buffer), n, dados);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+    ch.setUint16(12, hora, true); ch.setUint16(14, dia, true); ch.setUint32(16, crc, true);
+    ch.setUint32(20, tam, true); ch.setUint32(24, tam, true); ch.setUint16(28, n.length, true); ch.setUint32(42, off, true);
+    central.push(new Uint8Array(ch.buffer), n);
+    off += 30 + n.length + tam;
+  });
+  const tamCentral = central.reduce((t, p) => t + p.length, 0);
+  const fim = new DataView(new ArrayBuffer(22));
+  fim.setUint32(0, 0x06054b50, true); fim.setUint16(8, arquivos.length, true); fim.setUint16(10, arquivos.length, true);
+  fim.setUint32(12, tamCentral, true); fim.setUint32(16, off, true);
+  return new Blob([...partes, ...central, new Uint8Array(fim.buffer)], { type: 'application/zip' });
+}
+// Lê o .zip do próprio app e também um refeito pelo computador (comprimido), quando o
+// navegador sabe descomprimir.
+async function lerZip(u8) {
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  let e = -1;
+  for (let i = u8.length - 22; i >= Math.max(0, u8.length - 22 - 65535); i--) if (dv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error('o .zip está incompleto');
+  const total = dv.getUint16(e + 10, true), dec = new TextDecoder(), out = [];
+  let p = dv.getUint32(e + 16, true);
+  for (let k = 0; k < total; k++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) throw new Error('o índice do .zip está corrompido');
+    const metodo = dv.getUint16(p + 10, true), comp = dv.getUint32(p + 20, true), loc = dv.getUint32(p + 42, true);
+    const nLen = dv.getUint16(p + 28, true), xLen = dv.getUint16(p + 30, true), cLen = dv.getUint16(p + 32, true);
+    const nome = dec.decode(u8.subarray(p + 46, p + 46 + nLen));
+    p += 46 + nLen + xLen + cLen;
+    if (nome.endsWith('/') || nome.startsWith('__MACOSX')) continue;
+    const ini = loc + 30 + dv.getUint16(loc + 26, true) + dv.getUint16(loc + 28, true);
+    let dados = u8.subarray(ini, ini + comp);
+    if (metodo === 8) {
+      if (!window.DecompressionStream) throw new Error('este navegador não abre .zip comprimido — use o .zip do jeito que o app exportou');
+      dados = new Uint8Array(await new Response(new Blob([dados]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    } else if (metodo !== 0) throw new Error('tipo de compressão do .zip não suportado');
+    out.push({ nome, dados });
+  }
+  return out;
+}
+async function lerBackupZip(u8) {
+  const ent = await lerZip(u8);
+  let man = null;
+  const m = ent.find(x => x.nome.split('/').pop() === 'manifesto.json');
+  if (m) { try { man = JSON.parse(new TextDecoder().decode(m.dados)); } catch (e) { /* segue pelo nome dos arquivos */ } }
+  const banco = (man && man.banco && ent.find(x => x.nome.split('/').pop() === man.banco)) || ent.find(x => /\.(sqlite|db)$/i.test(x.nome));
+  if (!banco) throw new Error('não achei o banco (.sqlite) dentro do .zip');
+  const tipos = {};
+  ((man && man.midia) || []).forEach(x => { tipos[x.arquivo] = x.tipo; });
+  const midia = ent.filter(x => /(^|\/)midia\/[^/]+$/.test(x.nome)).map(x => {
+    const arq = x.nome.slice(x.nome.lastIndexOf('midia/'));
+    return ['midia:' + arq.slice(6).replace(/\.[^.]+$/, ''), new Blob([x.dados], { type: tipos[arq] || tipoPorExtensao(arq) })];
+  });
+  return { bytes: banco.dados, midia };
+}
+function baixarArquivo(blob, nome) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+}
+function marcarBackupFeito() {
+  try { localStorage.setItem('backup:ultimo', String(Date.now())); } catch (e) { /* ok */ }
+  renderBackup();
+  const aviso = document.getElementById('confirmar-backup'); if (aviso) aviso.textContent = textoUltimoBackup();
 }
 // db.export() serializa o banco INTEIRO (inclusive fotos em base64) — não pode custar
 // um export completo por gravação. persist() agrupa gravações seguidas (debounce curto)
@@ -1826,6 +2076,7 @@ async function persistNow() {
   persistPending = false;
   clearTimeout(persistTimer);
   try {
+    await midiaGravarFila();  // antes do banco: o banco salvo nunca cita mídia que não está no aparelho
     await idbSet('db', db.export());
     setEstado('salvo');
   } catch (e) {
@@ -2331,6 +2582,11 @@ function nomeDoObjeto(tipo, id) {
       const v = q('SELECT v.hora, i.codigo, i.nome FROM visita v JOIN imovel i ON i.id=v.imovel_id WHERE v.id=?', [id])[0];
       return 'visita ' + v.hora + ' · ' + nomeImovel(v);
     }
+    if (tipo === 'captacao') return q('SELECT nome FROM captacao_lp WHERE id=?', [id])[0].nome;
+    if (tipo === 'compromisso') {
+      const c = q('SELECT titulo, tipo, data FROM compromisso WHERE id=?', [id])[0];
+      return (c.titulo || (TIPOS_AGENDA[c.tipo] || { t: 'Compromisso' }).t) + ' · ' + fmtDataCurta(c.data);
+    }
   } catch (e) { /* objeto sumiu — segue sem rótulo */ }
   return tipo;
 }
@@ -2354,7 +2610,7 @@ function criarEscolha(k) {
 // ---------- contexto da nota ----------
 // notaCtx é o que resolve o bug de raiz: a nota tirada de dentro de uma visita, lead
 // ou imóvel nasce vinculada, em vez de cair em contexto 'geral' e ficar órfã.
-let notaCtx = null;   // { visita_id, lead_id, imovel_id, cliente_id, referencia }
+let notaCtx = null;   // { visita_id, lead_id, imovel_id, cliente_id, captacao_id, compromisso_id, referencia }
 function aplicarCtxNaNota() {
   if (!criarCtx) { notaCtx = null; return renderNotaCtx(); }
   const c = { referencia: criarCtx.nome };
@@ -2366,6 +2622,11 @@ function aplicarCtxNaNota() {
     c.lead_id = criarCtx.id; if (l) c.imovel_id = l.imovel_id;
   } else if (criarCtx.tipo === 'imovel') c.imovel_id = criarCtx.id;
   else if (criarCtx.tipo === 'cliente') c.cliente_id = criarCtx.id;
+  else if (criarCtx.tipo === 'captacao') c.captacao_id = criarCtx.id;
+  else if (criarCtx.tipo === 'compromisso') {
+    const cp = q('SELECT imovel_id FROM compromisso WHERE id=?', [criarCtx.id])[0];
+    c.compromisso_id = criarCtx.id; if (cp && cp.imovel_id) c.imovel_id = cp.imovel_id;
+  }
   notaCtx = c;
   renderNotaCtx();
 }
@@ -2385,8 +2646,7 @@ function renderNotaCtx() {
   });
 }
 function ctxNota() {
-  return [notaCtx && notaCtx.visita_id || null, notaCtx && notaCtx.lead_id || null,
-          notaCtx && notaCtx.imovel_id || null, notaCtx && notaCtx.cliente_id || null];
+  return ['visita_id', 'lead_id', 'imovel_id', 'cliente_id', 'captacao_id', 'compromisso_id'].map(k => notaCtx && notaCtx[k] || null);
 }
 function refNota(padrao) { return (notaCtx && notaCtx.referencia) || padrao; }
 
@@ -2586,9 +2846,12 @@ function openForm(tipo, ctx) {
     if (tipo === 'lead-venda' && ctx.tipo === 'imovel') setV('fv-imovel', ctx.id);
   }
   // pré-preenche o telefone com um dos números de teste, alternando a cada abertura —
-  // o usuário sobrescreve com o número real
+  // só enquanto o app está no exemplo. Depois de "Começar com meus dados" o campo nasce
+  // vazio: um lead de verdade não pode ser salvo com número de teste (revisão de 2026-11-24).
   const tel = document.querySelector('#sheet-body input[type="tel"]');
-  if (tel && !tel.value) tel.value = nextTestPhone();
+  let comDadosReais = false;
+  try { comDadosReais = !!localStorage.getItem('onboarding:feito'); } catch (e) { /* ok */ }
+  if (tel && !tel.value && !comDadosReais) tel.value = nextTestPhone();
   window.__confOk = null;
   if (cfg.depois) cfg.depois();
   // o rascunho compara com o formulário já com os padrões, o contexto e o telefone de teste
@@ -2751,24 +3014,23 @@ function capturarPosicaoImovel(id) { posicaoImovelSheet(id); }
 function seedDatabase() {
   db.run(SCHEMA_SQL);
   runMigrations();
-  // bairro e endereço saem do próprio nome do imóvel — são lugares reais do portfólio,
-  // não dado inventado. lat/lng ficam vazios de propósito: quem grava a coordenada é o
-  // corretor, em campo, com "usar minha posição".
+  // Carteira FICTÍCIA desta build de demonstração (mesma forma da real: 19 colunas).
   const imoveis = [
-    ['V1', 'Cobertura Vista Verde', 'Cobertura', 1780000, 1, 70, 'Alto padrão, vista panorâmica', 'Vista Verde'],
-    ['R2', 'Casa Recanto das Águas', 'Casa', 1320000, 2, 60, 'Condomínio fechado, família', 'Recanto das Águas'],
-    ['B3', 'Apto Setor Bela Vista', 'Apartamento', 640000, 3, 50, 'Entrada, primeiro imóvel', 'Bela Vista'],
-    ['P4', 'Casa Parque das Flores', 'Casa', 2150000, 4, 40, 'Família premium, prospecção', 'Parque das Flores'],
-    ['M5', 'Apto Mirante Sul', 'Apartamento', 890000, 5, 35, 'Investidor, aluguel', 'Mirante Sul'],
-    ['G6', 'Galpão Rota Norte', 'Galpão', 4200000, 6, 20, 'Prospecção B2B, logística', 'Rota Norte'],
-    ['L7', 'Casa Lagoa Serena', 'Casa', 3400000, 7, 15, 'Landing page premium', 'Lagoa Serena'],
-    ['T8', 'Terreno Alto do Bosque', 'Terreno', 720000, 8, 15, 'Permuta, incorporação', 'Alto do Bosque'],
-    ['C9', 'Cobertura Céu Aberto', 'Cobertura', 2980000, 9, 25, 'Lifestyle, remarketing', 'Céu Aberto'],
-    ['E10', 'Sala Comercial Eixo Central', 'Comercial', 550000, 10, 10, 'B2B, longo prazo', 'Eixo Central']
+    ['V1', 'Cobertura Vista Verde', 'Cobertura', 1780000, 1, 70, 'Alto padrão, vista panorâmica', 'Vista Verde', 'Alameda das Palmeiras, 120, cob. 2', 'Brasília', 'DF', 210, null, 3, 2, 4, 3, 1800, 6000],
+    ['R2', 'Casa Recanto das Águas', 'Casa', 1320000, 2, 60, 'Condomínio fechado, família', 'Recanto das Águas', 'Rua das Garças, 45', 'Brasília', 'DF', 260, 480, 4, 2, 4, 3, 450, 2400],
+    ['B3', 'Apto Setor Bela Vista', 'Apartamento', 640000, 3, 50, 'Entrada, primeiro imóvel', 'Bela Vista', 'Quadra 8, Bloco C, apto 304', 'Brasília', 'DF', 72, null, 2, 1, 2, 1, 620, 1500],
+    ['P4', 'Casa Parque das Flores', 'Casa', 2150000, 4, 40, 'Família premium, prospecção', 'Parque das Flores', 'Rua dos Ipês, 900', 'Brasília', 'DF', 380, 1000, 4, 3, 5, 4, 900, 4200],
+    ['M5', 'Apto Mirante Sul', 'Apartamento', 890000, 5, 35, 'Investidor, aluguel', 'Mirante Sul', 'Quadra 14, Bloco A, apto 1201', 'Brasília', 'DF', 95, null, 3, 1, 2, 2, 980, 2100],
+    ['G6', 'Galpão Rota Norte', 'Galpão', 4200000, 6, 20, 'Prospecção B2B, logística', 'Rota Norte', 'Rodovia Norte, km 12', 'Brasília', 'DF', 1500, 3000, null, null, 2, 10, null, 18000],
+    ['L7', 'Casa Lagoa Serena', 'Casa', 3400000, 7, 15, 'Landing page premium', 'Lagoa Serena', 'Trecho 4, conj. 7, casa 3', 'Brasília', 'DF', 520, 1500, 5, 4, 6, 4, 1200, 9000],
+    ['T8', 'Terreno Alto do Bosque', 'Terreno', 720000, 8, 15, 'Permuta, incorporação', 'Alto do Bosque', 'Rua 3, lote 15', 'Brasília', 'DF', null, 800, null, null, null, null, null, 1200],
+    ['C9', 'Cobertura Céu Aberto', 'Cobertura', 2980000, 9, 25, 'Lifestyle, remarketing', 'Céu Aberto', 'Quadra 2, Bloco D, cob. 1', 'Brasília', 'DF', 240, null, 4, 3, 5, 3, 2100, 7800],
+    ['E10', 'Sala Comercial Eixo Central', 'Comercial', 550000, 10, 10, 'B2B, longo prazo', 'Eixo Central', 'Setor Central, Ed. Torre Sul, sala 1210', 'Brasília', 'DF', 48, null, null, null, 1, 1, 700, 1900],
+    ['G11', 'Galpão Rota Norte — módulo 2', 'Galpão', 4200000, 11, 20, 'Prospecção B2B, logística', 'Rota Norte', 'Rodovia Norte, km 12, módulo 2', 'Brasília', 'DF', 1500, 3000, null, null, 2, 10, null, 18000]
   ];
-  imoveis.forEach(([codigo, nome, tipo, valor, prioridade, probabilidade, estrategia, bairro]) => {
-    db.run(`INSERT INTO imovel (codigo,nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro) VALUES (?,?,?,?,?,?,?,'ativo',?)`,
-      [codigo, nome, tipo, valor, prioridade, probabilidade, estrategia, bairro]);
+  imoveis.forEach(([codigo, nome, tipo, valor, prioridade, probabilidade, estrategia, bairro, endereco, cidade, uf, areaUtil, areaTotal, quartos, suites, banheiros, vagas, condominio, iptu]) => {
+    db.run(`INSERT INTO imovel (codigo,nome,tipo,valor,prioridade,probabilidade,estrategia,status,bairro,endereco,cidade,uf,area_util,area_total,quartos,suites,banheiros,vagas,condominio,iptu) VALUES (?,?,?,?,?,?,?,'ativo',?,?,?,?,?,?,?,?,?,?,?,?)`,
+      [codigo, nome, tipo, valor, prioridade, probabilidade, estrategia, bairro, endereco, cidade, uf, areaUtil, areaTotal, quartos, suites, banheiros, vagas, condominio, iptu]);
   });
   // ---- amostra de mercado: gerado por gerar-amostra-mercado.py, não edite à mão ----
   // Ver o porquê em gerar-amostra-mercado.py. Regerar: python gerar-amostra-mercado.py
@@ -2845,20 +3107,20 @@ function seedDatabase() {
   [['V1',-15.7940,-47.8820],['R2',-15.8390,-48.0230],['B3',-15.7640,-47.9310],
    ['P4',-15.8210,-47.9020],['M5',-15.7810,-47.9290],['G6',-15.7200,-47.9500],
    ['L7',-15.8600,-47.8700],['T8',-15.7500,-48.0100],['C9',-15.8000,-47.8600],
-   ['E10',-15.7930,-47.8890]].forEach(([c,la,ln]) =>
+   ['E10',-15.7930,-47.8890],['G11',-15.7210,-47.9480]].forEach(([c,la,ln]) =>
     db.run(`UPDATE imovel SET lat=?, lng=? WHERE codigo=?`, [la, ln, c]));
   db.run(`UPDATE imovel SET status='vendido' WHERE codigo='V1'`);
 
   const idBy = codigo => q('SELECT id FROM imovel WHERE codigo=?', [codigo])[0].id;
-  const b2 = idBy('V1'), b3 = idBy('R2'), a5 = idBy('B3'), c1 = idBy('P4'), c2 = idBy('M5');
+  const b2 = idBy('V1'), df03 = idBy('R2'), ext06 = idBy('B3'), df01 = idBy('P4'), df02 = idBy('M5');
 
   const leads = [
-    ['Patrícia Lopes', TEST_PHONES[0 % 3], c1, null, null, null, 'site', 'novo', 'alto', null, null, todayISO(0)],
-    ['João Vitor', TEST_PHONES[1 % 3], c2, null, null, null, 'indicação', 'novo', 'alto', null, null, todayISO(0)],
-    ['Camila Nunes', TEST_PHONES[2 % 3], b3, null, null, null, 'whatsapp', 'contato', 'morno', 'Aluguel vencendo em 60 dias', 'Enviar 2 comparáveis com condomínio menor — até sexta', todayISO(-2)],
-    ['Sérgio Antunes', TEST_PHONES[3 % 3], a5, null, null, null, 'whatsapp', 'contato', 'semente', null, null, todayISO(-3)],
-    ['Helena Prado', TEST_PHONES[4 % 3], b3, null, null, null, 'whatsapp', 'visita', 'médio', null, null, todayISO(-1)],
-    ['Otávio Bastos', TEST_PHONES[5 % 3], a5, null, null, null, 'site', 'proposta', 'semente', null, null, todayISO(-5)],
+    ['Patrícia Lopes', TEST_PHONES[0 % 3], df01, null, null, null, 'site', 'novo', 'alto', null, null, todayISO(0)],
+    ['João Vitor', TEST_PHONES[1 % 3], df01, null, null, null, 'indicação', 'novo', 'alto', null, null, todayISO(0)],
+    ['Camila Nunes', TEST_PHONES[2 % 3], df03, null, null, null, 'whatsapp', 'contato', 'morno', 'Aluguel vencendo em 60 dias', 'Enviar 2 comparáveis com condomínio menor — até sexta', todayISO(-2)],
+    ['Sérgio Antunes', TEST_PHONES[3 % 3], ext06, null, null, null, 'whatsapp', 'contato', 'semente', null, null, todayISO(-3)],
+    ['Helena Prado', TEST_PHONES[4 % 3], df03, null, null, null, 'whatsapp', 'visita', 'médio', null, null, todayISO(-1)],
+    ['Otávio Bastos', TEST_PHONES[5 % 3], ext06, null, null, null, 'site', 'proposta', 'semente', null, null, todayISO(-5)],
     ['Renata Kunz', TEST_PHONES[6 % 3], b2, null, null, null, 'indicação', 'fechado', '70%', null, null, todayISO(-12)]
   ];
   leads.forEach(row => db.run(`INSERT INTO lead (nome,telefone,imovel_id,tipo_interesse,bairro_interesse,orcamento,canal_origem,estagio,classificacao,motivacao,proximo_passo,criado_em) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`, row));
@@ -2866,18 +3128,18 @@ function seedDatabase() {
   const leadBy = nome => q('SELECT id FROM lead WHERE nome=?', [nome])[0].id;
   const marina = leadBy('Camila Nunes'), felipe = leadBy('Otávio Bastos'), beatriz = leadBy('Helena Prado'), rodrigo = leadBy('João Vitor');
 
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, marina, todayISO(0), '14:00', 'confirmada']);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [a5, felipe, todayISO(0), '16:30', 'pendente']);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, beatriz, todayISO(1), '10:00', 'confirmada']);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [c2, rodrigo, todayISO(1), '18:00', 'pendente']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [df03, marina, todayISO(0), '14:00', 'confirmada']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [ext06, felipe, todayISO(0), '16:30', 'pendente']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [df03, beatriz, todayISO(1), '10:00', 'confirmada']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [df01, rodrigo, todayISO(1), '18:00', 'pendente']);
 
   db.run(`INSERT INTO sequencia_contato (lead_id,dia,canal,descricao,status,vence_em) VALUES (?,?,?,?,?,?)`, [rodrigo, 7, 'WhatsApp', 'Conteúdo de valor', 'agendado', todayISO(-1)]);
 
   // rodada 35 — interações com humor e sinais, e respostas de qualificação
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [marina, 'ligacao', 'Quer visitar', 'confirmou a visita de hoje às 14h', 1, '["urgencia"]', 'Decidida, o aluguel vence em 60 dias', b3, todayISO(-1) + 'T10:20']);
+    [marina, 'ligacao', 'Quer visitar', 'confirmou a visita de hoje às 14h', 1, '["urgencia"]', 'Decidida, o aluguel vence em 60 dias', df03, todayISO(-1) + 'T10:20']);
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [felipe, 'whatsapp', 'Conversamos', 'mandei o comparável', 0, '["preco_objecao","decide_sozinho"]', 'Gosta do imóvel, trava no preço', a5, todayISO(-2) + 'T17:40']);
+    [felipe, 'whatsapp', 'Conversamos', 'mandei o comparável', 0, '["preco_objecao","decide_sozinho"]', 'Gosta do imóvel, trava no preço', ext06, todayISO(-2) + 'T17:40']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [marina, 'prazo', 'ate3m', todayISO(-1) + 'T10:21']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [marina, 'moradia_atual', 'aluguel', todayISO(-1) + 'T10:21']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [felipe, 'pagamento', 'a_vista', todayISO(-2) + 'T17:41']);
@@ -2900,25 +3162,25 @@ function seedDatabase() {
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cliente')`, [escritura, clienteBy('Renata Kunz')]);
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'cliente',?,'cônjuge')`, [escritura, clienteBy('Marcelo Dias')]);
   // plantão toda semana, 4 vezes (C2: repetição em série)
-  const plantao = novoComp('plantao', null, todayISO(2), '09:00', 240, null, c1, 0);
+  const plantao = novoComp('plantao', null, todayISO(2), '09:00', 240, null, df01, 0);
   [0, 7, 14, 21].forEach(n => {
-    const cid = n ? novoComp('plantao', null, todayISO(2 + n), '09:00', 240, null, c1, 0) : plantao;
+    const cid = n ? novoComp('plantao', null, todayISO(2 + n), '09:00', 240, null, df01, 0) : plantao;
     db.run(`UPDATE compromisso SET serie_id=?, recorrencia='semanal', recorrencia_ate=? WHERE id=?`, [plantao, todayISO(23), cid]);
   });
   // tarefas sem hora (C2)
   db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Pedir a certidão de matrícula', todayISO(0), null, null, b2, todayISO(-1)]);
   db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Mandar os comparáveis com condomínio menor', todayISO(1), 'lead', marina, null, todayISO(-1)]);
-  db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Atualizar as fotos do anúncio', null, null, null, b3, todayISO(-2)]);
+  db.run(`INSERT INTO tarefa (texto,data,pessoa_tipo,pessoa_id,imovel_id,criado_em) VALUES (?,?,?,?,?,?)`, ['Atualizar as fotos do anúncio', null, null, null, df03, todayISO(-2)]);
   db.run(`UPDATE visita SET destaque=1 WHERE lead_id=?`, [marina]);
 
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
-    ['audio', 'visita', 'R2 · Recanto das Águas', 'ela gostou muito da cozinha, achou o quintal pequeno mas disse que dava pra churrasco, perguntou se dá pra negociar o condomínio, falei que ia checar e volto até sexta', '14:32', todayISO(0), marina, b3]);
+    ['audio', 'visita', 'R2 · Recanto das Águas', 'ela gostou muito da cozinha, achou o quintal pequeno mas disse que dava pra churrasco, perguntou se dá pra negociar o condomínio, falei que ia checar e volto até sexta', '14:32', todayISO(0), marina, df03]);
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em) VALUES (?,?,?,?,?,?)`,
     ['camera', 'documento', 'RG do cliente · Marcelo Dias', OCR_SIMULADO[0], '11:50', todayISO(0)]);
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id) VALUES (?,?,?,?,?,?,?)`,
     ['texto', 'lead', 'João Vitor', 'ligou perguntando sobre financiamento pelo banco X, falei que ia verificar a taxa e retorno amanhã', '18:05', todayISO(-1), rodrigo]);
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
-    ['audio', 'visita', 'B3 · Bela Vista', 'cliente achou o preço alto pro padrão, mas gostou muito da vista — vale mandar comparável de imóvel similar', '11:10', todayISO(-3), felipe, a5]);
+    ['audio', 'visita', 'B3 · Bela Vista', 'cliente achou o preço alto pro padrão, mas gostou muito da vista — vale mandar comparável de imóvel similar', '11:10', todayISO(-3), felipe, ext06]);
 
   db.run(`INSERT INTO documento_carteira (nome,categoria,ocr_simulado,criado_em) VALUES (?,?,1,?)`, ['CRECI 00000-F (exemplo)', 'pessoal', todayISO(-20)]);
   db.run(`INSERT INTO documento_carteira (nome,categoria,ocr_simulado,criado_em) VALUES (?,?,1,?)`, ['RG / CPF', 'pessoal', todayISO(-20)]);
@@ -2927,8 +3189,7 @@ function seedDatabase() {
   db.run(`INSERT INTO documento_carteira (nome,categoria,ocr_texto,ocr_simulado,criado_em) VALUES (?,?,?,1,?)`, ['Comprovante de renda', 'negociacao', OCR_SIMULADO[2], todayISO(0)]);
 
   // rodada 37 — massa de demonstração: leads de venda, captações e mais leads de compra,
-  // diversificados nos 10 imóveis reais do portfólio (inclusive os 5 que ainda não tinham
-  // nenhum lead: A1, A3+A4, C3, C4, A2), cobrindo todos os estágios do funil, canais de
+  // diversificados na carteira (inclusive os imóveis que ainda não tinham nenhum lead), cobrindo todos os estágios do funil, canais de
   // origem variados, qualificação (respostas, sinais e humor) dos dois lados — comprador e
   // proprietário —, todos os status de visita e follow-up atrasado/em dia/feito. Pedido
   // explícito do usuário pra exercitar a demonstração completa das funcionalidades.
@@ -2940,23 +3201,25 @@ function seedDatabase() {
     ['Diego Farias', TEST_PHONES[11 % 3], 'Mirante Sul - Bloco 11', 'Apartamento', 'Financeiro — atrasou o condomínio, precisa vender rápido', 'contato', todayISO(-2)],
     ['Sônia Vasconcelos', TEST_PHONES[12 % 3], 'Bela Vista - Rua 8', 'Casa', 'Mudança — vai morar com a filha', 'novo', todayISO(-10)],
     ['Ricardo e Ana Beatriz Klein', TEST_PHONES[13 % 3], 'Alto do Bosque - Condomínio Quintas', 'Lote', 'Não vai mais construir, prefere vender o lote', 'novo', todayISO(0)],
-    ['Tech Cerrado Soluções', TEST_PHONES[14 % 3], 'Eixo Central - Trecho 3', 'Comercial', 'Fechou a filial de Brasília', 'contato', todayISO(-12)]
+    ['Tech Cerrado Soluções', TEST_PHONES[14 % 3], 'Eixo Central - Trecho 3', 'Comercial', 'Fechou a filial de Brasília', 'contato', todayISO(-12)],
+    // o banco de captações conta 5 casas a mais no mesmo condomínio da casa do litoral, como potencial, não como captação feita
+    ['Condomínio Bela Vista (incorporador) — 5 casas restantes', TEST_PHONES[27 % 3], 'Bela Vista - Rua das Palmeiras, 350', 'Casa', 'Potencial do banco de captações: 5 unidades a R$ 640 mil cada no mesmo condomínio da casa já captada; confirmar disponibilidade e quem decide', 'novo', todayISO(0)]
   ];
   captacoes.forEach(row => db.run(`INSERT INTO captacao_lp (nome,telefone,endereco,tipo_imovel,motivo,status,criado_em) VALUES (?,?,?,?,?,?,?)`, row));
   const captBy = nome => q('SELECT id FROM captacao_lp WHERE nome=?', [nome])[0].id;
 
-  const a1 = idBy('C9'), a3a4 = idBy('G6'), c3 = idBy('L7'), c4 = idBy('T8'), a2 = idBy('E10');
+  const ext02 = idBy('C9'), ext04 = idBy('G6'), ext03 = idBy('G11'), ext05 = idBy('L7'), ext01 = idBy('E10');
   const leads2 = [
-    ['Henrique Bastos', TEST_PHONES[15 % 3], a1, null, null, 'à vista, até R$ 3,2 mi', 'indicação', 'contato', 'quente', 'Cobertura para receber a família — decide com a esposa', 'Mandar mais fotos da vista e do pôr do sol', todayISO(-4)],
-    ['Lucas Andrade', TEST_PHONES[16 % 3], a3a4, 'Galpão logístico', null, null, 'site', 'novo', 'a qualificar', null, null, todayISO(-1)],
-    ['Fábio Noronha', TEST_PHONES[17 % 3], c3, null, null, null, 'whatsapp', 'visita', 'morno', 'Quer sair do apartamento, busca mais espaço pra família', 'Perguntar se já conversou com a esposa', todayISO(-6)],
-    ['Renata Colares', TEST_PHONES[18 % 3], c4, null, null, null, 'instagram', 'contato', 'morno', 'Achou pelo Reels — achou o valor acima do esperado', null, todayISO(-2)],
-    ['Overseas Cargo Participações', TEST_PHONES[19 % 3], a2, null, null, null, 'parceria', 'proposta', 'quente', 'Expansão do escritório regional — decide em comitê', 'Aguardar retorno da diretoria até sexta', todayISO(-9)],
+    ['Henrique Bastos', TEST_PHONES[15 % 3], ext02, null, null, 'à vista, até R$ 3,2 mi', 'indicação', 'contato', 'quente', 'Cobertura para receber a família — decide com a esposa', 'Mandar mais fotos da vista e do pôr do sol', todayISO(-4)],
+    ['Lucas Andrade', TEST_PHONES[16 % 3], ext04, 'Galpão logístico', null, null, 'site', 'novo', 'a qualificar', null, null, todayISO(-1)],
+    ['Fábio Noronha', TEST_PHONES[17 % 3], df03, null, null, null, 'whatsapp', 'visita', 'morno', 'Quer sair do apartamento, busca mais espaço pra família', 'Perguntar se já conversou com a esposa', todayISO(-6)],
+    ['Renata Colares', TEST_PHONES[18 % 3], ext05, null, null, null, 'instagram', 'contato', 'morno', 'Achou pelo Reels — achou o valor acima do esperado', null, todayISO(-2)],
+    ['Overseas Cargo Participações', TEST_PHONES[19 % 3], ext01, null, null, null, 'parceria', 'proposta', 'quente', 'Expansão do escritório regional — decide em comitê', 'Aguardar retorno da diretoria até sexta', todayISO(-9)],
     ['Juliana Kramer', TEST_PHONES[20 % 3], null, 'Apartamento', 'Bela Vista', 'até R$ 750 mil', 'google', 'novo', 'a qualificar', null, null, todayISO(0)],
     ['Otávio Mendes', TEST_PHONES[21 % 3], null, 'Casa', 'Recanto das Águas', 'até R$ 1,4 mi', 'placa', 'contato', 'morno', 'Passou na frente do R2 e perguntou o valor', 'Confirmar orçamento — o Matching já aponta o R2', todayISO(-1)],
-    ['Priscila Andrade', TEST_PHONES[22 % 3], c2, null, null, null, 'evento', 'novo', 'a qualificar', 'Conheceu no feirão imobiliário do shopping', null, todayISO(0)],
-    ['Thiago Bezerra', TEST_PHONES[23 % 3], b3, null, null, null, 'whatsapp', 'contato', 'frio', 'Mandei duas mensagens, sumiu', null, todayISO(-15)],
-    ['Marcelo Vidigal', TEST_PHONES[24 % 3], c1, null, null, null, 'site', 'fechado', 'quente', 'Fechou rápido, já tinha o dinheiro separado', null, todayISO(-6)]
+    ['Priscila Andrade', TEST_PHONES[22 % 3], df02, null, null, null, 'evento', 'novo', 'a qualificar', 'Conheceu no feirão imobiliário do shopping', null, todayISO(0)],
+    ['Thiago Bezerra', TEST_PHONES[23 % 3], df03, null, null, null, 'whatsapp', 'contato', 'frio', 'Mandei duas mensagens, sumiu', null, todayISO(-15)],
+    ['Marcelo Vidigal', TEST_PHONES[24 % 3], ext03, null, null, null, 'site', 'fechado', 'quente', 'Investidor: fechou rápido, já tinha o dinheiro separado', null, todayISO(-6)]
   ];
   leads2.forEach(row => db.run(`INSERT INTO lead (nome,telefone,imovel_id,tipo_interesse,bairro_interesse,orcamento,canal_origem,estagio,classificacao,motivacao,proximo_passo,criado_em) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`, row));
 
@@ -2966,26 +3229,26 @@ function seedDatabase() {
 
   // visitas com todos os status possíveis (pendente, confirmada futura, confirmada já
   // realizada com desfecho, não compareceu, cancelada), pra exercitar a Agenda por completo
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,destaque) VALUES (?,?,?,?,?,?)`, [a1, henrique, todayISO(3), '11:00', 'confirmada', 1]);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [b3, otavio, todayISO(2), '17:00', 'pendente']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,destaque) VALUES (?,?,?,?,?,?)`, [ext02, henrique, todayISO(3), '11:00', 'confirmada', 1]);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status) VALUES (?,?,?,?,?)`, [df03, otavio, todayISO(2), '17:00', 'pendente']);
   db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,inicio,fim,desfecho,objecao,proximo_passo) VALUES (?,?,?,?,?,?,?,?,?,?)`,
-    [c3, fabio, todayISO(-6), '15:00', 'confirmada', todayISO(-6) + 'T15:00', todayISO(-6) + 'T15:40', 'Gostou muito, quer levar a esposa numa segunda visita', 'Achou o quintal um pouco pequeno', 'Marcar segunda visita com a esposa']);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [c2, priscila, todayISO(-3), '10:00', 'nao_compareceu', 'Não avisou, não atendeu depois']);
-  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [b3, thiago, todayISO(-14), '09:00', 'cancelada', 'Cancelou de última hora']);
+    [df03, fabio, todayISO(-6), '15:00', 'confirmada', todayISO(-6) + 'T15:00', todayISO(-6) + 'T15:40', 'Gostou muito, quer levar a esposa numa segunda visita', 'Achou o quintal um pouco pequeno', 'Marcar segunda visita com a esposa']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [df02, priscila, todayISO(-3), '10:00', 'nao_compareceu', 'Não avisou, não atendeu depois']);
+  db.run(`INSERT INTO visita (imovel_id,lead_id,data,hora,status,desfecho) VALUES (?,?,?,?,?,?)`, [df03, thiago, todayISO(-14), '09:00', 'cancelada', 'Cancelou de última hora']);
 
   // qualificação: respostas + interações dos dois lados (comprador e proprietário), com
   // humor e sinais variados — do super quente ao frio de verdade, todos com chave/valor
   // válidos no catálogo de PERGUNTAS e SINAIS, pra pontuar de verdade
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [henrique, 'whatsapp', 'Mandou mais fotos', 'perguntou sobre a documentação do terreno e se tem averbação', 2, '["a_vista","depende_de_outro"]', 'Muito interessado, só precisa alinhar com a esposa', a1, todayISO(-4) + 'T09:15']);
+    [henrique, 'whatsapp', 'Mandou mais fotos', 'perguntou sobre a documentação do terreno e se tem averbação', 2, '["a_vista","depende_de_outro"]', 'Muito interessado, só precisa alinhar com a esposa', ext02, todayISO(-4) + 'T09:15']);
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [otavio, 'ligacao', 'Confirmou interesse', 'perguntou se dá pra negociar e se aceita financiamento pela Caixa', 1, '["comparando"]', 'Comparando com outro imóvel na região', b3, todayISO(-1) + 'T16:40']);
+    [otavio, 'ligacao', 'Confirmou interesse', 'perguntou se dá pra negociar e se aceita financiamento pela Caixa', 1, '["comparando"]', 'Comparando com outro imóvel na região', df03, todayISO(-1) + 'T16:40']);
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [fabio, 'visita', 'Visitou', 'gostou da casa mas achou o quintal pequeno', 1, '["vai_trazer_alguem"]', 'Vai voltar com a esposa antes de decidir', c3, todayISO(-6) + 'T15:40']);
+    [fabio, 'visita', 'Visitou', 'gostou da casa mas achou o quintal pequeno', 1, '["vai_trazer_alguem"]', 'Vai voltar com a esposa antes de decidir', df03, todayISO(-6) + 'T15:40']);
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [renata, 'whatsapp', 'Achou caro', 'disse que o valor está acima do que ela esperava pra região', -1, '["preco_objecao"]', 'Gosta do imóvel mas trava no preço', c4, todayISO(-2) + 'T11:20']);
+    [renata, 'whatsapp', 'Achou caro', 'disse que o valor está acima do que ela esperava pra região', -1, '["preco_objecao"]', 'Gosta do imóvel mas trava no preço', ext05, todayISO(-2) + 'T11:20']);
   db.run(`INSERT INTO interacao (lead_id,tipo,resultado,texto,humor,sinais,impressao,imovel_id,criado_em) VALUES (?,?,?,?,?,?,?,?,?)`,
-    [thiago, 'whatsapp', 'Sem resposta', 'mandei duas mensagens perguntando se ainda tem interesse, nada', -1, '["nao_responde"]', 'Provavelmente desistiu ou já comprou em outro lugar', b3, todayISO(-13) + 'T10:00']);
+    [thiago, 'whatsapp', 'Sem resposta', 'mandei duas mensagens perguntando se ainda tem interesse, nada', -1, '["nao_responde"]', 'Provavelmente desistiu ou já comprou em outro lugar', df03, todayISO(-13) + 'T10:00']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'prazo', 'ate6m', todayISO(-4) + 'T09:16']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'pagamento', 'a_vista', todayISO(-4) + 'T09:16']);
   db.run(`INSERT INTO qualificacao_resposta (lead_id,chave,valor,criado_em) VALUES (?,?,?,?)`, [henrique, 'decisor', 'conjuge', todayISO(-4) + 'T09:16']);
@@ -3019,24 +3282,24 @@ function seedDatabase() {
 
   // proposta em negociação — Overseas Cargo, oferta abaixo do valor pedido
   db.run(`INSERT INTO proposta (lead_id,imovel_id,valor,condicoes,status,criado_em) VALUES (?,?,?,?,?,?)`,
-    [overseas, a2, 520000, 'Pagamento em 3 parcelas — entrada, na assinatura e na entrega das chaves', 'enviada', todayISO(-9)]);
+    [overseas, ext01, 520000, 'Pagamento em 3 parcelas — entrada, na assinatura e na entrega das chaves', 'enviada', todayISO(-9)]);
 
   // mais clientes de base — indicação, ex-cliente sem lead ativo e o fechamento de C1
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Cláudia Ribeiro', TEST_PHONES[25 % 3], 'Contato geral', 'Amiga da Sônia Vasconcelos — pode indicar outros vendedores em Bela Vista', todayISO(0)]);
   db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Fernando Costa', TEST_PHONES[26 % 3], 'Ex-cliente', 'Comprou com outro corretor antes de conhecer o Rafael; hoje só acompanha o mercado', todayISO(-90)]);
-  db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Vidigal', TEST_PHONES[24 % 3], 'Ex-cliente', 'Fechou P4 · Parque das Flores, há 6 dias', todayISO(-6)]);
+  db.run(`INSERT INTO cliente (nome,telefone,tipo,observacoes,criado_em) VALUES (?,?,?,?,?)`, ['Marcelo Vidigal', TEST_PHONES[24 % 3], 'Ex-cliente', 'Fechou G11 · Galpão Rota Norte módulo 2, há 6 dias', todayISO(-6)]);
 
   // notas soltas — texto ligado a lead/imóvel, e uma de captação (contexto livre, a tabela
   // nota não tem coluna própria pra captação ainda)
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em,lead_id,imovel_id) VALUES (?,?,?,?,?,?,?,?)`,
-    ['texto', 'lead', 'Henrique Bastos', 'confirmou que topa fechar à vista se resolvermos a documentação do terreno até o fim do mês', '09:20', todayISO(-4), henrique, a1]);
+    ['texto', 'lead', 'Henrique Bastos', 'confirmou que topa fechar à vista se resolvermos a documentação do terreno até o fim do mês', '09:20', todayISO(-4), henrique, ext02]);
   db.run(`INSERT INTO nota (modo,contexto,referencia,texto,hora,criado_em) VALUES (?,?,?,?,?,?)`,
     ['texto', 'captacao', 'Marcelo Duarte', 'confirmou por WhatsApp que aceita placa e fotos profissionais, só pede discrição por conta dos vizinhos', '16:10', todayISO(-5)]);
 
   // agenda: avaliação de captação e reunião B2B, mostrando os dois lados do funil
   const avaliacao = novoComp('captacao', 'Avaliar apartamento do Marcelo Duarte', todayISO(2), '10:00', 60, 'Vista Verde - Alameda 3', null, 3);
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'captacao',?,'proprietário')`, [avaliacao, captBy('Marcelo Duarte')]);
-  const reuniaoB2B = novoComp('reuniao', 'Reunião com a diretoria da Overseas Cargo', todayISO(4), '14:00', 90, 'Escritório', a2, 2);
+  const reuniaoB2B = novoComp('reuniao', 'Reunião com a diretoria da Overseas Cargo', todayISO(4), '14:00', 90, 'Escritório', ext01, 2);
   db.run(`INSERT INTO agenda_pessoa (item_tipo,item_id,pessoa_tipo,pessoa_id,papel) VALUES ('compromisso',?,'lead',?,NULL)`, [reuniaoB2B, overseas]);
 
   persist();
@@ -3046,12 +3309,18 @@ function seedDatabase() {
 async function boot() {
   try {
     SQL = await initSqlJs({ wasmBinary: b64ToBytes(WASM_B64) });
+    try { await carregarMidia(); } catch (e) { console.error('midia', e); }
     let stored;
     try { stored = await idbGet('db'); } catch (e) { stored = null; }
     if (stored) {
       db = new SQL.Database(new Uint8Array(stored));
       runMigrations();
       try { esvaziarLixeiraVencida(); } catch (e) { /* ok */ }
+      // banco salvo antes da rodada 44: foto e áudio saem de dentro dele uma vez só
+      // VACUUM: o SQLite não devolve o espaço das páginas liberadas sozinho, e o banco salvo
+      // continuaria do tamanho de antes
+      try { if (tirarMidiaDoBanco()) { db.run('VACUUM'); persist(); } } catch (e) { console.error('midia', e); }
+      setTimeout(() => limparMidiaSolta().catch(e => console.error('midia', e)), 4000);
     } else {
       db = new SQL.Database();
       semeando = true; seedDatabase(); semeando = false;
@@ -3084,6 +3353,8 @@ function confirmarReset() {
     'Apagar tudo', resetDb, { exportar: true });
 }
 async function resetDb() {
+  midiaEsquecerTudo();
+  try { await midiaSubstituirTudo([]); } catch (e) { /* o que sobrar sai no próximo boot */ }
   db = new SQL.Database();
   semeando = true; seedDatabase(); semeando = false;
   crFilter = 'novo';
@@ -3100,17 +3371,58 @@ async function resetDb() {
 function limparMarcasPorId() {
   try { Object.keys(localStorage).filter(k => /^confirmado:|^lembrete:(disparados|adiados):/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ok */ }
 }
-function exportDb() {
-  const bytes = db.export();
-  const blob = new Blob([bytes], { type: 'application/x-sqlite3' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ohubimob-campo-' + todayISO(0) + '.sqlite';
-  a.click();
-  try { localStorage.setItem('backup:ultimo', String(Date.now())); } catch (e) { /* ok */ }
-  renderBackup();
-  const aviso = document.getElementById('confirmar-backup'); if (aviso) aviso.textContent = textoUltimoBackup();
-  showToast('Banco exportado.');
+// Rodada 44: o backup é um .zip com o banco e a pasta de mídia (decisão do dono, 2026-10-04).
+async function exportDb() {
+  let pares = [];
+  try { pares = await midiaLerTudo(); } catch (e) { /* sem mídia gravada ainda */ }
+  midiaFila.forEach((b, ref) => { if (!pares.some(p => p[0] === ref)) pares.push([ref, b]); });
+  const usadas = refsEmUso();
+  pares = pares.filter(([ref]) => usadas.has(ref));
+  const manifesto = { app: 'OHubImob Campo', formato: 1, exportado_em: new Date().toISOString(),
+    banco: 'ohubimob-campo.sqlite', midia: [] };
+  const arquivos = [{ nome: 'ohubimob-campo.sqlite', dados: db.export() }];
+  for (const [ref, b] of pares) {
+    const nome = 'midia/' + ref.slice(6) + extensaoMidia(b.type);
+    arquivos.push({ nome, dados: new Uint8Array(await b.arrayBuffer()) });
+    manifesto.midia.push({ ref, arquivo: nome, tipo: b.type });
+  }
+  arquivos.splice(1, 0, { nome: 'manifesto.json', dados: new TextEncoder().encode(JSON.stringify(manifesto, null, 2)) });
+  baixarArquivo(zipSemCompressao(arquivos), 'ohubimob-campo-' + todayISO(0) + '.zip');
+  marcarBackupFeito();
+  showToast(pares.length ? 'Backup exportado: banco e ' + plural(pares.length, 'arquivo de mídia', 'arquivos de mídia') + '.' : 'Backup exportado.');
+}
+// Só o .sqlite, com a mídia de volta dentro dele: é o formato que o portal (app-local.html)
+// abre. Fica como saída secundária; o backup de verdade é o .zip.
+async function refParaDataUrl(ref) {
+  const url = midiaUrls.get(ref); if (!url) return null;
+  const b = await (await fetch(url)).blob();
+  return new Promise(ok => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = () => ok(null); fr.readAsDataURL(b); });
+}
+async function exportarSoBanco() {
+  const copia = new SQL.Database(db.export());
+  try {
+    for (const [t, c] of MIDIA_COLUNAS) {
+      const st = copia.prepare(`SELECT rowid AS rid, ${c} AS v FROM ${t} WHERE ${c} LIKE 'midia:%'`), linhas = [];
+      while (st.step()) linhas.push(st.getAsObject());
+      st.free();
+      for (const r of linhas) {
+        const dado = await refParaDataUrl(r.v);
+        copia.run(`UPDATE ${t} SET ${c}=? WHERE rowid=?`, [dado, r.rid]);
+      }
+    }
+    // a lixeira também: um item restaurado depois precisa voltar com a foto
+    const st = copia.prepare("SELECT id, dados FROM lixeira WHERE dados LIKE '%midia:%'"), lix = [];
+    while (st.step()) lix.push(st.getAsObject());
+    st.free();
+    for (const r of lix) {
+      let dados = String(r.dados);
+      for (const ref of new Set(dados.match(/midia:[\w-]+/g) || [])) dados = dados.split(ref).join(await refParaDataUrl(ref) || '');
+      copia.run('UPDATE lixeira SET dados=? WHERE id=?', [dados, r.id]);
+    }
+    baixarArquivo(new Blob([copia.export()], { type: 'application/x-sqlite3' }), 'ohubimob-campo-' + todayISO(0) + '.sqlite');
+  } finally { copia.close(); }
+  marcarBackupFeito();
+  showToast('Banco exportado em .sqlite, com as fotos dentro.');
 }
 
 // nucleo-backup:inicio
@@ -3120,8 +3432,22 @@ function exportDb() {
 // depois do último, e "Depois" cala por 3 dias. `semeando` é o que impede a própria carga da
 // semente de contar como "alteração" — cada app liga/desliga em volta do próprio seedDatabase().
 let semeando = false;
+// O navegador pode despejar o IndexedDB de um site quando falta espaço. Na primeira gravação
+// de verdade, pede pra guardar o deste app como persistente (revisão de 2026-11-24). Em app
+// instalado o navegador costuma conceder sem perguntar; negado, tudo segue como antes.
+let armazenamentoPedido = false;
+function protegerArmazenamento() {
+  if (armazenamentoPedido) return;
+  armazenamentoPedido = true;
+  try {
+    const s = navigator.storage;
+    if (!s || !s.persist || !s.persisted) return;
+    s.persisted().then(ja => ja || s.persist()).catch(() => { /* ok */ });
+  } catch (e) { /* ok */ }
+}
 function marcarAlteracao() {
   if (semeando) return;
+  protegerArmazenamento();
   try {
     const agora = String(Date.now());
     localStorage.setItem('dados:alterado', agora);
@@ -3165,12 +3491,17 @@ function importDb(evt) {
   const file = evt.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
-    const bytes = new Uint8Array(reader.result);
+  reader.onload = async () => {
+    let bytes = new Uint8Array(reader.result), midia = [];
+    // rodada 44: o backup é um .zip (banco + mídia); o .sqlite antigo continua aceito
+    if (bytes[0] === 0x50 && bytes[1] === 0x4B) {
+      try { ({ bytes, midia } = await lerBackupZip(bytes)); }
+      catch (e) { showToastErr('Não consegui abrir o .zip: ' + (e && e.message ? e.message : e)); evt.target.value = ''; return; }
+    }
     // sql.js abre qualquer sequência de bytes sem reclamar e só falha na primeira query — e
     // antes o persist() vinha ANTES da query, gravando lixo no IndexedDB e travando o boot.
     if (String.fromCharCode(...bytes.slice(0, 15)) !== 'SQLite format 3') {
-      showToastErr('Esse arquivo não é um banco .sqlite exportado pelo app.'); evt.target.value = ''; return;
+      showToastErr('Esse arquivo não é um backup exportado pelo app (.zip ou .sqlite).'); evt.target.value = ''; return;
     }
     const anterior = db;
     try {
@@ -3181,13 +3512,23 @@ function importDb(evt) {
       db = anterior;
       showToastErr('Não consegui importar: ' + (e && e.message ? e.message : e)); evt.target.value = ''; return;
     }
+    // A mídia do banco anterior sai junto com ele; a do backup entra. Numa transação só: se
+    // falhar (aparelho cheio), nada muda e o banco anterior volta.
+    try { await midiaSubstituirTudo(midia); }
+    catch (e) {
+      db = anterior;
+      showToastErr('Não consegui gravar as fotos do backup no aparelho: ' + (e && (e.name || e.message) || e)); evt.target.value = ''; return;
+    }
+    midiaEsquecerTudo();
+    midia.forEach(([ref, b]) => midiaUrls.set(ref, URL.createObjectURL(b)));
+    if (tirarMidiaDoBanco()) { try { db.run('VACUUM'); } catch (e) { /* só espaço */ } }  // .sqlite antigo traz a foto dentro do banco
     limparMarcasPorId();
     persist(); persistNow();
     renderAll();
     colapsarPilha();
     agendarSyncPush(1000);
     evt.target.value = '';
-    showToast('Banco importado.');
+    showToast(midia.length ? 'Backup importado: banco e ' + plural(midia.length, 'arquivo de mídia', 'arquivos de mídia') + '.' : 'Banco importado.');
   };
   reader.readAsArrayBuffer(file);
 }
@@ -3339,7 +3680,7 @@ async function openFileShareSheet(id) {
   if (doc.imagem_base64 && navigator.canShare && navigator.share) {
     try {
       const safeName = (doc.nome || 'arquivo').replace(/[^\w\-]+/g, '_');
-      const file = await dataUrlToFile(doc.imagem_base64, safeName + '.jpg');
+      const file = await dataUrlToFile(midiaSrc(doc.imagem_base64), safeName + '.jpg');
       const shareData = { files: [file], title: doc.nome, text: doc.nome };
       if (navigator.canShare(shareData)) {
         await navigator.share(shareData);
@@ -3449,6 +3790,7 @@ function detailClienteHTML(id) {
       ${linhaCampo('Observações', esc(c.observacoes || '—'))}
       ${acoesContato(c.telefone, 'cliente:' + id)}
     </div>
+    ${botoesNotaHTML('cliente', id)}
     <button class="btn btn--block" onclick="abrirCriar('cliente', ${id})">${ico('somar')}Criar algo ligado a este cliente</button>
     ${proximosDaPessoaHTML('cliente', id)}
     ${blocoLinhaDoTempo('cliente', id)}
@@ -3466,6 +3808,7 @@ function detailCaptacaoHTML(id) {
       ${acoesContato(c.telefone, 'captacao:' + id)}
     </div>
     ${blocoQualificacaoHTML('captacao', id)}
+    ${botoesNotaHTML('captacao', id)}
     <button class="btn btn--block" onclick="captacaoVirarImovel(${id})">${ico('portfolio')}Virar imóvel do portfólio</button>
     ${proximosDaPessoaHTML('captacao', id)}
     ${blocoLinhaDoTempo('captacao', id)}
@@ -3489,7 +3832,7 @@ function detailImovelHTML(id) {
   const fatos = FATOS.map(f => [f[1], valorFato(im, f)]).filter(x => x[1]);
   const chk = checklistDe(id);
   return cabecalhoDetalhe('Imóvel', nomeImovel(im)) +
-    (im.imagem_base64 ? `<img class="shot" src="${im.imagem_base64}" alt="">` : '') + `
+    (im.imagem_base64 ? `<img class="shot" src="${midiaSrc(im.imagem_base64)}" alt="">` : '') + `
     <div class="card">
       <div class="between"><span class="price">${fmtBRL(im.valor)}</span><span class="pill ${im.status === 'vendido' ? '' : 'ok'}">${esc(im.status)}</span></div>
       <p class="muted" style="margin:var(--s2) 0 0">${esc(im.estrategia || '')}</p>
@@ -3518,7 +3861,7 @@ function detailImovelHTML(id) {
     </div>
 
     <h3 class="blk-title">Fotos</h3>
-    ${fotos.length ? `<div class="fotos-grade">${fotos.map(f => `<button class="foto" onclick="abrirFoto(${f.id})" aria-label="Abrir foto"><img src="${f.imagem_base64}" alt=""></button>`).join('')}</div>` : ''}
+    ${fotos.length ? `<div class="fotos-grade">${fotos.map(f => `<button class="foto" onclick="abrirFoto(${f.id})" aria-label="Abrir foto"><img src="${midiaSrc(f.imagem_base64)}" alt=""></button>`).join('')}</div>` : ''}
     <div class="btn-row">
       <button class="btn btn--grow" onclick="document.getElementById('foto-cam-${id}').click()">${ico('camera')}Tirar foto</button>
       <button class="btn btn--grow" onclick="document.getElementById('foto-gal-${id}').click()">${ico('upload')}Da galeria</button>
@@ -3526,13 +3869,16 @@ function detailImovelHTML(id) {
     <input type="file" id="foto-cam-${id}" accept="image/*" capture="environment" hidden onchange="adicionarFotos(${id}, this)">
     <input type="file" id="foto-gal-${id}" accept="image/*" multiple hidden onchange="adicionarFotos(${id}, this)">
 
+    ${blocoAnuncioHTML(im)}
+
     <h3 class="blk-title">Comparáveis na carteira</h3>
     ${cmaHTML(cmaDe(id))}
 
     <h3 class="blk-title">Documentos da venda · ${chk.feitos} de ${chk.total}</h3>
     ${checklistHTML(id, chk)}
 
-    <button class="btn btn--block" style="margin-top:var(--s3)" onclick="abrirCriar('imovel', ${id})">${ico('somar')}Criar algo ligado a este imóvel</button>
+    <div style="margin-top:var(--s3)">${botoesNotaHTML('imovel', id)}</div>
+    <button class="btn btn--block" onclick="abrirCriar('imovel', ${id})">${ico('somar')}Criar algo ligado a este imóvel</button>
     ${agendaDoImovelHTML(id)}
     <h3 class="blk-title">Leads interessados</h3>
     ${leads.length ? leads.map(l => `<div class="card between"><span>${objLink('lead', l.id, l.nome)}</span><span class="pill brand">${esc(l.classificacao || '—')}</span></div>`).join('')
@@ -3551,10 +3897,14 @@ function detailLeadHTML(id) {
       ${linhaCampo('Imóvel de interesse', l.imovel_id ? objLink('imovel', l.imovel_id, nomeImovel({ codigo: l.codigo, nome: l.imovel_nome })) : esc(l.tipo_interesse || '—'))}
       ${linhaCampo('Motivação', esc(l.motivacao || '—'))}
       ${linhaCampo('Próximo passo', esc(l.proximo_passo || '—'))}
+      ${l.estagio === 'descartado' ? linhaCampo('Descartado', esc(rotuloMotivoDescarte(l.motivo_descarte) || '—') + (l.descartado_em ? `<br><span class="muted">${esc(fmtRelDate(l.descartado_em))}</span>` : '') + `<br><button class="btn btn--sm" style="margin-top:var(--s2)" onclick="reabrirLeadUI(${l.id})">${ico('reset', 'ic-sm')}Reabrir</button>`) : ''}
       ${linhaCampo('Estágio', `<select onchange="setLeadStage(${l.id}, this.value)" style="min-height:var(--tap);width:100%;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg);color:var(--text);padding:0 var(--s3)">${Object.keys(STAGE_LABELS).map(st => `<option value="${st}" ${st === l.estagio ? 'selected' : ''}>${STAGE_LABELS[st]}</option>`).join('')}</select>`)}
       ${acoesContato(l.telefone, 'lead:' + id)}
     </div>
+    ${l.estagio === 'descartado' ? '' : blocoInteresseHTML(id)}
     ${blocoQualificacaoHTML('lead', id)}
+    ${l.imovel_id ? blocoSpinHTML(id, l.imovel_id, 'lead', false) : ''}
+    ${botoesNotaHTML('lead', id)}
     <button class="btn btn--block" onclick="abrirCriar('lead', ${id})">${ico('somar')}Criar algo ligado a este lead</button>
     ${proximosDaPessoaHTML('lead', id)}
     ${blocoLinhaDoTempo('lead', id)}
@@ -3569,7 +3919,7 @@ function detailArquivoHTML(id) {
   const optHTML = (rows, selectedId, labelFn) => '<option value="">(nenhum)</option>' +
     rows.map(r => `<option value="${r.id}" ${r.id === selectedId ? 'selected' : ''}>${esc(labelFn(r))}</option>`).join('');
   return cabecalhoDetalhe('Arquivo · ' + (d.categoria === 'pessoal' ? 'pessoal' : 'desta negociação'), d.nome) +
-    (d.imagem_base64 ? `<img class="shot" src="${d.imagem_base64}" alt="">` : '') + `
+    (d.imagem_base64 ? `<img class="shot" src="${midiaSrc(d.imagem_base64)}" alt="">` : '') + `
     <div class="card">
       <div class="row__meta">${d.ocr_simulado ? 'OCR simulado' : 'digitalizado'} · ${fmtRelDate(d.criado_em)}</div>
       ${d.ocr_texto ? `<p class="muted" style="margin:var(--s2) 0 0">${esc(d.ocr_texto)}</p>` : ''}
@@ -3594,7 +3944,10 @@ function salvarVinculosArquivo(id) {
   openDetail('arquivo', id);
 }
 function setLeadStage(id, estagio) {
-  run(`UPDATE lead SET estagio=? WHERE id=?`, [estagio, id]);
+  const antes = (q('SELECT estagio FROM lead WHERE id=?', [id])[0] || {}).estagio;
+  if (estagio === 'descartado' && antes !== 'descartado') return descartarLeadSheet(id);   // pede o motivo antes
+  if (antes === 'descartado' && estagio !== 'descartado') { reabrirLead(id, estagio); showToast('Lead reaberto em ' + STAGE_LABELS[estagio] + '.'); }
+  else run(`UPDATE lead SET estagio=? WHERE id=?`, [estagio, id]);
   crFilter = estagio; pessoasTipo = 'lead';
   renderCR(); renderHJ();
   if (sheetAberta()) openDetail('lead', id);
@@ -3729,8 +4082,9 @@ function vozParaTexto(msg, lembrar) {
   if (lembrar) { try { localStorage.setItem('voz:sem-reconhecimento', '1'); } catch (e) { /* ok */ } }
   // Rodada 33 (B5): sem transcrição, grava o áudio de verdade em vez de pedir pra digitar
   if (window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) return gravarAudioSheet(msg);
-  if (micPfx === 'vmic-' && viewAtual === 'visita' && visitaAtivaId) {
-    notaDaVisita(visitaAtivaId, 'texto');
+  if (micPfx === 'vmic-' && (notaRegAtual || (viewAtual === 'visita' && visitaAtivaId))) {
+    const r = notaRegAtual || { tipo: 'visita', id: visitaAtivaId };
+    notaNoRegistro(r.tipo, r.id, 'texto');
     setTimeout(() => { const t = document.getElementById('vnota-texto'); if (t) t.focus(); }, 90);
   } else {
     if (viewAtual !== 'nt') go('nt');
@@ -3742,10 +4096,10 @@ function vozParaTexto(msg, lembrar) {
 // Único ponto de gravação de nota. É aqui que o vínculo entra — até a rodada 31 a nota
 // de voz e a de texto gravavam contexto='geral' fixo e nasciam órfãs.
 function gravarNota(modo, referencia, texto, imagem, audio) {
-  const [vid, lid, iid, cid] = ctxNota();
-  const contexto = vid ? 'visita' : lid ? 'lead' : iid ? 'imovel' : cid ? 'cliente' : 'geral';
-  run(`INSERT INTO nota (modo,contexto,referencia,texto,imagem_base64,audio_base64,hora,visita_id,lead_id,imovel_id,cliente_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-    [modo, contexto, referencia, texto, imagem, audio || null, horaAgora(), vid, lid, iid, cid]);
+  const [vid, lid, iid, cid, capid, compid] = ctxNota();
+  const contexto = vid ? 'visita' : lid ? 'lead' : capid ? 'captacao' : compid ? 'compromisso' : iid ? 'imovel' : cid ? 'cliente' : 'geral';
+  run(`INSERT INTO nota (modo,contexto,referencia,texto,imagem_base64,audio_base64,hora,visita_id,lead_id,imovel_id,cliente_id,captacao_id,compromisso_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    [modo, contexto, referencia, texto, guardarMidia(imagem), guardarMidia(audio), horaAgora(), vid, lid, iid, cid, capid, compid]);
   renderNT();
   if (viewAtual === 'visita') renderVisita();
   showToast(notaCtx ? 'Nota salva em ' + notaCtx.referencia + '.' : 'Nota salva.');
@@ -3785,7 +4139,7 @@ function salvarDocumentoCamera() {
   if (!currentCameraDataUrl) return showToastErr('Tire uma foto primeiro.');
   const nome = val('cam-doc-nome') || 'Arquivo digitalizado';
   const id = insertAndGetId(`INSERT INTO documento_carteira (nome,categoria,imagem_base64,ocr_texto,ocr_simulado,cliente_id,imovel_id,lead_id) VALUES (?,?,?,?,1,?,?,?)`,
-    [nome, 'negociacao', currentCameraDataUrl, simulateOCR(),
+    [nome, 'negociacao', guardarMidia(currentCameraDataUrl), simulateOCR(),
      document.getElementById('cam-link-cliente').value || null,
      document.getElementById('cam-link-imovel').value || null,
      document.getElementById('cam-link-lead').value || null]);
@@ -4084,7 +4438,8 @@ function cartaoCliente(c) {
 }
 function renderCR() {
   const n = t => q(`SELECT COUNT(*) c FROM ${t}`)[0].c;
-  const tipos = [['lead', 'Compradores', n('lead')], ['captacao', 'Captação', n('captacao_lp')], ['cliente', 'Clientes', n('cliente')]];
+  // compradores conta só quem está no funil; os descartados têm o chip próprio (rodada 50)
+  const tipos = [['lead', 'Compradores', q("SELECT COUNT(*) c FROM lead WHERE estagio IS NOT 'descartado'")[0].c], ['captacao', 'Captação', n('captacao_lp')], ['cliente', 'Clientes', n('cliente')]];
   const termo = ((document.getElementById('cr-search') || {}).value || '').trim().toLowerCase();
   const digitos = termo.replace(/\D/g, '');
   const bate = (nome, extra, tel) => (nome || '').toLowerCase().includes(termo) || (extra || '').toLowerCase().includes(termo)
@@ -4124,24 +4479,77 @@ function renderCR() {
 }
 
 // ---------- render: PORTFÓLIO ----------
+// Busca do Portfólio (rodada 52): o texto do jeito que o cliente fala vira filtro (núcleo:
+// lerBuscaImovel/filtrarImoveis) e a tela mostra o que entendeu antes da lista. Texto sem
+// nenhum critério reconhecível continua sendo a busca antiga, por código, nome ou bairro.
+let buscaComAmostras = false;
+function fmtKm(k) { return k < 1 ? Math.round(k * 1000 / 50) * 50 + ' m' : k.toFixed(1).replace('.', ',') + ' km'; }
+function buscarPertoDeMim() {
+  if (!navigator.geolocation) return showToastErr('Este navegador não dá a localização.');
+  showToast('Buscando sua posição...');
+  navigator.geolocation.getCurrentPosition(
+    pos => { posicaoAtual = { lat: pos.coords.latitude, lng: pos.coords.longitude, t: Date.now() }; renderVI(); },
+    err => showToastErr('Não consegui a posição: ' + (err && err.message ? err.message : 'erro')),
+    { enableHighAccuracy: true, timeout: 10000 });
+}
+function usarBusca(t) { const i = document.getElementById('vi-search'); i.value = t; buscaComAmostras = false; renderVI(); }
+function salvarBuscaUI() {
+  const t = val('vi-search'); if (!salvarBusca(t)) return;
+  renderVI(); showToast('Busca salva. Ela aparece aqui quando a caixa estiver vazia.');
+}
+function esquecerBuscaUI(t) { esquecerBusca(t); renderVI(); showToast('Busca esquecida.', { label: 'Desfazer', fn: () => { salvarBusca(t); renderVI(); } }); }
+function painelBuscaHTML(texto, f, r) {
+  if (!texto.trim()) {
+    const salvas = buscasSalvas(); if (!salvas.length) return '';
+    return `<div class="eyebrow" style="color:var(--text-3);margin:var(--s3) 0 var(--s1)">Buscas salvas</div>
+      <div class="chip-row" style="flex-wrap:wrap;overflow:visible;padding-bottom:var(--s2)">${salvas.map(t =>
+        `<span class="chip" style="padding-right:0"><button class="link" data-busca="${esc(t)}" onclick="usarBusca(this.dataset.busca)">${esc(t)}</button>
+          <button class="btn--icon btn--sm" style="border:0;background:none;min-height:var(--tap);min-width:var(--tap)" data-busca="${esc(t)}" onclick="esquecerBuscaUI(this.dataset.busca)" aria-label="Esquecer esta busca">${ico('x', 'ic-sm')}</button></span>`).join('')}</div>`;
+  }
+  if (!r) return '';
+  const salva = buscasSalvas().includes(texto.trim());
+  return `<div class="card card--sunken" style="margin:var(--s3) 0">
+      <div class="eyebrow" style="color:var(--text-3)">Entendi</div>
+      <div class="chip-row" style="flex-wrap:wrap;overflow:visible;padding-bottom:0">${rotulosBusca(f).map(x => `<span class="chip on">${esc(x)}</span>`).join('')}</div>
+      ${f.sobra.length ? `<p class="muted" style="margin:var(--s2) 0 0;font-size:var(--t-sm)">Não usei: ${esc(f.sobra.join(', '))}</p>` : ''}
+      ${r.semOrigem === 'mim' ? `<button class="btn btn--block" style="margin-top:var(--s2)" onclick="buscarPertoDeMim()">${ico('rota')}Usar minha posição</button>
+        <p class="muted" style="margin:var(--s1) 0 0;font-size:var(--t-sm)">Sem a posição, a distância fica de fora.</p>` : ''}
+      ${r.semOrigem === 'imovel' ? `<p style="margin:var(--s2) 0 0;font-size:var(--t-sm)">${esc(f.perto.codigo)} não tem posição no mapa, então a distância ficou de fora. <button class="link" onclick="posicaoImovelSheet(${f.perto.id})">Marcar a posição</button></p>` : ''}
+      <div class="between" style="margin-top:var(--s2);align-items:center">
+        <span><b>${plural(r.itens.length, 'imóvel', 'imóveis')}</b>${(n => n ? `<span class="muted"> · ${n} a conferir</span>` : '')(r.itens.filter(x => x.conferir.length).length)}</span>
+        ${salva ? '<span class="muted" style="font-size:var(--t-sm)">busca salva</span>' : `<button class="btn btn--sm" style="white-space:nowrap" onclick="salvarBuscaUI()">${ico('check', 'ic-sm')}Salvar busca</button>`}
+      </div>
+      ${r.nAmostras ? `<button class="link" style="margin-top:var(--s2)" onclick="buscaComAmostras=!buscaComAmostras;renderVI()">${buscaComAmostras ? 'Esconder' : 'Mostrar'} ${plural(r.nAmostras, 'amostra de mercado', 'amostras de mercado')} que também ${r.nAmostras === 1 ? 'bate' : 'batem'}</button>` : ''}
+    </div>`;
+}
 function renderVI() {
-  const term = (document.getElementById('vi-search').value || '').toLowerCase();
-  let rows = q(`SELECT * FROM imovel ORDER BY prioridade ASC`);
-  if (term) rows = rows.filter(r => (r.nome || '').toLowerCase().includes(term) ||
-                                    (r.codigo || '').toLowerCase().includes(term) ||
-                                    (r.bairro || '').toLowerCase().includes(term));
+  const texto = document.getElementById('vi-search').value || '', term = texto.trim().toLowerCase();
+  const f = term ? lerBuscaImovel(texto) : null;
+  const r = f && buscaEntendeu(f) ? filtrarImoveis(f, { amostras: buscaComAmostras, origem: posicaoAtual }) : null;
+  const conferir = {}, km = {};
+  let rows;
+  if (r) rows = r.itens.concat(r.amostras).map(x => { conferir[x.im.id] = x.conferir; km[x.im.id] = x.km; return x.im; });
+  else {
+    rows = q(`SELECT * FROM imovel ORDER BY prioridade ASC`);
+    if (term) rows = rows.filter(r => (r.nome || '').toLowerCase().includes(term) ||
+                                      (r.codigo || '').toLowerCase().includes(term) ||
+                                      (r.bairro || '').toLowerCase().includes(term));
+  }
+  document.getElementById('vi-busca').innerHTML = painelBuscaHTML(texto, f, r);
   document.getElementById('vi-list').innerHTML = rows.length ? rows.map(r => `
     <div class="card">
-      ${r.imagem_base64 ? `<img class="shot" src="${r.imagem_base64}" alt="">`
+      ${r.imagem_base64 ? `<img class="shot" src="${midiaSrc(r.imagem_base64)}" alt="">`
                         : `<div class="shot shot--empty">${ico('casa')}</div>`}
       <div class="between" style="margin-bottom:var(--s1)">
-        <span style="font-weight:700;font-size:var(--t-lg)">${objLink('imovel', r.id, nomeImovel(r))}</span>
+        <span style="font-weight:600;font-size:var(--t-lg)">${objLink('imovel', r.id, nomeImovel(r))}</span>
         ${r.semente ? '<span class="pill">semente</span>' : ''}
       </div>
       <p class="muted" style="margin:0 0 var(--s2)">${esc([r.bairro, r.estrategia].filter(Boolean).join(' · '))}</p>
+      ${km[r.id] != null ? `<p style="margin:0 0 var(--s2);font-size:var(--t-sm);color:var(--text-2)">${ico('rota', 'ic-sm')} ${fmtKm(km[r.id])} em linha reta</p>` : ''}
+      ${(conferir[r.id] || []).length ? `<p style="margin:0 0 var(--s2);font-size:var(--t-sm);color:var(--text-2)"><b>A conferir:</b> ${esc(conferir[r.id].join(', '))} <span class="muted">(em branco no cadastro)</span></p>` : ''}
       <div class="between" style="margin-bottom:var(--s3)">
         <span class="price">${fmtBRL(r.valor)}</span>
-        <span class="pill ${r.status === 'vendido' ? '' : 'ok'}">${esc(r.status)}</span>
+        <span>${pillAnuncio(r.id)} <span class="pill ${r.status === 'vendido' ? '' : 'ok'}">${esc(r.status)}</span></span>
       </div>
       <div class="btn-row">
         <button class="btn btn--sm btn--ok btn--grow" onclick="compartilharImovel(${r.id})">${ico('compartilhar')}Compartilhar</button>
@@ -4154,17 +4562,32 @@ function renderVI() {
 }
 
 // ---------- render: NOTAS ----------
+const VINCULOS_NOTA = ['lead_id', 'captacao_id', 'cliente_id', 'compromisso_id', 'imovel_id', 'visita_id'];
+function temVinculoNota(n) { return VINCULOS_NOTA.some(k => n[k]); }
+// abre o registro a que a nota está ligada, do mais específico ao mais geral
+function abrirVinculoNota(id) {
+  const n = q(`SELECT ${VINCULOS_NOTA.join(', ')} FROM nota WHERE id=?`, [id])[0] || {};
+  if (n.lead_id) return openDetail('lead', n.lead_id);
+  if (n.captacao_id) return openDetail('captacao', n.captacao_id);
+  if (n.cliente_id) return openDetail('cliente', n.cliente_id);
+  if (n.compromisso_id && q('SELECT id FROM compromisso WHERE id=?', [n.compromisso_id]).length) return abrirCompromisso(n.compromisso_id);
+  if (n.imovel_id) return openDetail('imovel', n.imovel_id);
+  closeSheet(); if (n.visita_id) return abrirVisita(n.visita_id);
+  limparNotaCtx(); go('nt');
+}
 function notaCardHTML(n) {
   const ic = { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo';
   return `<div class="card card--note">
     <div class="between">
-      <span class="note-tag">${ico(ic, 'ic-sm')}${esc(n.referencia || n.contexto || '')}</span>
+      ${temVinculoNota(n)
+        ? `<button class="note-tag link" onclick="abrirVinculoNota(${n.id})" title="Abrir o registro">${ico(ic, 'ic-sm')}${esc(n.referencia || n.contexto || '')}</button>`
+        : `<span class="note-tag">${ico(ic, 'ic-sm')}${esc(n.referencia || n.contexto || '')}</span>`}
       <span class="row__meta" style="display:flex;align-items:center;gap:var(--s1)">${fmtRelDate(n.criado_em)}${n.hora ? ', ' + esc(n.hora) : ''}
         <button class="btn btn--sm btn--icon btn--ghost" onclick="apagar('nota', ${n.id})" aria-label="Apagar nota">${ico('lixeira')}</button></span>
     </div>
     <p style="margin:var(--s2) 0 0">${esc(n.texto || '')}</p>
-    ${n.audio_base64 ? `<audio controls preload="none" src="${n.audio_base64}" style="width:100%;margin-top:var(--s2)"></audio>` : ''}
-    ${n.imagem_base64 ? `<img class="note-thumb" src="${n.imagem_base64}" alt="">` : ''}
+    ${n.audio_base64 ? `<audio controls preload="none" src="${midiaSrc(n.audio_base64)}" style="width:100%;margin-top:var(--s2)"></audio>` : ''}
+    ${n.imagem_base64 ? `<img class="note-thumb" src="${midiaSrc(n.imagem_base64)}" alt="">` : ''}
   </div>`;
 }
 function renderNT() {
@@ -4188,7 +4611,7 @@ function notaCardSelecaoHTML(n) {
 function docCardHTML(d) {
   return `<div class="card">
     <div class="row">
-      <span class="row__ico">${d.imagem_base64 ? `<img src="${d.imagem_base64}" alt="">` : ico('arquivo')}</span>
+      <span class="row__ico">${d.imagem_base64 ? `<img src="${midiaSrc(d.imagem_base64)}" alt="">` : ico('arquivo')}</span>
       <span class="row__main">
         <span class="row__t">${objLink('arquivo', d.id, d.nome)}</span>
         <span class="row__s">${d.ocr_simulado ? 'OCR simulado' : 'digitalizado'} · ${fmtRelDate(d.criado_em)}</span>
@@ -4494,7 +4917,7 @@ function renderVisita() {
     body.innerHTML = `
       <div class="card card--accent">
         <div class="eyebrow">${v.desfecho === 'Cancelada' ? 'Visita cancelada' : v.desfecho === 'Não compareceu' ? 'Cliente não compareceu' : 'Visita encerrada'}</div>
-        <h2 style="font-family:var(--font-display);font-weight:700;font-size:var(--t-xl);margin:2px 0 var(--s2)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</h2>
+        <h2 style="font-family:var(--font-display);font-weight:600;font-size:var(--t-xl);margin:2px 0 var(--s2)">${esc(nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</h2>
         ${linhaCampo('Com quem', v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : '—')}
         ${linhaCampo('Desfecho', esc(v.desfecho || '—'))}
         ${linhaCampo('Objeção', esc(v.objecao || '—'))}
@@ -4505,6 +4928,7 @@ function renderVisita() {
         ? `<button class="btn btn--primary btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id})">${ico('agenda')}Remarcar</button>`
         : `<button class="btn btn--block" style="margin-top:var(--s3)" onclick="remarcarVisitaSheet(${v.id}, true)">${ico('agenda')}Marcar outra visita</button>`}
       <h2 class="blk-title">Notas desta visita</h2>
+      ${botoesNotaHTML('visita', v.id)}
       ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nenhuma nota registrada.</p></div>`}`;
     return;
   }
@@ -4514,7 +4938,7 @@ function renderVisita() {
       ${estrelaHTML('visita', v.id, v.destaque, 'estrela--live')}
       <div class="live__l">${v.inicio ? 'em andamento' : jaPassou(v) ? 'horário passou · dá pra registrar agora' : 'ainda não começou'}</div>
       <div class="live__t" id="visita-cron">${v.inicio ? tempoDecorrido(v.inicio) : esc(v.hora)}</div>
-      <div style="font-family:var(--font-display);font-weight:700;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
+      <div style="font-family:var(--font-display);font-weight:600;font-size:var(--t-lg);margin-top:var(--s2)">${objLink('imovel', v.imovel_id, nomeImovel({ codigo: v.codigo, nome: v.imovel_nome }))}</div>
       <div style="opacity:.85;font-size:var(--t-sm)">${v.lead_id ? objLink('lead', v.lead_id, v.lead_nome) : 'sem lead vinculado'}${v.bairro ? ' · ' + esc(v.bairro) : ''}</div>
       ${(() => { const ex = pessoasDoItem('visita', v.id); return ex.length ? `<div style="opacity:.85;font-size:var(--t-sm)">com ${ex.map(pp => objLink(pp.tipo, pp.id, pp.nome) + (pp.papel ? ' (' + esc(pp.papel) + ')' : '')).join(', ')}</div>` : ''; })()}
       ${!v.inicio ? linhaSairHTML(itemAgenda('visita', v.id)) : ''}
@@ -4556,6 +4980,8 @@ function renderVisita() {
     </div>
 
     ${v.lead_id ? blocoFaltaSaberHTML('lead', v.lead_id, 'Pra descobrir nesta visita') : ''}
+
+    ${blocoSpinHTML(v.lead_id, v.imovel_id, 'visita:' + v.id, true)}
 
     <h2 class="blk-title">Capturado nesta visita</h2>
     ${notas.length ? notas.map(notaCardHTML).join('') : `<div class="empty">${ico('mic')}<p>Nada ainda. Use os botões acima.</p></div>`}
@@ -4649,35 +5075,51 @@ function naoCompareceu(id) { encerrarSemVisita(id, 'Não compareceu', 'nao_compa
 function marcarRoteiro(i) { roteiroMarcado[i] = !roteiroMarcado[i]; gravarRoteiro(visitaAtivaId); renderVisita(); }
 // Abrir a captura daqui já carrega o contexto: a nota nasce com visita_id, lead_id e
 // imovel_id preenchidos. É o conserto do bug de raiz da nota órfã.
-function notaDaVisita(id, modo) {
+function notaDaVisita(id, modo) { return notaNoRegistro('visita', id, modo); }
+// Rodada 45 (FUN-DIG-001): a mesma folha da visita serve a qualquer ficha — cliente, lead,
+// captação, imóvel e compromisso. A nota nasce ligada ao registro de onde foi aberta, sem
+// perguntar o contexto, e a ficha de baixo volta redesenhada com ela.
+let notaRegAtual = null;   // { tipo, id } da folha de captura aberta
+function botoesNotaHTML(tipo, id) {
+  return `<div class="btn-row btn-row--wrap" style="margin-bottom:var(--s2)">
+      <button class="btn btn--grow" onclick="notaNoRegistro('${tipo}', ${id}, 'audio')" aria-label="Nota de voz">${ico('mic')}Voz</button>
+      <button class="btn btn--grow" onclick="notaNoRegistro('${tipo}', ${id}, 'texto')" aria-label="Nota de texto">${ico('teclado')}Texto</button>
+      <button class="btn btn--grow" onclick="notaNoRegistro('${tipo}', ${id}, 'camera')" aria-label="Foto com nota">${ico('camera')}Foto</button>
+    </div>`;
+}
+function notaNoRegistro(tipo, id, modo) {
   // Rodada 33: antes ia pra tela Notas — o voltar caía em Mais, a aba acesa virava "Mais"
   // no meio da visita, e reabrir a visita zerava o roteiro. Agora a captura abre por cima.
-  criarCtx = { tipo: 'visita', id, nome: nomeDoObjeto('visita', id) };
+  criarCtx = { tipo, id, nome: nomeDoObjeto(tipo, id) };
   aplicarCtxNaNota();
+  notaRegAtual = { tipo, id };
+  const daVisita = tipo === 'visita';
+  const ondeSalva = daVisita ? 'Salvar na visita' : 'Salvar nota';
   const titulo = { audio: 'Nota de voz', texto: 'Nota de texto', camera: 'Foto da visita' }[modo];
   let corpo;
   if (modo === 'audio') {
     corpo = `<div class="compose">
       <button class="mic-big" id="vmic-btn" onclick="toggleVoiceNote('vmic-')" aria-label="Gravar nota de voz">${ico('mic')}</button>
       <div id="vmic-status" style="font-weight:600;font-size:var(--t-sm)">Toque e fale</div>
-      <div class="muted" id="vmic-hint" style="margin-top:var(--s2)">a nota fica ligada a esta visita</div></div>`;
+      <div class="muted" id="vmic-hint" style="margin-top:var(--s2)">a nota fica ligada a ${daVisita ? 'esta visita' : esc(notaCtx ? notaCtx.referencia : 'este registro')}</div></div>`;
   } else if (modo === 'texto') {
     corpo = `<div class="field"><label for="vnota-texto">O que aconteceu</label>
-      <textarea id="vnota-texto" placeholder="Ex.: gostou da cozinha, achou o condomínio caro"></textarea></div>
-      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" onclick="salvarNotaTextoVisita()">${ico('check')}Salvar na visita</button></div>`;
+      <textarea id="vnota-texto" placeholder="${daVisita ? 'Ex.: gostou da cozinha, achou o condomínio caro' : 'Ex.: prefere falar depois das 18h; o filho decide junto'}"></textarea></div>
+      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" onclick="salvarNotaTextoVisita()">${ico('check')}${ondeSalva}</button></div>`;
   } else {
     corpo = `<div class="compose"><img id="vcam-preview" class="shot-preview" alt="">
       <button class="mic-big" style="background:var(--surface-2);color:var(--text-2);border-color:var(--border-2)" onclick="document.getElementById('vcam-input').click()" aria-label="Tirar foto">${ico('camera')}</button>
       <div style="font-weight:600;font-size:var(--t-sm)">Toque pra fotografar</div>
       <input type="file" id="vcam-input" accept="image/*" capture="environment" hidden onchange="onFotoVisita(event)"></div>
-      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" id="vcam-salvar" disabled onclick="salvarFotoVisita()">${ico('check')}Salvar na visita</button></div>`;
+      <div class="btn-row sheet__acts"><button class="btn btn--primary btn--grow" id="vcam-salvar" disabled onclick="salvarFotoVisita()">${ico('check')}${ondeSalva}</button></div>`;
   }
   fotoVisitaDataUrl = null;
   openSheet(`<h2 class="sheet__title" id="sheet-title">${titulo}</h2>
     <p class="muted" style="margin:0 0 var(--s3)">Ligada a ${esc(notaCtx ? notaCtx.referencia : '')}</p>${corpo}
-    <button class="btn btn--block sheet__close" onclick="closeSheet()">${ico('voltar')}Voltar pra visita</button>`,
-    { foco: modo === 'texto', aoFechar: () => { if (recognizing) { try { recognition.stop(); } catch (e) {} } limparNotaCtx(); } });
-  if (modo === 'texto') ligarRascunho('nota-visita:' + id, document.getElementById('sheet-body'));
+    <button class="btn btn--block sheet__close" onclick="closeSheet()">${ico('voltar')}${daVisita ? 'Voltar pra visita' : 'Voltar'}</button>`,
+    { foco: modo === 'texto', chave: 'nota:' + tipo + ':' + id,
+      aoFechar: () => { if (recognizing) { try { recognition.stop(); } catch (e) {} } limparNotaCtx(); notaRegAtual = null; } });
+  if (modo === 'texto') ligarRascunho((daVisita ? 'nota-visita:' : 'nota-' + tipo + ':') + id, document.getElementById('sheet-body'));
 }
 let fotoVisitaDataUrl = null;
 function onFotoVisita(evt) {
@@ -4693,7 +5135,7 @@ function onFotoVisita(evt) {
 }
 function salvarFotoVisita() {
   if (!fotoVisitaDataUrl) return;
-  gravarNota('camera', refNota('Foto da visita'), simulateOCR(), fotoVisitaDataUrl);
+  gravarNota('camera', refNota(notaRegAtual && notaRegAtual.tipo !== 'visita' ? 'Foto' : 'Foto da visita'), simulateOCR(), fotoVisitaDataUrl);
   fotoVisitaDataUrl = null; vibrar(); closeSheet();
 }
 function salvarNotaTextoVisita() {
@@ -4927,7 +5369,7 @@ function renderRota() {
         <div class="rota-step">
           <span class="rota-n">${i + 1}</span>
           <span style="flex:1;min-width:0">
-            <div class="between"><span class="num" style="font-weight:700">${esc(p.hora || 'dia inteiro')}</span>
+            <div class="between"><span class="num" style="font-weight:600">${esc(p.hora || 'dia inteiro')}</span>
               ${p._km != null ? `<span class="row__meta">${p._aprox ? '≈ ' : ''}${fmtKm(p._km)}</span>` : ''}</div>
             <div style="font-weight:600">${p._k === 'compromisso' ? `<button class="link" onclick="abrirCompromisso(${p.id})">${esc(p._titulo)}</button>` : objLink('imovel', p.imovel_id, nomeImovel({ codigo: p.codigo, nome: p.imovel_nome }))}</div>
             <div class="row__s">${esc([p.endereco, p.bairro].filter(Boolean).join(' · ') || 'sem endereço cadastrado')}</div>
@@ -5092,7 +5534,9 @@ function restaurar(lid) {
 const SOLTAR_AO_ESVAZIAR = {
   imovel: [['lead', 'imovel_id'], ['nota', 'imovel_id'], ['documento_carteira', 'imovel_id'], ['interacao', 'imovel_id'], ['compromisso', 'imovel_id'], ['tarefa', 'imovel_id']],
   lead: [['visita', 'lead_id'], ['nota', 'lead_id'], ['documento_carteira', 'lead_id']],
-  cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']]
+  cliente: [['nota', 'cliente_id'], ['documento_carteira', 'cliente_id']],
+  captacao: [['nota', 'captacao_id']],
+  compromisso: [['nota', 'compromisso_id']]
 };
 function esvaziarLixeiraVencida() {
   const vencidos = q('SELECT id, tabela, dados FROM lixeira WHERE apagado_em < ?', [todayISO(-30)]);
@@ -5101,6 +5545,9 @@ function esvaziarLixeiraVencida() {
     try {
       const p = JSON.parse(v.dados);
       (SOLTAR_AO_ESVAZIAR[v.tabela] || []).forEach(([t, col]) => db.run(`UPDATE ${t} SET ${col}=NULL WHERE ${col}=?`, [p.row.id]));
+      // série de compromissos: a primeira linha e as seguintes
+      if (v.tabela === 'serie') [p.row].concat(((p.filhos || []).find(([t]) => t === 'compromisso') || [null, []])[1])
+        .forEach(r => r && db.run('UPDATE nota SET compromisso_id=NULL WHERE compromisso_id=?', [r.id]));
       (p.filhos || []).filter(([t]) => t === 'visita').forEach(([, rows]) =>
         rows.forEach(r => { db.run('UPDATE nota SET visita_id=NULL WHERE visita_id=?', [r.id]); db.run("DELETE FROM agenda_pessoa WHERE item_tipo='visita' AND item_id=?", [r.id]); }));
       // pessoa que sai de vez deixa de estar marcada nos compromissos
@@ -5492,14 +5939,16 @@ function dossie(tipo, id) {
   const d = { tipo, id, gerado_em: agoraISO(), hoje: todayISO(0),
     pessoa: { nome: pessoa.nome, criado_em: pessoa.criado_em, tem_telefone: !!pessoa.telefone } };
   if (tipo === 'lead') Object.assign(d.pessoa, { estagio: pessoa.estagio, classificacao: pessoa.classificacao, tipo_interesse: pessoa.tipo_interesse,
-    bairro_interesse: pessoa.bairro_interesse, orcamento: pessoa.orcamento, canal_origem: pessoa.canal_origem, motivacao: pessoa.motivacao, proximo_passo: pessoa.proximo_passo,
+    bairro_interesse: pessoa.bairro_interesse, orcamento: pessoa.orcamento, o_que_procura: pessoa.busca_interesse || null, canal_origem: pessoa.canal_origem, motivacao: pessoa.motivacao, proximo_passo: pessoa.proximo_passo,
+    motivo_descarte: pessoa.motivo_descarte || null,
     imovel_interesse: pessoa.imovel_id ? (q('SELECT codigo, nome, tipo, valor, bairro FROM imovel WHERE id=?', [pessoa.imovel_id])[0] || null) : null });
   if (tipo === 'captacao') Object.assign(d.pessoa, { status: pessoa.status, tipo_imovel: pessoa.tipo_imovel, motivo: pessoa.motivo, tem_endereco: !!pessoa.endereco });
   if (tipo === 'cliente') Object.assign(d.pessoa, { tipo_cliente: pessoa.tipo, observacoes: pessoa.observacoes });
   d.respostas = tipo === 'cliente' ? {} : respostasDe(tipo, id);
   d.interacoes = q(`SELECT tipo, resultado, texto, humor, sinais, impressao, criado_em FROM interacao WHERE ${col}=? ORDER BY criado_em DESC`, [id])
     .map(r => ({ canal: r.tipo, resultado: r.resultado, texto: r.texto, humor: r.humor, sinais: lerSinais(r.sinais), impressao: r.impressao, quando: r.criado_em }));
-  d.notas = tipo === 'captacao' ? [] : q(`SELECT modo, texto, criado_em, hora FROM nota WHERE ${col}=? ORDER BY criado_em DESC`, [id])
+  // rodada 45: captação também tem nota ligada (nota.captacao_id), que conta como contato e dá pista
+  d.notas = q(`SELECT modo, texto, criado_em, hora FROM nota WHERE ${col}=? ORDER BY criado_em DESC`, [id])
     .map(n => ({ modo: n.modo, texto: n.texto, quando: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : '') }));
   if (tipo === 'lead') {
     d.visitas = q(`SELECT v.data, v.hora, v.status, v.inicio, v.fim, v.desfecho, v.objecao, v.proximo_passo, i.codigo, i.nome FROM visita v JOIN imovel i ON i.id=v.imovel_id WHERE v.lead_id=? ORDER BY v.data DESC, v.hora DESC`, [id])
@@ -5578,7 +6027,7 @@ function qualificarLocal(d) {
   faltando.sort((a, b) => b.peso - a.peso);
   const fx = faixaDe(pontos);
   return { pontos, faixa: fx.nome, faixaCls: fx.cls, motivos, faltando, proxima: faltando.find(f => f.pergunta) || null, pistas,
-           fechado: d.tipo === 'lead' && d.pessoa.estagio === 'fechado', origem: 'local' };
+           fechado: d.tipo === 'lead' && d.pessoa.estagio === 'fechado', descartado: d.tipo === 'lead' && d.pessoa.estagio === 'descartado', origem: 'local' };
 }
 // Contrato do qualificador. `remoto` fica pra quando houver API (nossa ou de terceiro):
 // recebe o mesmo dossiê, devolve o mesmo formato, e o app mostra os dois lado a lado
@@ -5587,10 +6036,396 @@ function qualificarLocal(d) {
 const QUALIFICADOR = { local: qualificarLocal, remoto: null };
 function qualificar(tipo, id) { const d = dossie(tipo, id); return d ? QUALIFICADOR.local(d) : null; }
 function pillFaixaHTML(tipo, id) {
-  const r = qualificar(tipo, id); if (!r || r.fechado) return '';
+  const r = qualificar(tipo, id); if (!r || r.fechado || r.descartado) return '';
   return `<span class="pill ${r.faixaCls}">${r.faixa.toLowerCase()} · ${r.pontos}</span>`;
 }
+
+// Lead descartado (rodada 50): sai do funil sem sumir. Guarda o motivo, a data e o estágio
+// de onde saiu; os follow-ups agendados ficam com status 'descartado' (não aparecem em
+// Pendências) e voltam a 'agendado' se o lead for reaberto. Nada é apagado.
+const MOTIVOS_DESCARTE = [
+  ['comprou_outro', 'Comprou com outro corretor'], ['sem_orcamento', 'Sem orçamento ou crédito'], ['desistiu', 'Desistiu de comprar'],
+  ['sem_resposta', 'Parou de responder'], ['fora_perfil', 'Fora do nosso estoque'], ['contato_invalido', 'Contato inválido'], ['outro', 'Outro motivo']
+];
+function rotuloMotivoDescarte(m) {
+  if (!m) return '';
+  const [k, ...resto] = String(m).split(':'); const o = MOTIVOS_DESCARTE.find(x => x[0] === k);
+  return (o ? o[1] : k) + (resto.length && resto.join(':').trim() ? ' — ' + resto.join(':').trim() : '');
+}
+function descartarLead(id, motivo, detalhe) {
+  const l = q('SELECT estagio FROM lead WHERE id=?', [id])[0]; if (!l) return false;
+  const de = l.estagio === 'descartado' ? null : l.estagio;
+  const m = (motivo || 'outro') + (detalhe ? ':' + String(detalhe).replace(/\s+/g, ' ').trim() : '');
+  run(`UPDATE lead SET estagio='descartado', motivo_descarte=?, descartado_em=?, estagio_antes_descarte=COALESCE(?, estagio_antes_descarte) WHERE id=?`, [m, agoraISO(), de, id]);
+  run(`UPDATE sequencia_contato SET status='descartado' WHERE lead_id=? AND status='agendado'`, [id]);
+  return true;
+}
+function reabrirLead(id, estagio) {
+  const l = q('SELECT estagio_antes_descarte FROM lead WHERE id=?', [id])[0]; if (!l) return null;
+  const volta = estagio && estagio !== 'descartado' ? estagio : (l.estagio_antes_descarte || 'contato');
+  run(`UPDATE lead SET estagio=?, motivo_descarte=NULL, descartado_em=NULL, estagio_antes_descarte=NULL WHERE id=?`, [volta, id]);
+  run(`UPDATE sequencia_contato SET status='agendado' WHERE lead_id=? AND status='descartado'`, [id]);
+  return volta;
+}
+
+// Roteiro SPIN por imóvel (rodada 49). SPIN = Situação, Problema, Implicação, Necessidade
+// (Rackham, 1988). As perguntas saem dos fatos do imóvel e do que já se sabe do lead,
+// por regra fixa, sem modelo. Cada pergunta diz de onde veio ("por"), e cada etapa tem
+// no máximo duas: perguntas abertas, o mínimo possível (gravação de 19/09).
+const SPIN_ETAPAS = [['S', 'Situação'], ['P', 'Problema'], ['I', 'Implicação'], ['N', 'Necessidade']];
+function roteiroSPIN(imovelId, leadId) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [imovelId])[0]; if (!im) return null;
+  const resp = leadId ? respostasDe('lead', leadId) : {};
+  const sinais = new Set(leadId ? q('SELECT sinais FROM interacao WHERE lead_id=?', [leadId]).flatMap(r => lerSinais(r.sinais)) : []);
+  const tipo = String(im.tipo || '').toLowerCase();
+  const residencial = /casa|apart|cobertura/.test(tipo) || !tipo;
+  const negocio = /comerc|sala|loja|galp/.test(tipo);
+  const etapas = { S: [], P: [], I: [], N: [] };
+  const por = (e, t, motivo) => { if (etapas[e].length < 2 && !etapas[e].some(x => x.t === t)) etapas[e].push({ t, por: motivo }); };
+
+  // S — o que ainda não se sabe, aberto; na ordem do peso da pergunta-chave
+  if (/galp/.test(tipo)) por('S', 'Como está a operação hoje: onde fica o estoque e quanto do espaço vocês usam?', 'Galpão');
+  else if (negocio) por('S', 'Como é o espaço onde você atende hoje?', 'Imóvel comercial');
+  else if (/terreno/.test(tipo)) por('S', 'O que você pensa em construir, e pra quando?', 'Terreno');
+  const abertas = { moradia_atual: 'Como é onde vocês moram hoje?', decisor: 'Quem mais participa dessa decisão?',
+    prazo: 'O que fez vocês começarem a procurar agora?', pagamento: 'Como vocês estão pensando em pagar?', ja_visitou: 'O que vocês já viram até aqui, e o que não serviu?' };
+  (leadId ? perguntasFaltando('lead', leadId) : PERGUNTAS.lead).forEach(pg => {
+    if (pg.k === 'moradia_atual' && !residencial) return;
+    if (abertas[pg.k]) por('S', abertas[pg.k], 'Falta saber: ' + pg.t);
+  });
+
+  // P — a dor que este imóvel resolve, a partir dos fatos dele
+  if (resp.moradia_atual === 'aluguel') por('P', 'O aluguel pesa no orçamento de vocês?', 'Mora de aluguel');
+  if (residencial) {
+    if (im.quartos >= 3) por('P', 'O espaço de hoje dá conta de todo mundo em casa?', plural(im.quartos, 'quarto', 'quartos') + ' neste imóvel');
+    if (/casa/.test(tipo) && im.area_total && im.area_util && im.area_total > im.area_util * 1.3)
+      por('P', 'Vocês sentem falta de área externa, de quintal?', 'Terreno de ' + Math.round(im.area_total) + ' m²');
+    if (im.vagas >= 2) por('P', 'Onde vocês guardam os carros hoje?', plural(im.vagas, 'vaga', 'vagas'));
+    if (im.posicao_sol) por('P', 'O lugar onde vocês estão pega sol? Tem umidade?', 'Sol: ' + im.posicao_sol);
+    if (im.bairro) por('P', 'Quanto tempo vocês perdem por dia no deslocamento?', 'Localização: ' + im.bairro);
+  } else if (/galp/.test(tipo)) {
+    por('P', 'O espaço atual limita o crescimento da operação?', 'Galpão' + (im.area_util ? ' de ' + Math.round(im.area_util) + ' m²' : ''));
+    por('P', 'O acesso de caminhão e o frete de onde vocês estão funcionam bem?', im.bairro ? 'Localização: ' + im.bairro : 'Galpão');
+  } else if (negocio) {
+    por('P', 'O espaço de hoje atrapalha o atendimento ou o crescimento?', im.area_util ? Math.round(im.area_util) + ' m²' : 'Imóvel comercial');
+    if (im.bairro) por('P', 'Seus clientes chegam fácil até você hoje?', 'Localização: ' + im.bairro);
+  } else if (/terreno/.test(tipo)) por('P', 'O que tem impedido de começar a construir?', 'Terreno');
+
+  // I — o custo de deixar como está; puxa do que o lead já respondeu ou sinalizou
+  if (resp.moradia_atual === 'aluguel') por('I', 'Somando os últimos anos, quanto do aluguel virou patrimônio de vocês?', 'Mora de aluguel');
+  if (['ja', 'ate3m'].includes(resp.prazo)) por('I', 'O que acontece se não resolverem dentro desse prazo?', 'Prazo: ' + rotuloResposta(perguntaPor('lead', 'prazo'), resp.prazo));
+  if (resp.moradia_atual === 'proprio_vende' || sinais.has('precisa_vender_antes'))
+    por('I', 'Se o seu imóvel demorar a vender, como fica o plano?', 'Precisa vender o dele antes');
+  if (['conjuge', 'familia'].includes(resp.decisor)) por('I', 'E pra quem decide com você, o que pesa mais se ficarem como estão?', 'Decide com outra pessoa');
+  if (residencial) por('I', 'Como isso afeta a rotina da família no dia a dia?', 'Imóvel residencial');
+  else if (/galp/.test(tipo)) por('I', 'Quanto essa limitação custa por mês na operação?', 'Galpão');
+  else if (negocio) por('I', 'Quantos clientes ou quanto faturamento isso custa por mês?', 'Imóvel comercial');
+
+  // N — a solução nas palavras do cliente: o que muda com ESTE imóvel
+  const fatos = [im.quartos ? plural(im.quartos, 'quarto', 'quartos') : '', im.vagas ? plural(im.vagas, 'vaga', 'vagas') : '',
+    im.area_util ? Math.round(im.area_util) + ' m²' : ''].filter(Boolean).join(', ');
+  // o bairro vai entre parênteses: "no" ou "na" depende do nome, e regra de artigo erraria
+  if (fatos) por('N', `Com ${fatos}${im.bairro ? ' (' + im.bairro + ')' : ''}, o que mudaria pra vocês?`, 'Fatos do imóvel');
+  else por('N', 'O que mudaria pra vocês com um imóvel como este?', 'Imóvel ' + (im.codigo || ''));
+  if (['ja', 'ate3m'].includes(resp.prazo)) por('N', 'O que precisaria ser verdade pra vocês decidirem ainda este mês?', 'Prazo curto');
+  else por('N', 'Se este for o imóvel, qual seria o próximo passo de vocês?', 'Fechamento');
+
+  return { imovel: { id: im.id, codigo: im.codigo, nome: im.nome }, argumento: im.estrategia || '',
+           etapas: SPIN_ETAPAS.map(([k, t]) => ({ k, t, perguntas: etapas[k] })) };
+}
+function roteiroSPINTexto(r) {
+  return 'Roteiro SPIN · ' + nomeImovel(r.imovel) + '\n' + r.etapas.map(e => e.k + ' · ' + e.t + '\n' + e.perguntas.map(p => '- ' + p.t).join('\n')).join('\n');
+}
 // nucleo-pessoas:fim
+// nucleo-anuncio:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js (seção anuncio) — NÃO editar aqui
+// Qualidade do anúncio (rodada 51). Na demonstração de 14/09, a rede "ranqueia o anúncio sem
+// cobrar, pela qualidade": foto, vídeo, tour 3D, texto. Aqui é uma régua fixa de 0 a 100, sem
+// modelo, em que cada ponto diz de onde veio e o que falta vem na ordem do que mais vale.
+// A autorização de venda não entra nos pontos: ela é trava (Lei 6.530/1978, art. 20), não
+// qualidade. Amostra de mercado (código MK-) é anúncio de terceiro e não é pontuada.
+const ANUNCIO_FAIXAS = [[75, 'Completo', 'ok'], [50, 'Bom', 'warn'], [0, 'Fraco', '']];
+// fatos que contam, por tipo de imóvel: [coluna(s), rótulo, pontos]; somam 20 em cada tipo
+const ANUNCIO_FATOS = {
+  residencial: [[['area_util', 'area_total'], 'área', 6], [['quartos'], 'quartos', 4], [['banheiros'], 'banheiros', 3],
+                [['vagas'], 'vagas', 3], [['iptu'], 'IPTU', 2], [['posicao_sol'], 'posição do sol', 2]],
+  negocio: [[['area_util', 'area_total'], 'área', 10], [['vagas'], 'vagas', 4], [['banheiros'], 'banheiros', 3], [['iptu'], 'IPTU', 3]],
+  terreno: [[['area_total', 'area_util'], 'área', 14], [['iptu'], 'IPTU', 3], [['posicao_sol'], 'posição do sol', 3]]
+};
+function ehAmostraMercado(im) { return /^MK-/.test(String((im && im.codigo) || '')); }
+function tipoDeAnuncio(tipo) {
+  const t = String(tipo || '').toLowerCase();
+  return /terreno|lote/.test(t) ? 'terreno' : /galp|comerc|sala|loja|escrit/.test(t) ? 'negocio' : 'residencial';
+}
+function linkValido(u) { return /^https?:\/\/\S+\.\S+/i.test(String(u || '').trim()); }
+function qualidadeAnuncio(imovelId) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [imovelId])[0]; if (!im) return null;
+  if (ehAmostraMercado(im)) return { amostra: true, pontos: null, itens: [], faltando: [] };
+  const itens = [];
+  const add = (k, t, p, max, falta) => itens.push({ k, t, p, max, falta: p < max ? falta : '' });
+
+  // fotos (30): os portais mostram galeria; abaixo de 5 o anúncio some na lista
+  const nFotos = q('SELECT COUNT(*) c FROM imovel_foto WHERE imovel_id=?', [imovelId])[0].c || (im.imagem_base64 ? 1 : 0);
+  const pf = nFotos >= 15 ? 30 : nFotos >= 10 ? 24 : nFotos >= 5 ? 15 : nFotos >= 1 ? 6 : 0;
+  add('fotos', nFotos ? plural(nFotos, 'foto', 'fotos') : 'Sem foto', pf, 30, 'Fotos: 15 ou mais' + (nFotos ? ' (tem ' + nFotos + ')' : ''));
+
+  // texto (20): tamanho, e caixa alta tira pontos
+  const texto = String(im.descricao || '').trim(), letras = texto.replace(/[^A-Za-zÀ-ÿ]/g, '');
+  const gritado = letras.length >= 40 && letras.replace(/[^A-ZÀ-Þ]/g, '').length / letras.length > 0.5;
+  let pt = texto.length >= 500 ? 20 : texto.length >= 250 ? 12 : texto.length >= 80 ? 5 : 0;
+  if (gritado) pt = Math.max(0, pt - 8);
+  add('texto', texto ? 'Texto com ' + texto.length + ' caracteres' + (gritado ? ', em caixa alta' : '') : 'Sem texto', pt, 20,
+      gritado ? 'Tirar a caixa alta do texto' : 'Texto: 500 caracteres ou mais' + (texto ? ' (tem ' + texto.length + ')' : ''));
+
+  // fatos (20), conforme o tipo
+  const regra = ANUNCIO_FATOS[tipoDeAnuncio(im.tipo)];
+  const tem = cols => cols.some(c => im[c] != null && im[c] !== '');
+  const faltam = regra.filter(([cols]) => !tem(cols));
+  const pfat = regra.reduce((s, [cols, , p]) => s + (tem(cols) ? p : 0), 0);
+  add('fatos', 'Fatos: ' + (regra.length - faltam.length) + ' de ' + regra.length, pfat, 20, 'Fatos: ' + faltam.map(f => f[1]).join(', '));
+
+  // onde fica (10): bairro e posição no mapa (é o que a busca por área usa)
+  const pl = (im.bairro ? 4 : 0) + (im.lat != null && im.lng != null ? 6 : 0);
+  add('local', im.bairro && im.lat != null ? 'Bairro e mapa' : im.bairro ? 'Bairro' : im.lat != null ? 'No mapa' : 'Sem bairro nem mapa', pl, 10,
+      im.lat == null ? 'Marcar a posição no mapa' : 'Preencher o bairro');
+
+  // vídeo (10) e tour 360 ou 3D (10)
+  add('video', linkValido(im.video_url) ? 'Vídeo' : 'Sem vídeo', linkValido(im.video_url) ? 10 : 0, 10, 'Link de um vídeo');
+  add('tour', linkValido(im.tour_url) ? 'Tour 360°' : 'Sem tour', linkValido(im.tour_url) ? 10 : 0, 10, 'Link de um tour 360° ou 3D');
+
+  const pontos = itens.reduce((s, i) => s + i.p, 0);
+  const [, faixa, faixaCls] = ANUNCIO_FAIXAS.find(([min]) => pontos >= min);
+  const faltando = itens.filter(i => i.p < i.max).map(i => ({ k: i.k, t: i.falta, ganho: i.max - i.p })).sort((a, b) => b.ganho - a.ganho);
+  return { amostra: false, pontos, faixa, faixaCls, itens, faltando, autorizado: !!im.autorizacao_em };
+}
+// nucleo-anuncio:fim
+// nucleo-busca:inicio
+// gerado por sync-nucleo.py a partir de nucleo-ohubimob.js (seção busca) — NÃO editar aqui
+// Buscar, primeiro degrau (rodada 52, nova abordagem §4.3): "vibe → filtro → link". O texto
+// do jeito que o cliente fala ("casa térrea 3 quartos até 1 milhão perto do metrô") vira um
+// filtro estruturado, por regra fixa, sem modelo; o filtro roda no estoque próprio e mostra o
+// que entendeu antes de filtrar. É o mesmo filtro que depois vira o link de busca de cada
+// portal (o terceiro passo, que espera o formato de endereço de cada um ser conferido).
+// Critério que o imóvel não tem como confirmar (dado em branco) não tira o imóvel da lista:
+// ele fica "a conferir", porque dado vazio não é "não".
+// vírgula e ponto só ficam antes de dígito ("1,2 mi", "1.000 m²"); colados no fim da palavra
+// ("no Bairro X, tem pressa") impediam reconhecer o bairro
+function normBusca(s) { return ' ' + String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[;!?()"]/g, ' ').replace(/[,.](?!\d)/g, ' ').replace(/\s+/g, ' ').trim() + ' '; }
+const BUSCA_TIPOS = [
+  ['Cobertura', /\bcoberturas?\b/, /cobertura/], ['Apartamento', /\b(apartamentos?|aptos?|ap|flat|studio|kitnet|kit)\b/, /apart|studio|flat|duplex|kit/],
+  ['Casa', /\b(casas?|sobrados?|terreas?)\b/, /casa|sobrado/], ['Galpão', /\b(galpao|galpoes|armazem|deposito|industrial)\b/, /galp|armaz|industr/],
+  ['Terreno', /\b(terrenos?|lotes?)\b/, /terreno|lote/], ['Comercial', /\b(sala|salas|loja|lojas|comercial|escritorio|consultorio|ponto comercial)\b/, /comerc|sala|loja|escrit|consult/]
+];
+const BUSCA_EXTRAS = ['terrea', 'piscina', 'varanda', 'churrasqueira', 'quintal', 'mobiliado', 'vista', 'condominio fechado', 'area de lazer', 'elevador', 'portaria'];
+const BUSCA_EXTRAS_ROT = { terrea: 'térrea', 'condominio fechado': 'condomínio fechado', 'area de lazer': 'área de lazer' };
+function rotuloExtra(x) { return BUSCA_EXTRAS_ROT[x] || x; }
+const BUSCA_PARADAS = new Set(['com', 'sem', 'de', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'em', 'e', 'ou', 'a', 'o', 'as', 'os', 'um', 'uma', 'pra', 'para', 'que', 'quero', 'procuro', 'procurando',
+  'busco', 'cliente', 'imovel', 'imoveis', 'venda', 'comprar', 'compra', 'reais', 'r$', 'perto', 'bem', 'bom', 'boa', 'algo', 'tipo', 'pelo', 'menos', 'ate', 'mais', 'acima', 'abaixo', 'entre', 'faixa', 'valor', 'preco', 'por']);
+const BUSCA_NUM = '(\\d{1,3}(?:\\.\\d{3})+|\\d+(?:,\\d+)?|um|uma|dois|duas|tres|quatro|cinco|seis)';
+function numBusca(s) {
+  const w = { um: 1, uma: 1, dois: 2, duas: 2, tres: 3, quatro: 4, cinco: 5, seis: 6 };
+  if (w[s] != null) return w[s];
+  return /^\d{1,3}(\.\d{3})+$/.test(s) ? +s.replace(/\./g, '') : +String(s).replace(',', '.');
+}
+// dinheiro falado: "1 milhão", "800 mil", "1,2 mi", "R$ 950.000"; sem unidade, número pequeno é
+// lido como milhão (até 50) ou mil (até 9.999) — o que foi lido aparece na tela pra conferir
+function valorBusca(n, u) {
+  if (/^(mil|k)$/.test(u || '')) return n * 1e3;
+  if (/^(milhao|milhoes|mi|mm)$/.test(u || '')) return n * 1e6;
+  return n <= 50 ? n * 1e6 : n < 1e4 ? n * 1e3 : n;
+}
+function lerBuscaImovel(texto) {
+  let t = normBusca(texto);
+  const f = { tipo: null, quartosMin: null, suitesMin: null, vagasMin: null, banheirosMin: null, areaMin: null, areaMax: null,
+              precoMin: null, precoMax: null, bairros: [], sol: null, extras: [], sobra: [], perto: null };
+  const tira = re => { const m = t.match(re); if (m) t = t.replace(re, ' '); return m; };
+  const MIN = '(?:(pelo menos|no minimo|minimo|a partir de|acima de|mais de)\\s)?';
+  let m;
+  // área: precisa de m2/m²/metros, então vem antes do preço
+  const AREA = BUSCA_NUM + '\\s?(?:m2|m²|mts|metros quadrados|metros)(?=\\s)';   // "²" não conta como letra pro \b do regex
+  if ((m = tira(new RegExp('\\b(?:entre|de)\\s' + BUSCA_NUM + '\\s?(?:m2|m²|metros)?\\s(?:e|a)\\s' + AREA)))) { f.areaMin = numBusca(m[1]); f.areaMax = numBusca(m[2]); }
+  else if ((m = tira(new RegExp('\\b(ate|no maximo|abaixo de|menos de)\\s' + AREA)))) f.areaMax = numBusca(m[2]);
+  else if ((m = tira(new RegExp('\\b' + MIN + AREA)))) f.areaMin = numBusca(m[2]);
+  // perto de (rodada 54): "até 3 km do <código>", "perto do <código>" (3 km), "perto de mim" / "aqui perto".
+  // Vem antes do preço: "até 3 km" seria lido como até 3 milhões.
+  const RAIO = '(?:(?:a\\s)?(?:ate|no maximo|num raio de|raio de)\\s)?(\\d+(?:,\\d+)?)\\s?(?:km|quilometros?)\\s(?:de|do|da|ao redor de|em volta de)';
+  const PERTO = '(?:perto|proximo|pertinho|ao lado|em volta|ao redor)\\s(?:de|do|da|ao)';
+  if ((m = tira(new RegExp('\\b(?:' + RAIO + '|' + PERTO + ')\\s(?:mim|voce|aqui)(?=\\s)'))) || (m = tira(/\b(?:aqui perto|perto daqui|por aqui)\b/)))
+    f.perto = { tipo: 'mim', raioKm: m[1] ? numBusca(m[1]) : 3 };
+  else {
+    const codigos = q("SELECT id, codigo FROM imovel WHERE codigo IS NOT NULL AND codigo != ''").sort((a, b) => b.codigo.length - a.codigo.length);
+    for (const im of codigos) {
+      const c = normBusca(im.codigo).trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if ((m = tira(new RegExp('\\b(?:' + RAIO + '|' + PERTO + ')\\s' + c + '(?=\\s)')))) { f.perto = { tipo: 'imovel', id: im.id, codigo: im.codigo, raioKm: m[1] ? numBusca(m[1]) : 3 }; break; }
+    }
+  }
+  // "perto do <bairro>" fica só como bairro: o estoque não tem o centro de um bairro
+  t = t.replace(new RegExp('\\b' + PERTO + '\\s', 'g'), ' ');
+  // contagens: quartos, suítes, vagas, banheiros
+  const conta = (re, chave) => {
+    if ((m = tira(new RegExp('\\b' + MIN + BUSCA_NUM + '\\+?\\s?' + re + '\\b')))) f[chave] = numBusca(m[2]) + (m[1] === 'mais de' || m[1] === 'acima de' ? 1 : 0);
+  };
+  conta('(?:quartos?|qts?|qto|dormitorios?|dorms?)', 'quartosMin');
+  conta('(?:suites?)', 'suitesMin');
+  conta('(?:vagas?(?: de garagem)?|garagens?)', 'vagasMin');
+  conta('(?:banheiros?|wc)', 'banheirosMin');
+  if (f.suitesMin == null && tira(/\b(?:com|e|tem) suites?\b/)) f.suitesMin = 1;
+  if (f.vagasMin == null && tira(/\b(?:com|e|tem) (?:vaga|garagem)\b/)) f.vagasMin = 1;
+  // preço
+  const V = '(?:r\\$\\s?)?' + BUSCA_NUM + '\\s?(mil|k|milhao|milhoes|mi|mm)?';
+  if ((m = tira(new RegExp('\\b(?:entre|de)\\s' + V + '\\s(?:e|a)\\s' + V + '(?=\\s)')))) {
+    const u = m[2] || m[4]; f.precoMin = valorBusca(numBusca(m[1]), m[2] || u); f.precoMax = valorBusca(numBusca(m[3]), m[4] || u);
+  } else {
+    if ((m = tira(new RegExp('\\b(?:ate|no maximo|abaixo de|menos de|max|maximo)\\s' + V + '(?=\\s)')))) f.precoMax = valorBusca(numBusca(m[1]), m[2]);
+    if ((m = tira(new RegExp('\\b(?:acima de|a partir de|mais de|no minimo|minimo)\\s' + V + '(?=\\s)')))) f.precoMin = valorBusca(numBusca(m[1]), m[2]);
+    if (f.precoMax == null && f.precoMin == null && (m = tira(new RegExp('(?:r\\$\\s?)?' + BUSCA_NUM + '\\s(mil|milhao|milhoes|mi)(?=\\s)')))) f.precoMax = valorBusca(numBusca(m[1]), m[2]);
+  }
+  // sol
+  if (tira(/\b(?:sol da manha|nascente)\b/)) f.sol = 'Nascente'; else if (tira(/\b(?:sol da tarde|poente)\b/)) f.sol = 'Poente';
+  // extras que só o texto do anúncio pode confirmar ("terrea" antes do tipo: "casa terrea" é casa)
+  BUSCA_EXTRAS.forEach(x => { if (t.includes(' ' + x + ' ')) { f.extras.push(x); t = t.replace(' ' + x + ' ', ' '); } });
+  // tipo
+  for (const [nome, re] of BUSCA_TIPOS) if (re.test(t)) { f.tipo = nome; t = t.replace(new RegExp(re.source, 'g'), ' '); break; }
+  // bairro ou cidade: os que existem no estoque, nome inteiro
+  const lugares = [...new Set(q('SELECT bairro AS n FROM imovel WHERE bairro IS NOT NULL UNION SELECT cidade FROM imovel WHERE cidade IS NOT NULL').map(r => r.n).filter(Boolean))]
+    .sort((a, b) => b.length - a.length);
+  lugares.forEach(l => { const n = normBusca(l); if (n.trim().length >= 3 && t.includes(n)) { f.bairros.push(l); t = t.replace(n, ' '); } });
+  f.sobra = t.split(/\s+/).filter(w => w.length >= 3 && !BUSCA_PARADAS.has(w) && !/^\d/.test(w));
+  return f;
+}
+function rotulosBusca(f) {
+  const r = [];
+  if (f.tipo) r.push(f.tipo);
+  if (f.quartosMin) r.push(f.quartosMin + '+ ' + (f.quartosMin === 1 ? 'quarto' : 'quartos'));
+  if (f.suitesMin) r.push(f.suitesMin + '+ ' + (f.suitesMin === 1 ? 'suíte' : 'suítes'));
+  if (f.vagasMin) r.push(f.vagasMin + '+ ' + (f.vagasMin === 1 ? 'vaga' : 'vagas'));
+  if (f.banheirosMin) r.push(f.banheirosMin + '+ ' + (f.banheirosMin === 1 ? 'banheiro' : 'banheiros'));
+  const m2 = n => n.toLocaleString('pt-BR') + ' m²';
+  if (f.areaMin && f.areaMax) r.push(m2(f.areaMin) + ' a ' + m2(f.areaMax)); else if (f.areaMin) r.push('a partir de ' + m2(f.areaMin)); else if (f.areaMax) r.push('até ' + m2(f.areaMax));
+  if (f.precoMin && f.precoMax) r.push(fmtBRL(f.precoMin) + ' a ' + fmtBRL(f.precoMax)); else if (f.precoMax) r.push('até ' + fmtBRL(f.precoMax)); else if (f.precoMin) r.push('a partir de ' + fmtBRL(f.precoMin));
+  f.bairros.forEach(b => r.push(b));
+  if (f.sol) r.push('sol ' + (f.sol === 'Nascente' ? 'da manhã' : 'da tarde'));
+  f.extras.forEach(x => r.push(rotuloExtra(x)));
+  if (f.perto) r.push('até ' + String(f.perto.raioKm).replace('.', ',') + ' km ' + (f.perto.tipo === 'mim' ? 'de você' : 'do ' + f.perto.codigo));
+  return r;
+}
+function buscaEntendeu(f) { return rotulosBusca(f).length > 0; }
+// critério firme: o que separa imóvel de imóvel; sol e palavras do anúncio sozinhos não bastam
+function buscaFirme(f) { return !!(f.tipo || f.quartosMin || f.suitesMin || f.vagasMin || f.banheirosMin || f.areaMin || f.areaMax || f.precoMin || f.precoMax || f.bairros.length || f.perto); }
+// distância em linha reta (haversine); não é distância de carro, e a tela diz isso
+function distanciaKm(a, b) {
+  const R = 6371, rad = x => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+function listaE(a) { return a.length <= 1 ? a.join('') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1]; }
+function filtrarImoveis(f, opts) {
+  opts = opts || {};
+  const tipoRe = f.tipo && (BUSCA_TIPOS.find(x => x[0] === f.tipo) || [])[2];
+  const itens = [], amostras = [];
+  // de onde medir: o imóvel de referência ou a posição do aparelho (opts.origem, que a tela pede)
+  let origem = null, semOrigem = null;
+  if (f.perto && f.perto.tipo === 'imovel') {
+    const ref = q('SELECT lat, lng FROM imovel WHERE id=?', [f.perto.id])[0];
+    if (ref && ref.lat != null && ref.lng != null) origem = { lat: ref.lat, lng: ref.lng }; else semOrigem = 'imovel';
+  } else if (f.perto) { if (opts.origem) origem = opts.origem; else semOrigem = 'mim'; }
+  q("SELECT * FROM imovel WHERE COALESCE(status,'') != 'vendido' ORDER BY prioridade IS NULL, prioridade").forEach(im => {
+    const conferir = [];
+    const num = (v, min, max, rot) => { if (min == null && max == null) return true; if (v == null || v === '') { conferir.push(rot); return true; }
+      return (min == null || +v >= min) && (max == null || +v <= max); };
+    if (tipoRe) { if (!im.tipo) conferir.push('tipo'); else if (!tipoRe.test(normBusca(im.tipo))) return; }
+    if (!num(im.quartos, f.quartosMin, null, 'quartos')) return;
+    if (!num(im.suites, f.suitesMin, null, 'suítes')) return;
+    if (!num(im.vagas, f.vagasMin, null, 'vagas')) return;
+    if (!num(im.banheiros, f.banheirosMin, null, 'banheiros')) return;
+    if (!num(im.area_util != null ? im.area_util : im.area_total, f.areaMin, f.areaMax, 'área')) return;
+    if (!num(im.valor, f.precoMin, f.precoMax, 'preço')) return;
+    if (f.bairros.length) {
+      const onde = normBusca([im.bairro, im.cidade, im.endereco].filter(Boolean).join(' '));
+      if (onde.trim() === '') conferir.push('bairro'); else if (!f.bairros.some(b => onde.includes(normBusca(b)))) return;
+    }
+    if (f.sol) { if (!im.posicao_sol) conferir.push('sol'); else if (normBusca(im.posicao_sol).trim() !== normBusca(f.sol).trim()) return; }
+    const texto = normBusca([im.nome, im.descricao, im.estrategia].join(' '));
+    f.extras.forEach(x => { if (!texto.includes(' ' + x)) conferir.push(rotuloExtra(x)); });
+    let km = null;
+    if (f.perto && f.perto.tipo === 'imovel' && im.id === f.perto.id) return;   // o próprio imóvel de referência
+    if (origem) {
+      // amostra de mercado sem posição não é "perto" de nada: não é nossa, ninguém vai marcar
+      if ((im.lat == null || im.lng == null) && ehAmostraMercado(im)) return;
+      if (im.lat == null || im.lng == null) conferir.push('posição');
+      else { km = distanciaKm(origem, im); if (km > f.perto.raioKm) return; }
+    }
+    (ehAmostraMercado(im) ? amostras : itens).push({ im, conferir, km });
+  });
+  const ordem = (a, b) => a.conferir.length - b.conferir.length || (a.km == null) - (b.km == null) || (a.km || 0) - (b.km || 0);
+  return { itens: itens.sort(ordem), amostras: opts.amostras ? amostras.sort(ordem) : [], nAmostras: amostras.length, semOrigem };
+}
+// buscas salvas: no banco (config), pra irem junto no backup e abrirem nos dois apps
+function buscasSalvas() {
+  try { return JSON.parse((q("SELECT valor FROM config WHERE chave='buscas_salvas'")[0] || {}).valor || '[]'); } catch (e) { return []; }
+}
+function gravarBuscas(lista) { run("INSERT OR REPLACE INTO config (chave, valor) VALUES ('buscas_salvas', ?)", [JSON.stringify(lista.slice(0, 8))]); }
+function salvarBusca(texto) { const t = String(texto || '').trim(); if (!t) return false; gravarBuscas([t].concat(buscasSalvas().filter(x => x !== t))); return true; }
+function esquecerBusca(texto) { gravarBuscas(buscasSalvas().filter(x => x !== texto)); }
+// O que o lead procura (rodada 53): a mesma leitura, guardada no lead (busca_interesse) e
+// proposta a partir do que já foi escrito sobre ele — notas, interações, motivação. Gravar
+// preenche tipo, bairro e orçamento só onde estão vazios, pra alimentar o Matching do portal
+// sem apagar o que o corretor escreveu à mão.
+function valorOrcamento(txt) {
+  const t = String(txt || '').trim(); if (!t) return null;
+  const limpo = t.toLowerCase().replace(/r\$/g, ' ').replace(/(^|\s)(ate|até|no maximo|no máximo|cerca de|uns|umas|aprox\.?|aproximadamente)(?=\s|$)/g, ' ').trim();
+  const n = numeroBR(limpo);
+  if (n != null && !isNaN(n) && n > 0) return n < 1e4 ? valorBusca(n, null) : n;
+  const f = lerBuscaImovel(/^\s*(ate|até|entre|de|acima|a partir)/i.test(t) ? t : 'até ' + t);
+  return f.precoMax || f.precoMin || null;
+}
+function interesseDoLead(id) {
+  const l = q('SELECT busca_interesse FROM lead WHERE id=?', [id])[0];
+  if (!l || !String(l.busca_interesse || '').trim()) return null;
+  const f = lerBuscaImovel(l.busca_interesse);
+  return { texto: l.busca_interesse, f, rotulos: rotulosBusca(f), r: buscaEntendeu(f) ? filtrarImoveis(f) : null };
+}
+function pistasDeInteresse(id) {
+  const textos = [].concat(
+    q(`SELECT n.texto t, n.criado_em em FROM nota n LEFT JOIN visita v ON v.id=n.visita_id WHERE (n.lead_id=? OR v.lead_id=?) AND n.texto IS NOT NULL`, [id, id]),
+    q(`SELECT TRIM(COALESCE(texto,'') || ' ' || COALESCE(impressao,'')) t, criado_em em FROM interacao WHERE lead_id=?`, [id]),
+    q(`SELECT motivacao t, criado_em em FROM lead WHERE id=? AND motivacao IS NOT NULL`, [id]));
+  const atual = (q('SELECT busca_interesse b FROM lead WHERE id=?', [id])[0] || {}).b || '';
+  const vistos = new Set([rotulosBusca(lerBuscaImovel(atual)).join('|')]);
+  const out = [];
+  textos.filter(x => x.t && x.t.trim()).sort((a, b) => String(b.em || '').localeCompare(String(a.em || ''))).forEach(x => {
+    const f = lerBuscaImovel(x.t); if (!buscaFirme(f)) return;
+    const rot = rotulosBusca(f), chave = rot.join('|'); if (vistos.has(chave)) return; vistos.add(chave);
+    out.push({ texto: x.t.trim(), trecho: x.t.trim().length > 90 ? x.t.trim().slice(0, 90) + '…' : x.t.trim(), rotulos: rot });
+  });
+  return out.slice(0, 3);
+}
+function gravarInteresse(id, texto) {
+  const l = q('SELECT tipo_interesse, bairro_interesse, orcamento FROM lead WHERE id=?', [id])[0]; if (!l) return null;
+  const t = String(texto || '').replace(/\s+/g, ' ').trim();
+  run('UPDATE lead SET busca_interesse=? WHERE id=?', [t || null, id]);
+  const out = { preenchidos: [], mantidos: [] };
+  if (!t) return out;
+  const f = lerBuscaImovel(t);
+  const n = v => normBusca(v).trim();
+  const set = (col, v, rot, igual) => {
+    if (!v) return;
+    if (!String(l[col] || '').trim()) { run(`UPDATE lead SET ${col}=? WHERE id=?`, [v, id]); out.preenchidos.push(rot); }
+    else if (!igual(l[col], v)) out.mantidos.push(rot + ' (' + l[col] + ')');
+  };
+  set('tipo_interesse', f.tipo, 'tipo', (a, b) => n(a) === n(b));
+  set('bairro_interesse', f.bairros[0], 'bairro', (a, b) => n(a) === n(b));
+  set('orcamento', f.precoMax ? 'até ' + fmtBRL(f.precoMax) : null, 'orçamento', a => valorOrcamento(a) === f.precoMax);
+  return out;
+}
+// o aviso depois de gravar: o que foi preenchido e o que ficou como estava, escrito à mão
+function avisoInteresse(r) {
+  if (!r) return 'Salvo.';
+  return 'Salvo.' + (r.preenchidos.length ? ' Preenchi ' + listaE(r.preenchidos) + '.' : '')
+    + (r.mantidos.length ? ' Mantive o que estava escrito: ' + listaE(r.mantidos) + '.' : '');
+}
+// nucleo-busca:fim
 function blocoFaltaSaberHTML(tipo, id, titulo) {
   const r = qualificar(tipo, id); if (!r) return '';
   const itens = r.faltando.filter(f => f.pergunta).slice(0, 3);
@@ -5600,6 +6435,126 @@ function blocoFaltaSaberHTML(tipo, id, titulo) {
       ${itens.map(f => `<button class="chip" onclick="perguntaSheet('${tipo}', ${id}, '${f.k}')">${esc(f.t)}</button>`).join('')}
     </div></div>`;
 }
+// Roteiro SPIN por imóvel (rodada 49): as perguntas vêm de roteiroSPIN (núcleo); aqui só a
+// tela. "Até onde chegou" grava lead.spin_estagio, a mesma coluna que o portal já mostrava.
+function blocoSpinHTML(leadId, imovelId, volta, aberto) {
+  const r = roteiroSPIN(imovelId, leadId); if (!r) return '';
+  const atual = leadId ? ((q('SELECT spin_estagio FROM lead WHERE id=?', [leadId])[0] || {}).spin_estagio || '') : '';
+  const corpo = `<div class="card">
+      ${r.etapas.map(e => `<div style="margin-bottom:var(--s3)">
+        <div class="eyebrow" style="color:${atual === e.k ? 'var(--brand)' : 'var(--text-3)'}">${e.k} · ${esc(e.t)}</div>
+        ${e.perguntas.map(p => `<p style="margin:6px 0 0">${esc(p.t)}<br><span class="muted" style="font-size:var(--t-sm)">${esc(p.por)}</span></p>`).join('')}
+      </div>`).join('')}
+      ${r.argumento ? `<p class="muted" style="font-size:var(--t-sm);margin:0 0 var(--s3)"><b>Argumento do imóvel:</b> ${esc(r.argumento)}</p>` : ''}
+      ${leadId ? `<div class="eyebrow" style="color:var(--text-3)">Até onde a conversa chegou</div>
+        <div class="chip-row" style="flex-wrap:wrap;overflow:visible">${SPIN_ETAPAS.map(([k, t]) =>
+          `<button class="chip${atual === k ? ' on' : ''}" aria-pressed="${atual === k}" onclick="marcarSpin(${leadId}, '${k}', '${volta}')">${k} · ${esc(t)}</button>`).join('')}</div>` : ''}
+      <button class="btn btn--sm" style="margin-top:var(--s2)" onclick="copiarSpin(${imovelId}, ${leadId || 'null'})">${ico('copiar', 'ic-sm')}Copiar roteiro</button>
+    </div>`;
+  const titulo = 'Roteiro SPIN · ' + esc(r.imovel.codigo || r.imovel.nome || '');
+  return aberto ? `<h2 class="blk-title">${titulo}</h2>${corpo}`
+    : `<details style="margin-top:var(--s2)"><summary class="muted" style="cursor:pointer;min-height:var(--tap);display:flex;align-items:center">${titulo}</summary>${corpo}</details>`;
+}
+// Descartar (rodada 50): a regra mora no núcleo (descartarLead/reabrirLead); aqui só a folha.
+function descartarLeadSheet(id) {
+  const l = q('SELECT nome FROM lead WHERE id=?', [id])[0]; if (!l) return;
+  openSheet(`<h2 class="sheet__title" id="sheet-title">Descartar ${esc(l.nome)}</h2>
+    <p class="muted" style="margin-top:0">Sai do funil e dos follow-ups. Nada é apagado: dá pra reabrir depois.</p>
+    <div class="chip-row" style="flex-wrap:wrap;overflow:visible" id="desc-motivos">
+      ${MOTIVOS_DESCARTE.map(([k, t], i) => `<button class="chip${i === 0 ? ' on' : ''}" data-k="${k}" aria-pressed="${i === 0}" onclick="document.querySelectorAll('#desc-motivos .chip').forEach(c => { c.classList.toggle('on', c === this); c.setAttribute('aria-pressed', c === this); })">${esc(t)}</button>`).join('')}
+    </div>
+    <div style="margin-top:var(--s3)">${campo('desc-detalhe', 'Detalhe (opcional)', '<input id="desc-detalhe" placeholder="Ex.: fechou um apartamento em outro bairro">')}</div>
+    <div class="btn-row sheet__acts">
+      <button type="button" class="btn btn--primary btn--grow" onclick="confirmarDescarte(${id})">${ico('x')}Descartar</button>
+      <button type="button" class="btn btn--grow" onclick="closeSheet()">Voltar</button>
+    </div>`, { foco: false });
+}
+function confirmarDescarte(id) {
+  const ch = document.querySelector('#desc-motivos .chip.on');
+  const motivo = ch ? ch.dataset.k : 'outro', detalhe = (document.getElementById('desc-detalhe') || {}).value || '';
+  const antes = (q('SELECT estagio FROM lead WHERE id=?', [id])[0] || {}).estagio;
+  descartarLead(id, motivo, detalhe);
+  crFilter = antes && antes !== 'descartado' ? antes : 'novo'; pessoasTipo = 'lead';
+  closeSheet(); renderAll();
+  showToast('Lead descartado.', { label: 'Desfazer', fn: () => { reabrirLead(id); renderAll(); } });   // o motivo já fica na ficha; toast curto não cobre a tela
+}
+function reabrirLeadUI(id) {
+  const volta = reabrirLead(id); if (!volta) return;
+  crFilter = volta; pessoasTipo = 'lead'; renderAll(); openDetail('lead', id);
+  showToast('Lead reaberto em ' + (STAGE_LABELS[volta] || volta) + '.');
+}
+function marcarSpin(leadId, etapa, volta) {
+  const antes = (q('SELECT spin_estagio FROM lead WHERE id=?', [leadId])[0] || {}).spin_estagio || null;
+  const nova = antes === etapa ? null : etapa;          // tocar de novo desmarca
+  run('UPDATE lead SET spin_estagio=? WHERE id=?', [nova, leadId]);
+  const [onde, id] = String(volta).split(':');
+  if (onde === 'visita') { const y = window.scrollY; renderVisita(); window.scrollTo(0, y); } else openDetail('lead', leadId);   // na visita, redesenha no lugar: abrirVisita empilharia histórico
+  showToast(nova ? 'Conversa marcada em ' + SPIN_ETAPAS.find(e => e[0] === nova)[1] + '.' : 'Marcação do SPIN tirada.');
+}
+// ---------- o que o lead procura (rodada 53) ----------
+// Texto do jeito que o cliente falou, lido pela mesma régua da busca do Portfólio (núcleo:
+// lerBuscaImovel). As notas e interações do lead viram sugestão com um toque. Gravar
+// preenche tipo, bairro e orçamento só onde estão vazios.
+function blocoInteresseHTML(id) {
+  const it = interesseDoLead(id), pistas = pistasDeInteresse(id);
+  const n = it && it.r ? it.r.itens.length : 0;
+  return `<h3 class="blk-title">O que procura</h3>
+    <div class="card">
+      ${it ? `${it.rotulos.length
+          ? `<div class="chip-row" style="flex-wrap:wrap;overflow:visible;padding-bottom:0">${it.rotulos.map(x => `<span class="chip on">${esc(x)}</span>`).join('')}</div>`
+          : `<p style="margin:0">“${esc(it.texto)}” <span class="muted">— não reconheci critério nesse texto.</span></p>`}
+        ${it.r ? (n ? `<button class="btn btn--block" style="margin-top:var(--s3)" onclick="verImoveisDoLead(${id})">${ico('portfolio')}Ver ${plural(n, 'imóvel que bate', 'imóveis que batem')}</button>`
+          : `<p class="muted" style="margin:var(--s3) 0 0">Nenhum imóvel do estoque bate.</p>`) : ''}
+        <button class="link" style="margin-top:var(--s2)" onclick="editarInteresse(${id})">editar</button>`
+      : `<p class="muted" style="margin:0 0 var(--s3)">Escreva do jeito que o cliente falou, por exemplo “casa 3 quartos até 1 milhão”.</p>
+        <button class="btn btn--block" onclick="editarInteresse(${id})">${ico('editar')}Escrever o que procura</button>`}
+      ${pistas.length ? `<div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Nas notas</div>
+        ${pistas.map(p => `<button class="link" style="display:block;text-align:left;margin-top:4px" data-t="${esc(p.texto)}" onclick="usarPistaInteresse(${id}, this.dataset.t)">“${esc(p.trecho)}” → ${esc(p.rotulos.join(' · '))}</button>`).join('')}` : ''}
+    </div>`;
+}
+function previaInteresse(el) {
+  const f = lerBuscaImovel(el.value), rot = rotulosBusca(f);
+  document.getElementById('fq-previa').innerHTML = rot.length
+    ? `<span class="muted">Entendi:</span> ${rot.map(x => `<span class="chip on">${esc(x)}</span>`).join(' ')}${f.sobra.length ? `<br><span class="muted">Não usei: ${esc(f.sobra.join(', '))}</span>` : ''}`
+    : (el.value.trim() ? '<span class="muted">Ainda não reconheci critério.</span>' : '');
+}
+function editarInteresse(id) {
+  const l = q('SELECT nome, busca_interesse FROM lead WHERE id=?', [id])[0]; if (!l) return;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">O que ${esc(primeiroNome(l.nome))} procura</h2>
+    <form id="form-interesse" onsubmit="event.preventDefault();salvarInteresse(${id})" novalidate>
+      ${campo('fq-texto', 'Do jeito que o cliente falou', `<textarea id="fq-texto" rows="3" oninput="previaInteresse(this)" placeholder="Ex.: casa térrea 3 quartos até 1 milhão, com vaga">${esc(l.busca_interesse || '')}</textarea>`)}
+      <div id="fq-previa" style="margin:0 0 var(--s3);line-height:2"></div>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>`);
+  previaInteresse(document.getElementById('fq-texto'));
+  ligarRascunho('interesse:' + id, document.getElementById('form-interesse'));
+}
+function primeiroNome(n) { return String(n || '').trim().split(/\s+/)[0] || 'o cliente'; }
+function aplicarInteresse(id, texto) {
+  const antes = q('SELECT busca_interesse, tipo_interesse, bairro_interesse, orcamento FROM lead WHERE id=?', [id])[0];
+  const r = gravarInteresse(id, texto);
+  vibrar(); renderAll();
+  openDetail('lead', id);
+  showToast(texto ? avisoInteresse(r) : 'Apagado.', antes && {
+    label: 'Desfazer', fn: () => { run('UPDATE lead SET busca_interesse=?, tipo_interesse=?, bairro_interesse=?, orcamento=? WHERE id=?',
+      [antes.busca_interesse, antes.tipo_interesse, antes.bairro_interesse, antes.orcamento, id]); renderAll(); openDetail('lead', id); } });
+}
+function salvarInteresse(id) { const t = val('fq-texto'); limparRascunho(); aplicarInteresse(id, t); }
+function usarPistaInteresse(id, texto) { aplicarInteresse(id, texto); }
+function verImoveisDoLead(id) {
+  const it = interesseDoLead(id); if (!it) return;
+  closeSheet(); go('vi');
+  const i = document.getElementById('vi-search'); i.value = it.texto; buscaComAmostras = false; renderVI();
+}
+function copiarSpin(imovelId, leadId) {
+  const r = roteiroSPIN(imovelId, leadId); if (!r) return;
+  (navigator.clipboard ? navigator.clipboard.writeText(roteiroSPINTexto(r)) : Promise.reject()).then(
+    () => showToast('Roteiro copiado.'), () => showToast('Não deu pra copiar neste navegador.'));
+}
 function blocoQualificacaoHTML(tipo, id) {
   const r = qualificar(tipo, id); if (!r) return '';
   const pessoa = tipo === 'lead' ? (q('SELECT classificacao FROM lead WHERE id=?', [id])[0] || {}) : {};
@@ -5608,7 +6563,7 @@ function blocoQualificacaoHTML(tipo, id) {
   const resp = respostasDe(tipo, id);
   return `<h3 class="blk-title">Qualificação</h3>
     <div class="card">
-      ${r.fechado ? `<p class="muted" style="margin:0">Negócio fechado — a qualificação não se aplica mais.</p>` : `
+      ${r.fechado || r.descartado ? `<p class="muted" style="margin:0">${r.descartado ? 'Lead descartado' : 'Negócio fechado'} — a qualificação não se aplica mais.</p>` : `
       <div class="between"><span style="white-space:nowrap"><span class="pill ${r.faixaCls}">${r.faixa}</span> <b style="font-variant-numeric:tabular-nums">${r.pontos}</b><span class="muted"> de 100</span></span>
         ${tipo === 'lead' && (pessoa.classificacao || '').toLowerCase() !== r.faixa.toLowerCase() ? `<button class="btn btn--sm" onclick="usarFaixa(${id})">Usar como classificação</button>` : ''}</div>
       ${barra}
@@ -5692,10 +6647,11 @@ function linhaDoTempoHTML(tipo, id) {
     const pg = perguntaPor(tipo, r.chave); if (!pg) return;
     it.push({ q: r.criado_em, ic: 'check', t: 'Descobriu · ' + pg.t, s: rotuloResposta(pg, r.valor) });
   });
+  // rodada 45: a captação também tem nota ligada (nota.captacao_id)
+  q(`SELECT * FROM nota WHERE ${col}=?`, [id]).forEach(n => it.push({ q: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : ''),
+    ic: { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo', t: n.modo === 'camera' ? 'Foto' : n.modo === 'audio' ? 'Nota de voz' : 'Nota',
+    s: (n.texto || '').slice(0, 160), audio: midiaSrc(n.audio_base64) }));
   if (tipo !== 'captacao') {
-    q(`SELECT * FROM nota WHERE ${col}=?`, [id]).forEach(n => it.push({ q: String(n.criado_em || '').slice(0, 10) + (n.hora ? ' ' + n.hora : ''),
-      ic: { audio: 'mic', texto: 'teclado', camera: 'camera' }[n.modo] || 'arquivo', t: n.modo === 'camera' ? 'Foto' : n.modo === 'audio' ? 'Nota de voz' : 'Nota',
-      s: (n.texto || '').slice(0, 160), audio: n.audio_base64 }));
     q(`SELECT id, nome, criado_em FROM documento_carteira WHERE ${col}=?`, [id]).forEach(d => it.push({ q: d.criado_em, ic: 'arquivo', t: 'Arquivo', s: d.nome, go: `openDetail('arquivo', ${d.id})` }));
   }
   if (tipo === 'lead') {
@@ -5800,7 +6756,7 @@ function recebidoVirarNota() {
 function recebidoVirarArquivos() {
   const r = window.__recebido; if (!r) return;
   r.fotos.forEach((f, i) => run(`INSERT INTO documento_carteira (nome,categoria,imagem_base64,ocr_simulado,criado_em) VALUES (?,?,?,0,?)`,
-    ['Foto recebida ' + (i + 1), 'negociacao', f, agoraISO()]));
+    ['Foto recebida ' + (i + 1), 'negociacao', guardarMidia(f), agoraISO()]));
   closeSheet(); renderCART();
   showToast(plural(r.fotos.length, 'foto salva', 'fotos salvas') + ' em Arquivos.', { label: 'Ver', fn: () => go('cart') });
 }
@@ -5871,6 +6827,79 @@ function salvarFatos(id) {
   showToast('Fatos salvos.');
 }
 
+// ---------- anúncio e qualidade do anúncio (rodada 51) ----------
+// Texto, vídeo e tour 360° do anúncio, e a régua do núcleo (qualidadeAnuncio) mostrando o que
+// falta, na ordem do que mais vale. Cada "falta" abre o lugar onde se resolve.
+function blocoAnuncioHTML(im) {
+  const r = qualidadeAnuncio(im.id); if (!r || r.amostra) return '';
+  const cor = r.faixaCls === 'ok' ? 'var(--ok)' : r.faixaCls === 'warn' ? 'var(--warn)' : 'var(--text-3)';
+  const link = (u, rot) => linkValido(u) ? `<a href="${esc(u.trim())}" target="_blank" rel="noopener noreferrer">${rot}</a>` : '—';
+  const texto = String(im.descricao || '').trim();
+  return `<h3 class="blk-title">Anúncio</h3>
+    <div class="card">
+      <div class="between"><span style="white-space:nowrap"><span class="pill ${r.faixaCls}">${r.faixa}</span> <b style="font-variant-numeric:tabular-nums">${r.pontos}</b><span class="muted"> de 100</span></span></div>
+      <div style="height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:var(--s2) 0"><div style="width:${r.pontos}%;height:100%;background:${cor}"></div></div>
+      <div class="muted" style="font-size:var(--t-sm);line-height:1.6;white-space:normal">${r.itens.some(i => i.p) ? r.itens.filter(i => i.p).map(i => `<span>+${i.p} ${esc(i.t)}</span>`).join(' · ') : 'Nada do anúncio preenchido ainda.'}</div>
+      ${r.faltando.length ? `<div class="eyebrow" style="color:var(--text-3);margin-top:var(--s3)">Falta</div>
+        <div class="chip-row" style="flex-wrap:wrap;overflow:visible;padding-bottom:0">${r.faltando.slice(0, 4).map(x =>
+          `<button class="chip" onclick="resolverFaltaAnuncio(${im.id}, '${x.k}')">${esc(x.t)}<span class="muted" style="margin-left:6px">+${x.ganho}</span></button>`).join('')}</div>` : ''}
+      ${r.autorizado ? '' : `<p class="muted" style="margin:var(--s3) 0 0">Sem autorização de venda registrada: não anuncie ainda (Lei 6.530/1978, art. 20).</p>`}
+      ${linhaCampo('Texto', texto ? `<span style="white-space:pre-wrap">${esc(texto.length > 180 ? texto.slice(0, 180) + '…' : texto)}</span>` : 'sem texto')}
+      ${linhaCampo('Vídeo', link(im.video_url, 'abrir o vídeo'))}
+      ${linhaCampo('Tour 360°', link(im.tour_url, 'abrir o tour'))}
+      <div class="btn-row" style="margin-top:var(--s3)">
+        <button class="btn btn--grow" onclick="editarAnuncio(${im.id})">${ico('editar')}${texto || im.video_url || im.tour_url ? 'Editar anúncio' : 'Escrever anúncio'}</button>
+        ${texto ? `<button class="btn btn--grow" onclick="copiarAnuncio(${im.id})">${ico('copiar')}Copiar texto</button>` : ''}
+      </div>
+    </div>`;
+}
+function pillAnuncio(id) {
+  const a = qualidadeAnuncio(id);
+  return a && !a.amostra ? `<span class="pill ${a.faixaCls}" title="Qualidade do anúncio">Anúncio ${a.pontos}</span>` : '';
+}
+function resolverFaltaAnuncio(id, k) {
+  if (k === 'fotos') return document.getElementById('foto-gal-' + id).click();
+  if (k === 'fatos') return editarFatos(id);
+  if (k === 'local') { const im = q('SELECT lat FROM imovel WHERE id=?', [id])[0]; return im && im.lat == null ? posicaoImovelSheet(id) : editarImovel(id); }
+  editarAnuncio(id, k);
+}
+function editarAnuncio(id, foco) {
+  const im = q('SELECT * FROM imovel WHERE id=?', [id])[0]; if (!im) return;
+  openSheet(`
+    <h2 class="sheet__title" id="sheet-title">Anúncio</h2>
+    <p class="muted" style="margin:0 0 var(--s3)">${esc(nomeImovel(im))}</p>
+    <form id="form-anuncio" onsubmit="event.preventDefault();salvarAnuncio(${id})" novalidate>
+      ${campo('fa-texto', 'Texto do anúncio', `<textarea id="fa-texto" rows="7" oninput="document.getElementById('fa-conta').textContent=this.value.trim().length+' caracteres'">${esc(im.descricao || '')}</textarea>
+        <div class="muted" id="fa-conta" style="font-size:var(--t-sm);margin-top:4px">${String(im.descricao || '').trim().length} caracteres</div>`)}
+      ${campo('fa-video', 'Link do vídeo', `<input id="fa-video" type="url" inputmode="url" autocomplete="off" placeholder="https://" value="${esc(im.video_url || '')}">`)}
+      ${campo('fa-tour', 'Link do tour 360° ou 3D', `<input id="fa-tour" type="url" inputmode="url" autocomplete="off" placeholder="https://" value="${esc(im.tour_url || '')}">`)}
+      <p class="muted" style="margin:0 0 var(--s3);font-size:var(--t-sm)">Sem caixa alta, com o que o cliente pergunta primeiro: área, quartos, vagas, sol, condomínio e o que há em volta.</p>
+      <div class="btn-row sheet__acts">
+        <button type="submit" class="btn btn--primary btn--grow">${ico('check')}Salvar</button>
+        <button type="button" class="btn btn--grow" data-cancelar onclick="cancelarForm()">Cancelar</button>
+      </div>
+    </form>`, { foco: false });
+  ligarRascunho('anuncio:' + id, document.getElementById('form-anuncio'));
+  const alvo = document.getElementById(foco === 'video' ? 'fa-video' : foco === 'tour' ? 'fa-tour' : 'fa-texto');
+  if (alvo && foco) alvo.focus();
+}
+function salvarAnuncio(id) {
+  const texto = val('fa-texto'), video = val('fa-video'), tour = val('fa-tour');
+  if (video && !linkValido(video)) return erroCampo('fa-video', 'Cole o link inteiro, começando com https://');
+  if (tour && !linkValido(tour)) return erroCampo('fa-tour', 'Cole o link inteiro, começando com https://');
+  const antes = (qualidadeAnuncio(id) || {}).pontos;
+  run('UPDATE imovel SET descricao=?, video_url=?, tour_url=? WHERE id=?', [texto || null, video || null, tour || null, id]);
+  limparRascunho(); vibrar(); renderVI();
+  openDetail('imovel', id);
+  const depois = (qualidadeAnuncio(id) || {}).pontos;
+  showToast('Anúncio salvo' + (depois !== antes ? ': ' + antes + ' → ' + depois + ' pontos.' : '.'));
+}
+function copiarAnuncio(id) {
+  const im = q('SELECT descricao FROM imovel WHERE id=?', [id])[0]; if (!im || !im.descricao) return;
+  (navigator.clipboard ? navigator.clipboard.writeText(im.descricao) : Promise.reject()).then(
+    () => showToast('Texto do anúncio copiado.'), () => showToast('Não deu pra copiar neste navegador.'));
+}
+
 // ---------- fotos do imóvel (B3) ----------
 // A foto nunca era gravada. Agora várias, reduzidas a 1280 px pra não estourar o banco.
 async function adicionarFotos(id, input) {
@@ -5878,7 +6907,7 @@ async function adicionarFotos(id, input) {
   let n = 0;
   for (const f of files) {
     try {
-      const url = await reduzirImagem(f);
+      const url = guardarMidia(await reduzirImagem(f));
       run('INSERT INTO imovel_foto (imovel_id, imagem_base64, criado_em) VALUES (?,?,?)', [id, url, agoraISO()]);
       const im = q('SELECT imagem_base64 FROM imovel WHERE id=?', [id])[0];
       if (im && !im.imagem_base64) run('UPDATE imovel SET imagem_base64=? WHERE id=?', [url, id]);
@@ -5893,7 +6922,7 @@ function abrirFoto(fid) {
   const f = q('SELECT * FROM imovel_foto WHERE id=?', [fid])[0]; if (!f) return;
   openSheet(`
     <h2 class="sheet__title" id="sheet-title">Foto do imóvel</h2>
-    <img class="shot" src="${f.imagem_base64}" alt="">
+    <img class="shot" src="${midiaSrc(f.imagem_base64)}" alt="">
     <div class="btn-row">
       <button class="btn btn--grow" onclick="usarDeCapa(${fid})">${ico('check')}Usar de capa</button>
       <button class="btn btn--grow" style="color:var(--danger)" onclick="apagar('foto', ${fid})">${ico('lixeira')}Apagar</button>
@@ -5974,7 +7003,7 @@ function marcarChecklist(imovelId, i, ctx) {
 async function fotografarChecklist(imovelId, i, input) {
   const f = input.files && input.files[0]; if (!f) return;
   const item = CHECKLIST_VENDA[i];
-  let url; try { url = await reduzirImagem(f, 1600, 0.85); } catch (e) { return showToastErr('Não consegui ler a foto.'); }
+  let url; try { url = guardarMidia(await reduzirImagem(f, 1600, 0.85)); } catch (e) { return showToastErr('Não consegui ler a foto.'); }
   const docId = insertAndGetId(`INSERT INTO documento_carteira (nome,categoria,imagem_base64,ocr_simulado,imovel_id,criado_em) VALUES (?,?,?,0,?,?)`,
     [item, 'negociacao', url, imovelId, agoraISO()]);
   const r = q('SELECT * FROM checklist_item WHERE imovel_id=? AND item=?', [imovelId, item])[0];
@@ -6833,6 +7862,8 @@ function compromissoHTML(id) {
         ${podeIr ? `<button class="btn btn--grow" onclick="irItemAgenda('compromisso', ${id})">${ico('mapa')}Ir</button>` : ''}
         <button class="btn btn--grow" onclick="lembreteItemSheet('compromisso', ${id})">${ico('sino')}Lembrete</button>
       </div>` : `<button class="btn btn--block" onclick="reabrirCompromisso(${id})">${ico('reset')}Voltar pra marcado</button>`}
+    <div style="margin-top:var(--s2)">${botoesNotaHTML('compromisso', id)}</div>
+    ${q('SELECT COUNT(*) n FROM nota WHERE compromisso_id=?', [id])[0].n ? `<h3 class="blk-title">Notas</h3>${linkedNotasHTML('compromisso_id', id)}` : ''}
     <div class="btn-row" style="margin-top:var(--s2)">
       <button class="btn btn--grow" onclick="editarCompromisso(${id})">${ico('editar')}Editar</button>
       <button class="btn btn--grow" onclick="duplicarCompromisso(${id})">${ico('copiar')}Duplicar</button>
@@ -7344,14 +8375,7 @@ function abrirResultadoBusca(tipo, id) {
   if (TABELA_PESSOA[tipo] || tipo === 'imovel' || tipo === 'arquivo') return openDetail(tipo, id);
   if (tipo === 'compromisso') return abrirCompromisso(id);
   if (tipo === 'visita') { closeSheet(); return abrirVisita(id); }
-  if (tipo === 'nota') {
-    const n = q('SELECT visita_id, lead_id, imovel_id, cliente_id FROM nota WHERE id=?', [id])[0] || {};
-    if (n.lead_id) return openDetail('lead', n.lead_id);
-    if (n.cliente_id) return openDetail('cliente', n.cliente_id);
-    if (n.imovel_id) return openDetail('imovel', n.imovel_id);
-    closeSheet(); if (n.visita_id) return abrirVisita(n.visita_id);
-    limparNotaCtx(); go('nt');
-  }
+  if (tipo === 'nota') return abrirVinculoNota(id);
 }
 
 // =============================================================================
@@ -8802,11 +9826,11 @@ async function desenharFichaImovel(im) {
   const ctx = canvas.getContext('2d');
   const cs = getComputedStyle(document.documentElement);
   const tok = (v, fb) => { const x = (cs.getPropertyValue(v) || '').trim(); return x || fb; };
-  const tinta = tok('--text', '#14161B'), fundo = tok('--bg', '#FFFFFF'), acento = tok('--brand-fill', '#BD2F86'), cinza = tok('--text-3', '#6B7280');
+  const tinta = tok('--text', '#1F2A2E'), fundo = tok('--bg', '#FFFFFF'), acento = tok('--brand-text', '#0B5F64'), cinza = tok('--text-3', '#6B7280');
   const fonte = tok('--font-display', 'sans-serif').split(',')[0].replace(/^"|"$/g, '');
   try { await document.fonts.ready; } catch (e) { /* segue com a fonte do sistema */ }
   ctx.fillStyle = fundo; ctx.fillRect(0, 0, W, H);
-  const fotoSrc = im.imagem_base64 || (q('SELECT imagem_base64 FROM imovel_foto WHERE imovel_id=? ORDER BY id LIMIT 1', [im.id])[0] || {}).imagem_base64;
+  const fotoSrc = midiaSrc(im.imagem_base64 || (q('SELECT imagem_base64 FROM imovel_foto WHERE imovel_id=? ORDER BY id LIMIT 1', [im.id])[0] || {}).imagem_base64);
   if (fotoSrc) {
     try {
       const img = await carregarImagemFicha(fotoSrc);
